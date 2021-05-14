@@ -26,4 +26,11 @@ stages:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
-          $(tag)
+          - task: ECRPushImage@1
+  inputs:
+    awsCredentials: 'gateway-backend'
+    regionName: 'us-east-2'
+    imageSource: 'imagename'
+    sourceImageName: '$(tag)'
+    repositoryName: 'gateway'
+    outputVariable: 'production'
