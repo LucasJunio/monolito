@@ -29,7 +29,7 @@ stages:
       inputs:
         awsCredentials: 'gateway-backend'
         regionName: 'us-east-2'
-        imageSource: 'imagename'
+        imageSource: 'tag'
         sourceImageName: '$(tag)'
         sourceImageTag: '$(Build.BuildId)'
         repositoryName: 'gateway'        
