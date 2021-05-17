@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
 app.use("/", (req, res) => {
-    res.send("Hello")
+    res.send("Hello World")
 });
 
 // Starting the server
