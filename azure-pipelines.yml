@@ -24,13 +24,15 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          - task: ECRPushImage@1
-  inputs:
-    awsCredentials: 'gateway-backend'
-    regionName: 'us-east-2'
-    imageSource: 'imagename'
-    sourceImageName: '$(tag)'
-    repositoryName: 'gateway'
-    outputVariable: 'production'
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'        
+    - task: ECRPushImage@1
+      inputs:
+        awsCredentials: 'gateway-backend'
+        regionName: 'us-east-2'
+        imageSource: 'imagename'
+        sourceImageName: '$(tag)'
+        sourceImageTag: '$(Build.BuildId)'
+        repositoryName: 'gateway'
+        pushTag: 'production'
+        autoCreateRepository: true
+        outputVariable: 'production'
