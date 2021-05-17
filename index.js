@@ -30,12 +30,12 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Routes
+Routes
 app.use("/", (req, res) => {
-    res.send("Hello World")
+    res.send("Hello Lucas")
 });
 
-require('./app/routes')(app)
+// require('./app/routes')(app)
 
 // Starting the server
 app.listen(app.get("port"), () => {
