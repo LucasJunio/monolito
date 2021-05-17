@@ -35,6 +35,8 @@ app.use("/", (req, res) => {
     res.send("Hello World")
 });
 
+require('./app/routes')(app)
+
 // Starting the server
 app.listen(app.get("port"), () => {
   console.log(`Serve on port ${app.get("port")}`);
