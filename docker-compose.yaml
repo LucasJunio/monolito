@@ -1,0 +1,30 @@
+version: '3.0'
+
+services:
+    # [name aplication]
+  app: 
+    restart: always    
+    env_file:
+      - .env
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - "db_gateway"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+    entrypoint: npm run dev
+
+    #   [name database]
+  db_gateway:
+    image:  mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    environment:
+      - TZ=America/Belem
+      - ACCEPT_EULA=Y
+      - MSSQL_AGENT_ENABLED=True  
+      - MSSQL_SA_PASSWORD=@#Vileve123*%a
+      - MSSQL_PID=Express 
+    ports:
+      - "1433:1433"
