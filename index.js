@@ -1,8 +1,8 @@
 require('dotenv').config()
-import morgan from 'morgan'
-var express = require('express')
+const morgan = require('morgan')
+const express = require('express')
 const cors = require('cors')
-var app = express()
+const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(morgan('common'))
@@ -14,4 +14,5 @@ const server = app.listen(process.env.PORT || 3000, () => {
 })
 
 // routes
-require('./app/routes')(app)
+app.use("/", require("./src/routes"));
+
