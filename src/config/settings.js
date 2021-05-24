@@ -18,20 +18,20 @@ module.exports = {
       port: process.env.DB_PORT,
       database: process.env.DB_NAME
     }
-  }
+  },
 
-  email : nodemailer.createTransport({
-    host: process.env.EMAILHOST,
-    port: process.env.EMAILPORT,
-  auth: {
-      user: process.env.EMAILUSER,  
-      pass: process.env.EMAILPASS  
-      },
-            secureConnection: false,
-            tls: { ciphers: 'SSLv3' } 
-  }),
+  // email: nodemailer.createTransport({
+  //   host: process.env.EMAILHOST,
+  //   port: process.env.EMAILPORT,
+  //   auth: {
+  //     user: process.env.EMAILUSER,
+  //     pass: process.env.EMAILPASS
+  //   },
+  //   secureConnection: false,
+  //   tls: { ciphers: 'SSLv3' }
+  // }),
 
-  twilioconfig:{
+  twilioconfig: {
     accountSid: process.env.TWILIO_ACCOUNT_SID,
     authToken: process.env.TWILIO_AUTH_TOKEN
   }

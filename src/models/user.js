@@ -1,14 +1,14 @@
 const sql = require("mssql");
 const { config } = require('../config/settings');
 
-const userValidation = require("../models/user.validation");
+const userValidation = require("../validate/user.validation");
 
 function create(user, callback) {
     sql.connect(config, function (err) {
         if (err) {
             callback(err, false)
         } else {
-            userValidation(user, (err, result) => {
+            userValidation(user, async (err, result) => {
                 if (result) {
                     let querysql = `INSERT INTO user
                               (DATA,CODIGO,IDESPECIAL,ID_PROSITE,MESEOCORRE,MESIOCORRE,
@@ -37,7 +37,7 @@ function create(user, callback) {
 }
 
 function read(user, callback) {
-    sql.connect(config, function (err) {
+    sql.connect(config, async function (err) {
         if (err) {
             callback(err, false)
         } else {

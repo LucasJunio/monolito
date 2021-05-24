@@ -1,9 +1,4 @@
 const Joi = require('joi');
-const Log = require('../models/log.model');
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.log(reason)
-})
 
 const validationMiddleware = (arrayobject, callback) => {
 

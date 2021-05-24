@@ -1,11 +1,7 @@
-const express = require('express')
-const router = express.Router();
-const authMiddleware = require('../middleware/auth.js')
+const router = require('express').Router();
 
-router.use('/teste', (req, res) => { res.status(200).send("Hello World"); })  
+const token = require('../middleware/auth');
 
-router.use('/signup', require('./signup.controller'))
-// router.use('/auth', require('./auth.controller'))
-// router.use('/user', authMiddleware, require('./user.controller'))
+router.use('/signup', require('../controllers/signup.controller'))  
 
 module.exports = router;
