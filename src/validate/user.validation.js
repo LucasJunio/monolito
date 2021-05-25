@@ -1,32 +1,23 @@
 const Joi = require('joi');
 
-const validationMiddleware = (arrayobject, callback) => {
+const validationMiddleware = async (object, callback) => {
 
-  let i = 0
-  let e = 0
-  let errors = []
+  const { error } = await userSchema.validate(object)
 
-  arrayobject.map((v, index) => {
-    const { error } = userSchema.validate(v)
-    const valid = error == null;
-    if (error != undefined) {
-      const { details } = error;
-      const message = details.map(i => i.message).join(',');
-      errors.push({ error: message, cpf: v.CPF, index: index });
-      e++
-    }
-    i++
-    if (arrayobject.length === i) {
-      e === 0 ? callback(null, true) : callback(errors, false)
-    }
-  })
+  if (error) {
+    callback(error, false)
+  } else {    
+    callback(null, true);
+  }
 }
 
 const userSchema = Joi.object().keys({
-  nome: Joi.string(),
-  email: Joi.string(),
-  senha: Joi.number().allow(null, ''),
-  celular: Joi.number().allow(null, ''),
+  nome: Joi.string().min(10).max(150).required(),
+  email: Joi.string().min(10).max(150).required(),
+  celular: Joi.string().min(11).max(11).required(),
+  senha: Joi.string().max(1000).required(),
+  token1: Joi.string().min(6).max(6),
+  token2: Joi.string().min(6).max(6),
 })
 
 module.exports = validationMiddleware;

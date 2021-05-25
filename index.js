@@ -1,34 +1,26 @@
-require('dotenv').config()
-const express = require('express')
-const path = require('path')
-const Router = require('./src/routes')
-const bodyParser = require('body-parser');
-
-
+const express = require("express");
+// Express: Facto standard server framework for Node.js
 const app = express();
+// Cors habilited Cross-origin resource sharing
+var cors = require('cors');
+// Morgan is used for logging request details;
+const morgan = require("morgan");
+// BodyParser formated request body
+const bodyParser = require("body-parser");
 
-const fs = require('fs');
-// const https = require('https');
-const http = require('http');
-
-
-app.use(bodyParser.urlencoded({extended: true}));
+// Middlewares: functions run before of create routes
+app.use(morgan("dev"));
+app.use(express.json());
 app.use(bodyParser.json());
-app.use(Router);
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});    
-app.disable('x-powered-by');
+// Routes
+app.use("/", require("./src/routes"));
 
-//  https.createServer(options, app).listen(5002, function () {
-//   console.log('Server is running 5002');
-//  })
+// Settings
+app.set("port", process.env.PORT || 3000);
 
-
-http.createServer(app).listen(process.env.HTTPPORT, function () {
-  console.log('Server is running '+ process.env.HTTPPORT);
- })
+// Starting the server
+app.listen(app.get("port"), () => {
+  console.log(`Server is running ${app.get("port")}`);
+});

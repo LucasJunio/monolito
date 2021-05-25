@@ -8,23 +8,17 @@ router.post('/', async (req, res) => {
 
     await create(req.body, (err, result) => {
         if (!result) {
-            res.status(400).json({ message: err });
-        } 
+            return res.status(400).json({ message: err });
+        } else {
+            read(req.body, (err, result) => {
+                if (!result.success) {
+                    return res.status(400).json({ message: err });
+                } else {
+                    res.status(201).json({ message: "success", token: result.token });
+                }
+            })
+        }
     })
-
-    
-
-    // await read(req.body.email, (response, result) => {
-    //     if (!result) {
-    //         res.status(400).json({ message: response });
-    //     } 
-    // })
-    
-
-
-
-    res.status(201).json({ message: "success" });
-
 })
 
 
