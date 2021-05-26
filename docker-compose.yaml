@@ -15,6 +15,7 @@ services:
       - "3000:3000"
     volumes:
       - ./:/app
+      - /app/node_modules      
     entrypoint: npm start
 
     #   [name database]
@@ -27,4 +28,6 @@ services:
       - MSSQL_SA_PASSWORD=@#Vileve123*%a
       - MSSQL_PID=Express 
     ports:
-      - "1433:1433"
+      - "1434:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
