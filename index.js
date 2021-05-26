@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/", require("./src/routes"));
 
 // Settings
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.HTTPPORT || 3000);
 
 // Starting the server
 app.listen(app.get("port"), () => {
