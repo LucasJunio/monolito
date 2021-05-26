@@ -15,7 +15,7 @@ services:
       - "3000:3000"
     volumes:
       - ./:/app
-    entrypoint: npm run dev
+    entrypoint: npm start
 
     #   [name database]
   db_gateway:
