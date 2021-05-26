@@ -20,7 +20,7 @@ services:
 
     #   [name database]
   db_gateway:
-    image:  mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    image:  mcr.microsoft.com/mssql/server:2019-CU10-ubuntu-20.04
     environment:
       - TZ=America/Belem
       - ACCEPT_EULA=Y
@@ -30,4 +30,5 @@ services:
     ports:
       - "1434:1433"
     volumes:
-      - sqlvolume:/var/opt/mssql
+      - /var/lib/docker/volumes/mssql_db/_data:/var/opt/mssql
+    user: root
