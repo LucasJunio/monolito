@@ -17,7 +17,7 @@ const generateOTP = () => {
     return OTP;
 }
 
-// Validation
+// Email and SMS validation
 router.post('/', async (req, res) => {
 
     const token = jwt.sign({ data: req.body.username }, 'stringsecret', { expiresIn: process.env.EXPIRE });
