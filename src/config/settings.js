@@ -6,9 +6,9 @@ module.exports = {
 
   config: {
 
-    server: process.env.HOST,
-    user: process.env.USERNAME,
-    password: process.env.PASSWORD,
+    server: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
 
     connectionTimeout: 300000,
     requestTimeout: 300000,
@@ -18,8 +18,8 @@ module.exports = {
     },
 
     options: {
-      port: process.env.PORT,
-      database: process.env.NAME
+      port: process.env.DB_PORT,
+      database: process.env.DB_NAME
     }
   },
 
