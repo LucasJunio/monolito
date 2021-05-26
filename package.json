@@ -2,11 +2,12 @@
   "name": "gateway-backend",
   "version": "0.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon start.js",
-    "start": "node start.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "jest",
+    "secure-mode": "jest --watch --verbose=true"
   },
   "keywords": [
     "LucasJunio"
@@ -14,14 +15,17 @@
   "author": "LucasJunio",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "esm": "^3.2.25",
     "express": "^4.17.1",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mssql": "^3.3.0",
-    "sequelize": "^6.3.5",
-    "sequelize-paper-trail": "^3.0.1"
+    "nodemailer": "^6.4.16",
+    "twilio": "^3.62.0"
   },
   "devDependencies": {
     "nodemon": "2.0.7"
