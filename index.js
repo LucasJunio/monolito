@@ -1,26 +1,40 @@
+  
 const express = require("express");
-// Express: Facto standard server framework for Node.js
 const app = express();
-// Cors habilited Cross-origin resource sharing
 var cors = require('cors');
-// Morgan is used for logging request details;
-const morgan = require("morgan");
-// BodyParser formated request body
 const bodyParser = require("body-parser");
 
+app.use((req, response, next) => {
+  
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Credentials", "true");
+  response.setHeader("Access-Control-Allow-Methods", "*");
+  response.setHeader("Access-Control-Allow-Headers", "*");
+  app.use(cors());
+  next();
+});
+
+// All OPTIONS requests return a simple status: 'OK'
+app.options('*', (req, res) => {
+  res.json({
+    status: 'OK'
+  });
+});
+
+// Settings
+app.set("port", process.env.PORT || 3001);
+
 // Middlewares: functions run before of create routes
-app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
-app.use("/", require("./src/routes"));
-
-// Settings
-app.set("port", process.env.HTTPPORT || 3000);
+app.use("/", (req, res) => {
+    res.send("Hello")
+});
 
 // Starting the server
 app.listen(app.get("port"), () => {
-  console.log(`Server is running ${app.get("port")}`);
+  console.log(`Serve on port ${app.get("port")}`);
 });
