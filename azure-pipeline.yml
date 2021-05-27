@@ -35,4 +35,4 @@ stages:
               sourceImageTag: '$(Build.BuildId)'
               repositoryName: 'gateway'
               autoCreateRepository: true
-              pushTag: 'production'  
+              pushTag: 'production'
