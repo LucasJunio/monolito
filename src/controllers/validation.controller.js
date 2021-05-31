@@ -39,9 +39,9 @@ router.post('/', async (req, res) => {
     conn.connect().then(() => {
         const reqsql = new sql.Request(conn);
         token1 = generateOTP()
-        reqsql.query(`INSERT INTO Clientes (data, nome, email, celular, senha, token1) VALUES (GETDATE(), '${req.body.nome}', '${req.body.email}', '${req.body.celular}', HASHBYTES('SHA2_512', '${req.body.senha}') , '${token1}')`, function (err, recordset) {
+        reqsql.query(`INSERT INTO Usuarios (data, nome, email, celular, senha, token1) VALUES (GETDATE(), '${req.body.nome}', '${req.body.email}', '${req.body.celular}', HASHBYTES('SHA2_512', '${req.body.senha}') , '${token1}')`, function (err, recordset) {
             if (err) {
-                res.status(200).send(`alert('Erro de banco de dados, tente novamente!')`)
+                res.status(400).send(`alert('Erro de banco de dados, tente novamente!')`)
             } else {
                 sendmail()
             }
