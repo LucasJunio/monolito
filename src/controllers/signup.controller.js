@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, read } = require('../models/user');
+const { create, read, sendEmail, sendSms } = require('../models/user');
 
 // Signup user
 router.post('/', async (req, res) => {
@@ -14,12 +14,26 @@ router.post('/', async (req, res) => {
                 if (!result.success) {
                     return res.status(400).json({ message: err });
                 } else {
-                    res.status(201).json({ message: "success", token: result.token });
+                    
+                    req.body.id = result.id
+
+                    sendEmail(req.body, (err, result) => {
+                        if (!result.success) {
+                            return res.status(400).json({ message: err });
+                        } else {
+                            sendSms(req.body, (err, result) => {
+                                if (!result.success) {
+                                    return res.status(400).json({ message: err });
+                                } else {
+                                    res.status(201).json({ message: "success", token: result.token });
+                                }
+                            })
+                        }
+                    })  
                 }
             })
         }
     })
 })
-
 
 module.exports = router;
