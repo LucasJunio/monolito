@@ -18,13 +18,14 @@ function create(user, callback) {
                 if (result) {
 
                     token1 = generateOTP()
+                    token2 = generateOTP()
 
                     await bcrypt.genSalt(10, function (err, salt) {
                         bcrypt.hash(user.senha, salt, function (err, hash) {
                             let querysql = `INSERT INTO USUARIOS
                                     (DATA, NOME, EMAIL, CELULAR, SENHA, TOKEN1, TOKEN2) 
                                     VALUES (GETDATE(), '${user.nome}', '${user.email}', ${user.celular},
-                                    '${hash}', '${token1}', '${user.token2}')`
+                                    '${hash}', '${token1}', '${token2}')`
 
                             request.query(querysql, (err, recordset) => {
                                 if (err) {
