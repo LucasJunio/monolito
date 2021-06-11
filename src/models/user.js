@@ -98,7 +98,7 @@ async function sendSms(user, callback) {
         })
         .catch(err => callback(err, false))
 
-    const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
         expiresIn: 86400,
     })
 
