@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
         if (!result.success) {
             return res.status(400).json({ message: err });
         } else {
-            res.status(200).json({ message: "success", token: result.token });
+            res.status(200).json({ message: "success sucesso", token: result.token });
         }
     })
 })
