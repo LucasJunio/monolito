@@ -1,16 +1,16 @@
-
+ 
 # Docker
 # Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- master
+- develop
 
 resources:
 - repo: self
 
 variables:
-  tag: 'image-production-$(Build.BuildId)'
+  tag: 'image-develop-$(Build.BuildId)'
 
 stages:
 - stage: Build
@@ -30,10 +30,10 @@ stages:
     - task: ECRPushImage@1
       inputs:
         awsCredentials: 'gateway-backend'
-        regionName: 'us-east-2'
+        regionName: 'us-east-1'
         imageSource: 'imagename'
         sourceImageName: '$(tag)'
         sourceImageTag: '$(Build.BuildId)'
-        repositoryName: 'gateway'        
+        repositoryName: 'repo-gateway-backend'        
         autoCreateRepository: true
-        pushTag: 'production'  
+        pushTag: 'develop'  
