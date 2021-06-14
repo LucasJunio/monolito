@@ -2,11 +2,13 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
-const { email } = require('../models/validation');
+const auth = require('../middleware/auth');
 
-router.get('/email/:token', async (req, res) => {
+const { email, sms } = require('../models/validation');
 
-    email(req.params.token, req.headers.authorization, (err, result) => {
+router.get('/email/:token', async (req, res) => {    
+
+    email(req.params.token, (err, result) => {
         if (!result.success) {
             return res.status(400).json({ message: err });
         } else {
@@ -15,15 +17,15 @@ router.get('/email/:token', async (req, res) => {
     })
 })
 
-router.post('/sms/:token', async (req, res) => {
+router.post('/sms/:token', auth, async (req, res) => {
 
-    const authHeader = (req.headers.authorization);
-    const parts = authHeader.split(' ');
-    const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
-    
-    console.log(decoded.email)
-
-    res.status(201).json({ message: "success" });
+    sms(req.params.token, req.headers.authorization, (err, result) => {
+        if (!result.success) {
+            return res.status(400).json({ message: err });
+        } else {
+            res.status(200).json({ message: "success" });
+        }
+    })
 
 })
 

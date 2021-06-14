@@ -22,9 +22,9 @@ function create(user, callback) {
                     await bcrypt.genSalt(10, function (err, salt) {
                         bcrypt.hash(user.senha, salt, function (err, hash) {
                             let querysql = `INSERT INTO USUARIOS
-                                    (DATA, NOME, EMAIL, CELULAR, SENHA, TOKEN1, TOKEN2) 
+                                    (DATA, NOME, EMAIL, CELULAR, SENHA, TOKEN1, VALIDACAO) 
                                     VALUES (GETDATE(), '${user.nome}', '${user.email}', ${user.celular},
-                                    '${hash}', '${token1}', '${user.token2}')`
+                                    '${hash}', '${token1}', 0)`
 
                             request.query(querysql, (err, recordset) => {
                                 if (err) {
@@ -73,7 +73,10 @@ function read(user, callback) {
     });
 }
 
-function sendEmail(user, callback) {
+async function sendEmail(user, callback) {
+
+    const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {})
+
     const message = {
         from: 'contato@vilevepay.com.br',
         to: user.email,
@@ -81,7 +84,7 @@ function sendEmail(user, callback) {
         html: `
         Olá ${user.nome}, <br>
         <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
-        <br> <a href='http://www.vileve.com.br'>Clique para confirmar sua conta</a> <br>  `
+        <br> <a href='http://localhost:3000/validation/email/${token}'>Clique para confirmar sua conta</a> <br>  `
     }
 
     email.sendMail(message, function (err, info) {
