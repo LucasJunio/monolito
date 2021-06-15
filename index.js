@@ -6,7 +6,9 @@ var cors = require('cors');
 // Morgan is used for logging request details;
 const morgan = require("morgan");
 // BodyParser formated request body
-const bodyParser = require("body-parser");  
+const bodyParser = require("body-parser");
+
+
 
 // Middlewares: functions run before of create routes
 app.use(morgan("dev"));
