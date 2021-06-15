@@ -11,7 +11,7 @@ const bodyParser = require("body-parser");
 // Middlewares: functions run before of create routes
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
