@@ -12,6 +12,7 @@ function create(user, callback) {
     sql.connect(config, function (err) {
         if (err) {
             callback(err, false)
+            return;
         } else {
             let request = new sql.Request();
             userValidation(user, async (err, result) => {
@@ -24,12 +25,13 @@ function create(user, callback) {
                         bcrypt.hash(user.senha, salt, function (err, hash) {
                             let querysql = `INSERT INTO USUARIOS
                                     (DATA, NOME, EMAIL, CELULAR, SENHA, TOKEN1, VALIDACAO) 
-                                    VALUES (GETDATE(), '${user.nome}', '${user.email}', ${user.celular},
+                                    VALUES (GETDATE(), '${user.nome}', '${user.email}', '${user.celular}',
                                     '${hash}', '${token1}', 0)`
 
                             request.query(querysql, (err, recordset) => {
                                 if (err) {
                                     callback(err, false)
+                                    return;
                                 };
                                 sql.close();
                                 callback(null, true)
@@ -39,6 +41,7 @@ function create(user, callback) {
 
                 } else {
                     callback(err, false)
+                    return;
                 }
             })
         }
@@ -59,13 +62,12 @@ function read(user, callback) {
                         callback('user invalid', false)
                     } else {
                         if (await bcrypt.compare(user.senha, recordset[0].senha)) {
-
+                            
                             const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
                                 expiresIn: 86400,
                             })
                         
                             callback(null, { token, success: true })
-                            
                         } else {
                             callback('user or password incorrect', false)
                         }
