@@ -7,6 +7,8 @@ const { config, twilioconfig, email } = require('../config/settings');
 const userValidation = require("../validate/user.validation");
 const twilio = require('twilio')(twilioconfig.accountSid, twilioconfig.authToken);
 
+const tokenSms = generateOTP()
+
 function create(user, callback) {
 
     sql.connect(config, function (err) {
@@ -16,17 +18,14 @@ function create(user, callback) {
         } else {
             let request = new sql.Request();
             userValidation(user, async (err, result) => {
-                if (result) {
-
-                    token1 = generateOTP()
-                    token2 = generateOTP()
+                if (result) {                                      
 
                     await bcrypt.genSalt(10, function (err, salt) {
                         bcrypt.hash(user.senha, salt, function (err, hash) {
                             let querysql = `INSERT INTO USUARIOS
                                     (DATA, NOME, EMAIL, CELULAR, SENHA, TOKEN1, VALIDACAO) 
                                     VALUES (GETDATE(), '${user.nome}', '${user.email}', '${user.celular}',
-                                    '${hash}', '${token1}', 0)`
+                                    '${hash}', '${tokenSms}', 0)`
 
                             request.query(querysql, (err, recordset) => {
                                 if (err) {
@@ -138,11 +137,14 @@ async function sendEmail(user, callback) {
 }
 
 async function sendSms(user, callback) {
+    
+    const mobilenumber = user.celular.toString().replace(/[() -]/g,'')
+
     twilio.messages
         .create({
-            body: 'Token SMS Gateway Vileve: ' + user.token1,
+            body: 'Token SMS Gateway Vileve: ' + tokenSms,
             from: '+14158549567',
-            to: '+55' + user.celular
+            to: '+55' + mobilenumber
         })
         .catch(err => { return callback(err, false) })
 
