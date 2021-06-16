@@ -6,6 +6,7 @@ const auth = require('../middleware/auth');
 
 const { email, sms } = require('../models/validation');
 
+
 router.get('/email/:token', async (req, res) => {    
 
     email(req.params.token, (err, result) => {
