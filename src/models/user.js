@@ -59,7 +59,13 @@ function read(user, callback) {
                         callback('user invalid', false)
                     } else {
                         if (await bcrypt.compare(user.senha, recordset[0].senha)) {
-                            callback(recordset[0], { success: true })
+
+                            const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+                                expiresIn: 86400,
+                            })
+                        
+                            callback(null, { token, success: true })
+                            
                         } else {
                             callback('user or password incorrect', false)
                         }

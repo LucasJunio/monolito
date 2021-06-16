@@ -17,7 +17,7 @@ router.get('/email/:token', async (req, res) => {
     })
 })
 
-router.post('/sms/:token', auth, async (req, res) => {
+router.get('/sms/:token', auth, async (req, res) => {
 
     sms(req.params.token, req.headers.authorization, (err, result) => {
         if (!result.success) {
