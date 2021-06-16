@@ -34,7 +34,7 @@ function create(user, callback) {
                                     return;
                                 };
                                 sql.close();
-                                callback(null, true)
+                                return callback(null, true)
                             });
                         })
                     });
@@ -53,6 +53,39 @@ function read(user, callback) {
     sql.connect(config, async function (err) {
         if (err) {
             callback(err, false)
+            return;
+        } else {
+            let request = new sql.Request();
+
+            await request.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${user.email}'`, async function (err, recordset) {
+                try {
+                    if (recordset.length == 0) {
+                        callback('email invalid', false)
+                        return;
+                    } else {
+                        const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+                            expiresIn: 86400,
+                        })
+                    
+                        return callback(null, { token, success: true })
+                    }
+                }
+                catch (err) {
+                    console.error(err)
+                    sql.close();
+                    return;
+                }
+            });
+        }
+    });
+}
+
+function sigin(user, callback) {
+
+    sql.connect(config, async function (err) {
+        if (err) {
+            callback(err, false)
+            return;
         } else {
             let request = new sql.Request();
 
@@ -60,6 +93,7 @@ function read(user, callback) {
                 try {
                     if (recordset.length == 0) {
                         callback('user invalid', false)
+                        return;
                     } else {
                         if (await bcrypt.compare(user.senha, recordset[0].senha)) {
                             
@@ -67,15 +101,17 @@ function read(user, callback) {
                                 expiresIn: 86400,
                             })
                         
-                            callback(null, { token, success: true })
+                            return callback(null, { token, success: true })
                         } else {
                             callback('user or password incorrect', false)
+                            return;
                         }
                     }
                 }
                 catch (err) {
                     console.error(err)
                     sql.close();
+                    return;
                 }
             });
         }
@@ -97,7 +133,7 @@ async function sendEmail(user, callback) {
     }
 
     email.sendMail(message, function (err, info) {
-        if (err) { callback(err, false) } else { callback(null, { success: true }) }
+        if (err) { return callback(err, false) } else { return callback(null, { success: true }) }
     });
 }
 
@@ -108,13 +144,13 @@ async function sendSms(user, callback) {
             from: '+14158549567',
             to: '+55' + user.celular
         })
-        .catch(err => callback(err, false))
+        .catch(err => { return callback(err, false) })
 
     const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
         expiresIn: 86400,
     })
 
-    callback(null, { token, success: true })
+    return callback(null, { token, success: true })
 }
 
 function generateOTP() {
@@ -126,4 +162,4 @@ function generateOTP() {
     return OTP;
 }
 
-module.exports = { create, read, sendEmail, sendSms }
+module.exports = { create, read, sendEmail, sendSms, sigin }
