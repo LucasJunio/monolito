@@ -7,7 +7,7 @@ const { config, twilioconfig, email } = require('../config/settings');
 const userValidation = require("../validate/user.validation");
 const twilio = require('twilio')(twilioconfig.accountSid, twilioconfig.authToken);
 
-const tokenSms = generateOTP()
+let tokenSms;
 
 function create(user, callback) {
 
@@ -18,7 +18,9 @@ function create(user, callback) {
         } else {
             let request = new sql.Request();
             userValidation(user, async (err, result) => {
-                if (result) {                                      
+                if (result) {    
+                    
+                    tokenSms = generateOTP()
 
                     await bcrypt.genSalt(10, function (err, salt) {
                         bcrypt.hash(user.senha, salt, function (err, hash) {
@@ -144,9 +146,13 @@ async function sendSms(user, callback) {
         .create({
             body: 'Token SMS Gateway Vileve: ' + tokenSms,
             from: '+14158549567',
-            to: '+55' + mobilenumber
+            to: `+55${mobilenumber}`
         })
-        .catch(err => { return callback(err, false) })
+        .catch(err => { 
+             
+             callback(err, false)
+             return;
+         })
 
     const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
         expiresIn: 86400,
