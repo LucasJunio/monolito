@@ -29,11 +29,11 @@ stages:
         repository: $(tag)
     - task: ECRPushImage@1
       inputs:
-        awsCredentials: 'gateway-backend'
+        awsCredentials: 'vileve-authentication'
         regionName: 'us-east-1'
         imageSource: 'imagename'
         sourceImageName: '$(tag)'
         sourceImageTag: '$(Build.BuildId)'
-        repositoryName: 'repo-gateway-backend'        
+        repositoryName: 'repo-vileve-base-backend'        
         autoCreateRepository: true
         pushTag: 'homolog'  
