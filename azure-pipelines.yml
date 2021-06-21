@@ -24,7 +24,7 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: build
+        command: build 
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'        
         repository: $(tag)
     - task: ECRPushImage@1
