@@ -16,7 +16,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes  
 app.use("/", require("./src/routes"));
 
-
 // Settings
 app.set("port", process.env.HTTPPORT || 80);
 
