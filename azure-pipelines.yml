@@ -4,13 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- develop
+- homolog
 
 resources:
 - repo: self
 
 variables:
-  tag: 'image-develop-$(Build.BuildId)'
+  tag: 'image-homolog-$(Build.BuildId)'
 
 stages:
 - stage: Build
@@ -36,4 +36,4 @@ stages:
         sourceImageTag: '$(Build.BuildId)'
         repositoryName: 'repo-vileve-base-backend'        
         autoCreateRepository: true
-        pushTag: 'develop'  
+        pushTag: 'homolog'  
