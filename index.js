@@ -18,7 +18,7 @@ app.use("/", require("./src/routes"));
 
 
 // Settings
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.HTTPPORT || 80);
 
 // Starting the server
 app.listen(app.get("port"), () => {
