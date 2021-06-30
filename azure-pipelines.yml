@@ -36,4 +36,4 @@ stages:
         sourceImageTag: '$(Build.BuildId)'
         repositoryName: 'vileveway-base-backend'        
         autoCreateRepository: true
-        pushTag: 'homolog'  
+        pushTag: 'develop'  
