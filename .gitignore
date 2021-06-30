@@ -1,4 +1,5 @@
 .index.js
+.azure-pipelines.yml
 .idea/
 
 # Logs
