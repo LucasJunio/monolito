@@ -34,6 +34,6 @@ stages:
         imageSource: 'imagename'
         sourceImageName: '$(tag)'
         sourceImageTag: '$(Build.BuildId)'
-        repositoryName: 'vileveway-base-backend'        
+        repositoryName: 'vileveway-backend'        
         autoCreateRepository: true
         pushTag: 'develop'  
