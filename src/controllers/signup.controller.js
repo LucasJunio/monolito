@@ -1,25 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, read, sendEmail, sendSms } = require('../models/user');
+const { createUser } = require('../models/user');
+const { sigin } = require('../models/sigin');
+const { sendEmail, sendSms } = require('../models/validation');
 
 // Signup user
 router.post('/', async (req, res) => {
     
-    await create(req.body, (err, result) => {
+    await createUser(req.body, (err, result) => {
         if (!result) {
             res.status(400).send({ message: err });
             return;
-        } else {
+        } else {            
 
-            read(req.body, (err, result) => {
+            sigin(req.body, (err, result) => {
                 if (!result.success) {
                     res.status(400).send({ message: err });
                     return;
                 } else {
                     
-                    req.body.id = result.id
-
                     sendEmail(req.body, (err, result) => {
                         if (!result.success) {
                             res.status(400).send({ message: err });

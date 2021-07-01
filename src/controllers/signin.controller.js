@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { sigin } = require('../models/user');
+const { sigin } = require('../models/sigin');
 
-// Signup user
+// Signin user
 router.post('/', async (req, res) => {
 
     sigin(req.body, (err, result) => {
