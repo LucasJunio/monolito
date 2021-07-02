@@ -13,8 +13,8 @@ function createAccount(payload, callback) {
             let request = new sql.Request();
 
             let querysql = `insert into conta (id, banco, agencia, conta, operacao, pix) 
-                            values ('${payload.id}', '${payload.banco}', '${payload.agencia}', 
-                            '${payload.conta}', '${payload.operacao}', '${payload.pix}')`
+                            values ('${payload.conta.id}', '${payload.conta.banco}', '${payload.conta.agencia}', 
+                            '${payload.conta.conta}', '${payload.conta.operacao}', '${payload.conta.pix}')`
 
             request.query(querysql, (err, recordset) => {
                 if (err) {

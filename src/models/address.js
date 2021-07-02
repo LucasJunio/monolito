@@ -3,18 +3,14 @@ const sql = require("mssql");
 
 const { config } = require('../config/settings');
 
-function createAddreess(payload, callback) {
+function createAddreess(querysql, callback) {
 
     sql.connect(config, function (err) {
         if (err) {
             callback(err, false)
             return;
         } else {
-            let request = new sql.Request();
-
-            let querysql = `insert into endereco (id, cep, complemento, endereco, bairro) 
-                            values ('${payload.id}', '${payload.cep}', '${payload.complemento}',
-                            '${payload.endereco}', '${payload.bairro}')`
+            let request = new sql.Request();            
 
             request.query(querysql, (err, recordset) => {
                 if (err) {

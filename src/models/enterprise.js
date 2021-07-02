@@ -10,20 +10,33 @@ function createEnterprise(payload, callback) {
             callback(err, false)
             return;
         } else {
-            let request = new sql.Request();
+            let select = new sql.Request();
+            let insert = new sql.Request();
 
-            let querysql = `insert into empresa (id_pessoa, cnpj, cnae, razao_social, telefone_fixo, celular, nome_fantasia, site) 
-                            values ('${payload.id_pessoa}', '${payload.cnpj}', '${payload.cnae}', '${payload.razao_social}',
-                            '${payload.telefone_fixo}', '${payload.celular}', '${payload.nome_fantasia}', '${payload.site}')`
+            await select.query(`select id from usuario where email ='${payload.usuario.email}'`, async function (err, recordset) {
+                if (!err) {
+                    if (recordset.length == 0) {
+                        callback('email not found', false)
+                    } else {
 
-            request.query(querysql, (err, recordset) => {
-                if (err) {
-                    callback(err, false)
-                    return;
-                };
+                        let querysql = `insert into empresa (id_pessoa, cnpj, cnae, razao_social, telefone_fixo, celular, nome_fantasia, site) 
+                            values ('${recordset.id}', '${payload.empresa.cnpj}', '${payload.empresa.cnae}', '${payload.empresa.razao_social}',
+                            '${payload.empresa.telefone_fixo}', '${payload.empresa.celular}', '${payload.empresa.nome_fantasia}', '${payload.empresa.site}')`
 
-                sql.close();
-                return callback(null, { id: payload.cnpj, success:true })
+                        insert.query(querysql, (err, recordset) => {
+                            if (err) {
+                                callback(err, false)
+                                return;
+                            };
+
+                            sql.close();
+                            return callback(null, { id: payload.empresa.cnpj, success: true })
+                        });
+                    }
+                } else {
+                    console.error(err)
+                    sql.close();
+                }
             });
         }
     });
