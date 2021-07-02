@@ -5,7 +5,7 @@ const { config } = require('../config/settings');
 
 function createEnterprise(payload, callback) {
 
-    sql.connect(config, function (err) {
+    sql.connect(config, async function (err) {
         if (err) {
             callback(err, false)
             return;
@@ -20,7 +20,7 @@ function createEnterprise(payload, callback) {
                     } else {
 
                         let querysql = `insert into empresa (id_pessoa, cnpj, cnae, razao_social, telefone_fixo, celular, nome_fantasia, site) 
-                            values ('${recordset.id}', '${payload.empresa.cnpj}', '${payload.empresa.cnae}', '${payload.empresa.razao_social}',
+                            values ('${recordset[0].id}', '${payload.empresa.cnpj}', '${payload.empresa.cnae}', '${payload.empresa.razao_social}',
                             '${payload.empresa.telefone_fixo}', '${payload.empresa.celular}', '${payload.empresa.nome_fantasia}', '${payload.empresa.site}')`
 
                         insert.query(querysql, (err, recordset) => {

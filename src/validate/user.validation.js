@@ -16,8 +16,6 @@ const userSchema = Joi.object().keys({
   email: Joi.string().min(10).max(150).required(),
   celular: Joi.string().max(50).required(),
   senha: Joi.string().max(1000).required(),
-  token1: Joi.string().min(6).max(6),
-  token2: Joi.string().min(6).max(6),
 })
 
 module.exports = validationMiddleware;

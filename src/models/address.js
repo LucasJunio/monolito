@@ -19,7 +19,7 @@ function createAddreess(querysql, callback) {
                 };
 
                 sql.close();
-                return callback(null, true)
+                return callback(null, {success: true})
             });
         }
     });

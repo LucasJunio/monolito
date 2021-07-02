@@ -6,51 +6,51 @@ const { sigin } = require('../models/sigin');
 const { sendEmail, sendSms } = require('../models/validation');
 const { createPerson } = require('../models/person');
 const { createAddreess } = require('../models/address');
+const { createEnterprise } = require('../models/enterprise');
+const { createAccount } = require('../models/account');
 
 // Signup user
 router.post('/', async (req, res) => {
-    
-    console.log(req.body.usuario.nome)
 
-    await createUser(req.body, (err, result) => {
+    const { usuario, pessoa, empresa, conta, endereco_cnpj, endereco_cpf } = req.body
+    
+    await createUser(usuario, (err, result) => {
         if (!result) {
             res.status(400).send({ message: err });
             return;
         } else {
 
-            sigin(req.body, (err, result) => {
+            sigin(usuario, (err, result) => {
                 if (!result.success) {
                     res.status(400).send({ message: err });
                     return;
                 } else {
 
-                    createPerson(req.body, (err, result) => {
+                    createPerson({ usuario, pessoa }, (err, result) => {
                         if (!result.success) {
                             res.status(400).send({ message: err });
                             return;
-                        } else {
-                            req.body.id = result.id
-
+                        } else {       
+                            
                             let querysql = `insert into endereco (id, cep, complemento, endereco, numero,  bairro) 
-                            values ('${payload.endereco_cpf.id}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
-                            '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}')`
+                            values ('${result.id}', '${endereco_cpf.cep}', '${endereco_cpf.complemento}',
+                            '${endereco_cpf.endereco}', '${endereco_cpf.numero}', '${endereco_cpf.bairro}')`
 
-                            createAddreess(req.body, querysql, (err, result) => {
+                            createAddreess(querysql, (err, result) => {
                                 if (!result.success) {
                                     res.status(400).send({ message: err });
                                     return;
                                 } else {
 
-                                    createEnterprise(req.body, (err, result) => {
+                                    createEnterprise({usuario, empresa}, (err, result) => {
                                         if (!result.success) {
                                             res.status(400).send({ message: err });
                                             return;
-                                        } else {
-                                            req.body.id = result.id
+                                        } else {                                            
 
                                             let querysql = `insert into endereco (id, cep, complemento, endereco, numero,  bairro) 
-                                            values ('${payload.endereco_cnpj.id}', '${payload.endereco_cnpj.cep}', '${payload.endereco_cnpj.complemento}',
-                                            '${payload.endereco_cnpj.endereco}', '${payload.endereco_cnpj.numero}', '${payload.endereco_cnpj.bairro}')`
+                                            values ('${result.id}', '${endereco_cnpj.cep}', '${endereco_cnpj.complemento}',
+                                            '${endereco_cnpj.endereco}', '${endereco_cnpj.numero}', '${endereco_cnpj.bairro}')`
 
                                             createAddreess(querysql, (err, result) => {
                                                 if (!result.success) {
@@ -58,18 +58,18 @@ router.post('/', async (req, res) => {
                                                     return;
                                                 } else {
 
-                                                    createAccount(req.body, (err, result) => {
+                                                    createAccount(conta, (err, result) => {
                                                         if (!result.success) {
                                                             res.status(400).send({ message: err });
                                                             return;
                                                         } else {
 
-                                                            sendEmail(req.body, (err, result) => {
+                                                            sendEmail(usuario, (err, result) => {
                                                                 if (!result.success) {
                                                                     res.status(400).send({ message: err });
                                                                     returnGE;
                                                                 } else {
-                                                                    sendSms(req.body, (err, result) => {
+                                                                    sendSms(usuario, (err, result) => {
                                                                         if (!result.success) {
                                                                             res.status(400).send({ message: err });
                                                                             return;

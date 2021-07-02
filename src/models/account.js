@@ -13,8 +13,8 @@ function createAccount(payload, callback) {
             let request = new sql.Request();
 
             let querysql = `insert into conta (id, banco, agencia, conta, operacao, pix) 
-                            values ('${payload.conta.id}', '${payload.conta.banco}', '${payload.conta.agencia}', 
-                            '${payload.conta.conta}', '${payload.conta.operacao}', '${payload.conta.pix}')`
+                            values ('${payload.id}', '${payload.banco}', '${payload.agencia}', 
+                            '${payload.conta}', '${payload.operacao}', '${payload.pix}')`
 
             request.query(querysql, (err, recordset) => {
                 if (err) {
@@ -23,7 +23,7 @@ function createAccount(payload, callback) {
                 };
 
                 sql.close();
-                return callback(null, { id: payload.cpf, success:true })
+                return callback(null, { success: true })
             });
         }
     });

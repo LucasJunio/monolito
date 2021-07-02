@@ -7,14 +7,14 @@ const twilio = require('twilio')(twilioconfig.accountSid, twilioconfig.authToken
 
 async function sendEmail(payload, callback) {
 
-    const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {})
+    const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {})
 
     const message = {
         from: 'contato@vilevepay.com.br',
-        to: payload.usuario.email,
+        to: payload.email,
         subject: 'Confirmação de Conta Vileve',
         html: `
-        Olá ${payload.usuario.nome}, <br>
+        Olá ${payload.nome}, <br>
         <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
         <br> <a href='http://localhost:3000/validation/email/${token}'>Clique para confirmar sua conta</a> <br>  `
     }
@@ -32,13 +32,13 @@ async function sendSms(payload, callback) {
         } else {
             let select = new sql.Request();
 
-            await select.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${payload.usuario.email}'`, async function (err, recordset) {
+            await select.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${payload.email}'`, async function (err, recordset) {
                 if (!err) {
                     if (recordset.length == 0) {
                         callback('email not found', false)
                     } else {                        
 
-                        const mobilenumber = payload.usuario.celular.toString().replace(/[() -]/g, '')
+                        const mobilenumber = payload.celular.toString().replace(/[() -]/g, '')
 
                         twilio.messages
                             .create({
@@ -52,7 +52,7 @@ async function sendSms(payload, callback) {
                                 return;
                             })
 
-                        const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
+                        const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {
                             expiresIn: 86400,
                         })
 

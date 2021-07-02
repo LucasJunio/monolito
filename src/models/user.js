@@ -8,8 +8,6 @@ const userValidation = require("../validate/user.validation");
 
 function createUser(payload, callback) {
 
-    console.log(payload.usuario.nome)
-
     sql.connect(config, function (err) {
         if (err) {
             callback(err, false)
@@ -19,14 +17,13 @@ function createUser(payload, callback) {
             userValidation(payload, async (err, result) => {
                 if (result) {         
                     
-                    console.log("teste"+payload.usuario.nome)
-                    
                     await bcrypt.genSalt(10, function (err, salt) {
-                        bcrypt.hash(payload.usuario.senha, salt, function (err, hash) {
+                        bcrypt.hash(payload.senha, salt, function (err, hash) {
 
                             let querysql = `insert into usuario
                                     (data, nome, email, celular, senha, token_sms, validacao) 
-                                    values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}', '${payload.usuario.celular}',
+                                    values (GETDATE(), '${payload.nome}', '${payload.email}', 
+                                    '${payload.celular}',
                                     '${hash}', '${generateOTP()}', 0)`
 
                             request.query(querysql, (err, recordset) => {

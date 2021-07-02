@@ -13,13 +13,14 @@ function createPerson(payload, callback) {
             let insert = new sql.Request();
             let select = new sql.Request();
 
-            await select.query(`select id from usuario where email ='${payload.usuario.email}'`, async function (err, recordset) {
+            await select.query(`select top 1 id from usuario where email ='${payload.usuario.email}'`, async function (err, recordset) {
                 if (!err) {
                     if (recordset.length == 0) {
                         callback('email not found', false)
                     } else {
+
                         let querysql = `insert into pessoa (cpf, id_usuario) 
-                            values ('${payload.pessoa.cpf}', '${recordset.id}')`
+                            values ('${payload.pessoa.cpf}', '${recordset[0].id}')`
 
                         await insert.query(querysql, (err, recordset) => {
                             if (err) {
