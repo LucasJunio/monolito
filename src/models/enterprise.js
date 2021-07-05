@@ -15,7 +15,7 @@ function createEnterprise(payload, callback) {
 
             await select.query(`select id from usuario where email ='${payload.usuario.email}'`, async function (err, recordset) {
                 if (!err) {
-                    if (recordset.length == 0) {
+                    if (recordset.length == undefined) {
                         callback('email not found', false)
                     } else {
 
