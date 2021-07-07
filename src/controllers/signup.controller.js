@@ -4,16 +4,13 @@ const router = express.Router();
 const { signup } = require('../models/signup');
 
 // Signup
-router.post('/', async (req, res) => {
+router.post('/', (req, res, next) => {
 
-    await signup(req.body, (err, result) => {
-        if (!result.success) {
-            res.status(400).send(err);
-            return;
-        } else {
-            res.status(201).send({ message: "success", token: result.token });
-        }
-    })
+    signup(req.body)
+    .then((result) => {
+        return res.status(201).send({ message: "success", token: result.token }); 
+    }).catch(err => next(err));
+
 })
 
 module.exports = router;

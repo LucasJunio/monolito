@@ -18,6 +18,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes  
 app.use("/", require("./src/routes"));
 
+
+// Error validation
+app.use((err, req, res, next) => {
+  const { name, message, stack } = err;
+  if (name === 'ValidationError') res.status(400).json({ error: message });
+  else res.status(500).json({ name, message, stack });
+  next(err);
+});
+
+// Not found 404
+app.use((req, res) => {
+  res.status(404).send("Página não encontrada!")
+})
+
 // Settings
 app.set("port", process.env.HTTPPORT || 80);
 
