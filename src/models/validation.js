@@ -5,65 +5,58 @@ const jwt = require('jsonwebtoken');
 const { config, twilioconfig, email } = require('../config/settings');
 const twilio = require('twilio')(twilioconfig.accountSid, twilioconfig.authToken);
 
-async function sendEmail(payload, callback) {
+async function sendEmail(payload) {
 
-    const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {})
+    return new Promise(async function (resolve, reject) {
 
-    const message = {
-        from: 'contato@vilevepay.com.br',
-        to: payload.email,
-        subject: 'Confirmação de Conta Vileve',
-        html: `
-        Olá ${payload.nome}, <br>
-        <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
-        <br> <a href='http://localhost:3000/validation/email/${token}'>Clique para confirmar sua conta</a> <br>  `
-    }
+        const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {})
 
-    email.sendMail(message, function (err, info) {
-        if (err) { return callback(err, false) } else { return callback(null, { success: true }) }
-    });
+        const message = {
+            from: 'contato@vilevepay.com.br',
+            to: payload.email,
+            subject: 'Confirmação de Conta Vileve',
+            html: `
+            Olá ${payload.nome}, <br>
+            <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
+            <br> <a href='http://localhost:3000/validation/email/${token}'>Clique para confirmar sua conta</a> <br>  `
+        }
+
+        email.sendMail(message, function (err, info) {
+            if (err) reject({ name: 'E-mail não enviado.', message: err })
+            resolve()
+        });
+    })
 }
 
-async function sendSms(payload, callback) {
+async function sendSms(payload) {
 
-    sql.connect(config, async function (err) {
-        if (err) {
-            callback(err, false)
-        } else {
-            let select = new sql.Request();
+    return new Promise(async function (resolve, reject) {
 
-            await select.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${payload.email}'`, async function (err, recordset) {
-                if (!err) {
-                    if (recordset.length == 0) {
-                        callback('email not found', false)
-                    } else {                        
+        sql.connect(config, async function (err) {
 
-                        const mobilenumber = payload.celular.toString().replace(/[() -]/g, '')
+            if (err) reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
-                        twilio.messages
-                            .create({
-                                body: 'Vileve Way - Token: ' + recordset[0].token1,
-                                from: '+14158549567',
-                                to: `+55${mobilenumber}`
-                            })
-                            .catch(err => {
+            let request = new sql.Request();
 
-                                callback(err, false)
-                                return;
-                            })
+            await request.query(`select * from usuario where email ='${payload.email}'`, async function (err, recordset) {
 
-                        const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {
-                            expiresIn: 86400,
-                        })
+                sql.close();
 
-                        return callback(null, { token, success: true })
-                    }
-                } else {
-                    console.error(err)
-                    sql.close();
-                }
+                if (err) reject({ name: 'E-mail do usuário não encontrado.', message: err })
+
+                const mobilenumber = payload.celular.toString().replace(/[() -]/g, '')
+
+                twilio.messages
+                    .create({
+                        body: 'Vileve Way - Token: ' + recordset[0].token_sms,
+                        from: '+14158549567',
+                        to: `+55${mobilenumber}`
+                    })
+                    .catch(err => reject({ name: 'E-mail do usuário não encontrado.', message: err }))
+
+                resolve()
             });
-        }
+        });
     });
 }
 
