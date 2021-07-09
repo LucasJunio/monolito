@@ -38,7 +38,7 @@ async function sendSms(payload) {
 
             let request = new sql.Request();
 
-            await request.query(`select * from usuario where email ='${payload.email}'`, async function (err, recordset) {
+            await request.query(`select u.token_sms token_sms from usuario u join pessoa p on p.id_usuario = u.id where p.cpf ='${payload.cpf}'`, async function (err, recordset) {
 
                 sql.close();
 

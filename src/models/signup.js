@@ -31,17 +31,21 @@ const signup = async (payload) => {
 
                         payload.usuario.tokenSms = generateOTP()
 
-                        let querysql = `
+                         let querysql = `
                                         BEGIN TRAN
                                         BEGIN TRY
                                         insert into usuario
-                                                (data, nome, email, celular, senha, token_sms, validacao) 
-                                                values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}', 
-                                                '${payload.usuario.celular}',
+                                                (data, nome, email, senha, token_sms, validacao) 
+                                                values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
                                                 '${hash}', '${payload.usuario.tokenSms}', 0)
 
-                                        insert into pessoa (cpf, id_usuario) 
-                                            values ('${payload.pessoa.cpf}', (SELECT SCOPE_IDENTITY()))
+                                        insert into pessoa (cpf, id_usuario, celular, emissao, 
+                                            emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
+                                            values ('${payload.pessoa.cpf}', (SELECT SCOPE_IDENTITY()), '${payload.pessoa.celular}',
+                                            '${payload.pessoa.emissao}','${payload.pessoa.emissor}', '${payload.pessoa.estado_civil}',
+                                            '${payload.pessoa.mae}', '${payload.pessoa.pai}', '${payload.pessoa.nacionalidade}',
+                                            '${payload.pessoa.nascimento}', '${payload.pessoa.naturalidade}', '${payload.pessoa.rg}',
+                                            '${payload.pessoa.sexo}')
 
                                         insert into empresa (id_pessoa, cnpj, cnae, razao_social, telefone_fixo, celular, nome_fantasia, site) 
                                             values ((SELECT SCOPE_IDENTITY()), '${payload.empresa.cnpj}', '${payload.empresa.cnae}', '${payload.empresa.razao_social}',
@@ -52,13 +56,16 @@ const signup = async (payload) => {
                                             '${payload.conta.conta}', '${payload.conta.operacao}', '${payload.conta.pix}')
 
 
-                                        insert into endereco (id, cep, complemento, endereco, numero,  bairro) 
-                                            values ('${payload.empresa.cnpj}', '${payload.endereco_cnpj.cep}', '${payload.endereco_cnpj.complemento}',
-                                            '${payload.endereco_cnpj.endereco}', '${payload.endereco_cnpj.numero}', '${payload.endereco_cnpj.bairro}')
+                                        insert into endereco (id, cep, complemento, endereco, numero,  bairro, cidade, estado) 
+                                            values ('${payload.empresa.cnpj}', '${payload.endereco_cnpj.cep}', 
+                                            '${payload.endereco_cnpj.complemento}', '${payload.endereco_cnpj.endereco}',
+                                            '${payload.endereco_cnpj.numero}', '${payload.endereco_cnpj.bairro}',
+                                            '${payload.endereco_cnpj.cidadepj}', '${payload.endereco_cnpj.estadopj}')
 
-                                        insert into endereco (id, cep, complemento, endereco, numero,  bairro) 
+                                        insert into endereco (id, cep, complemento, endereco, numero,  bairro, cidade, estado) 
                                             values ('${payload.pessoa.cpf}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
-                                            '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}')
+                                            '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
+                                            '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
                                         select * from usuario where email ='${payload.usuario.email}'
                                         COMMIT TRAN
                                         END TRY
@@ -73,12 +80,11 @@ const signup = async (payload) => {
                                         ROLLBACK TRAN
                                         END CATCH
                                         `
-
                         request.query(querysql, async function (err, recordset) {
 
                             sql.close();
-
-                            if (err) reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: recordset[0].ErrorMessage })
+ 
+                            if (recordset[0].ErrorMessage) reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: recordset[0].ErrorMessage })
 
                             const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
                                 expiresIn: 86400,
@@ -87,8 +93,7 @@ const signup = async (payload) => {
                             let error = []
 
                             sendEmail(payload.usuario).catch(err => error.push(err));
-
-                            sendSms(payload.usuario).catch(err => error.push(err));
+                            sendSms(payload.pessoa).catch(err => error.push(err));
 
                             resolve({ 
                                 message: 'Usuário cadastrado com sucesso.',
