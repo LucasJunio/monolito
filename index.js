@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", require("./src/routes"));
 
 
-// Error validation
+// Error validation  
 app.use((err, req, res, next) => {
   const { name, message, stack } = err;
   res.status(500).json({ name, message, stack });
