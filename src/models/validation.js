@@ -71,13 +71,13 @@ function validateEmail(token, callback) {
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            await select.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${decoded.email}'`, async function (err, recordset) {
+            await select.query(`select * from usuario where email ='${decoded.email}'`, async function (err, recordset) {
                 if (!err) {
                     if (recordset.length == 0) {
                         callback('email not found', false)
                     } else {
 
-                        await update.query(`UPDATE usuarios
+                        await update.query(`update usuario
                                             set validacao = ( case
                                                                 when validacao = 0 then 2                
                                                                 when validacao = 1 then 3
@@ -115,21 +115,21 @@ function validateSms(token, authHeader, callback) {
             const parts = authHeader.split(' ');
             const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
 
-            await select.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${decoded.email}'`, async function (err, recordset) {
+            await select.query(`select * from usuario where email ='${decoded.email}'`, async function (err, recordset) {
                 if (!err) {
                     if (recordset.length == 0) {
                         callback('email not found', false)
                     } else {
 
                         if (recordset[0].token1 == token) {
-                            await update.query(`UPDATE usuarios
+                            await update.query(`update usuario
                                             set validacao = ( case
                                                                 when validacao = 0 then 1                
                                                                 when validacao = 1 then 1
                                                                 when validacao = 2 then 3
                                                                 when validacao = 3 then 3
                                                              end)
-                                            WHERE email='${decoded.email}' AND validacao is not null`, async function (err, recordset) {
+                                            where email='${decoded.email}' AND validacao is not null`, async function (err, recordset) {
 
                                 if (!err) {
                                     callback(null, { success: true })
@@ -139,7 +139,7 @@ function validateSms(token, authHeader, callback) {
                                 }
                             })
                         } else {
-                            callback('invalid token1', false)
+                            callback('invalid token_sms', false)
                         }
                     }
                 } else {

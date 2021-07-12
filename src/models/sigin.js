@@ -13,7 +13,7 @@ function sigin(payload, callback) {
         } else {
             let request = new sql.Request();
 
-            await request.query(`SELECT * FROM USUARIOS WHERE EMAIL ='${payload.email}'`, async function (err, recordset) {
+            await request.query(`select * from usuario where email ='${payload.email}'`, async function (err, recordset) {
                 try {
                     if (recordset.length == 0) {
                         callback('email invalid', false)
