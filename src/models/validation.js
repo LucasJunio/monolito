@@ -121,7 +121,7 @@ function validateSms(token, authHeader, callback) {
                         callback('email not found', false)
                     } else {
 
-                        if (recordset[0].token1 == token) {
+                        if (recordset[0].token_sms == token) {
                             await update.query(`update usuario
                                             set validacao = ( case
                                                                 when validacao = 0 then 1                
