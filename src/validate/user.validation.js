@@ -12,6 +12,8 @@ const validationMiddleware = async (object, callback) => {
 }
 
 
+
+
 const userSchema = Joi.object().keys({
   nome: Joi.string().min(10).max(150).required(),
   email: Joi.string().min(10).max(150).required(),
