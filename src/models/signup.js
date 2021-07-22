@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const { config } = require('../config/settings');
-const userValidation = require('../validate/user.validation');
+const validationMiddleware = require('../validate/signup.validation');
 const { sendEmail, sendSms } = require('./validation');
 
 const signup = async (payload) => {
@@ -16,10 +16,10 @@ const signup = async (payload) => {
             if (err) reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
             let request = new sql.Request();
+            
+            validationMiddleware(payload, async (err, result) => {
 
-            userValidation(payload.usuario, async (err, result) => {
-
-                if (err) reject({ name: 'Falha na validação dos dados.', message: err })
+                if (!result) reject({ name: 'Falha na validação dos dados.', message: err })
 
                 await bcrypt.genSalt(10, function (err, salt) {
 
