@@ -30,6 +30,15 @@ const userSchema = Joi.object().keys({
   mae: Joi.string().min(10).max(150).required(),
   pai: Joi.string().min(10).max(150).required(),
 
+  cnpj: Joi.string().min(14).max(45).required(),
+  cnae: Joi.string().min(1).max(10).required(),
+  razao_social: Joi.string().min(10).max(150).required(),
+  telefone_fixo: Joi.string().min(8).max(45).required(),
+  celular: Joi.string().min(8).max(45).required(),
+  nome_fantasia: Joi.string().min(10).max(150).required(),
+  site: Joi.string().min(10).max(150).required(),
+  
+
 })
 
 module.exports = validationMiddleware;
