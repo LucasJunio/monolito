@@ -13,7 +13,12 @@ const validationMiddleware = async (object, callback) => {
 
 const personSchema = Joi.object().keys({
   
-  cpf: Joi.string().min(11).max(45).required(),
+  cpf: Joi.string().min(11).max(45).required().messages({
+    'string.base': `CPF deve ser do tipo texto.`,
+    'string.empty': `CPF não deve ser um campo vazio.`,
+    'string.min': `CPF deve ter no mínimo {#limit} caracteres.`,
+    'any.required': `CPF é um campo requerido`
+  }),
   celular: Joi.string().min(8).max(45).required(),
   nascimento: Joi.date().required(),
   naturalidade: Joi.string().min(1).max(150).required(),
