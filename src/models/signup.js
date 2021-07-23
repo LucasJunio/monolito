@@ -7,7 +7,7 @@ const { config } = require('../config/settings');
 const validationMiddleware = require('../validate/signup.validation');
 const { sendEmail, sendSms } = require('./validation');
 
-const signup = async (payload) => {
+async function signup(payload) {
 
     return new Promise(async function (resolve, reject) {
 
@@ -16,7 +16,7 @@ const signup = async (payload) => {
             if (err) reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
             let request = new sql.Request();
-            
+
             validationMiddleware(payload, async (err, result) => {
 
                 if (!result) reject({ name: 'Falha na validação dos dados.', message: err })
@@ -31,7 +31,7 @@ const signup = async (payload) => {
 
                         payload.usuario.tokenSms = generateOTP()
 
-                         let querysql = `
+                        let querysql = `
                                         BEGIN TRAN
                                         BEGIN TRY
                                         insert into usuario
@@ -83,8 +83,8 @@ const signup = async (payload) => {
                         request.query(querysql, async function (err, recordset) {
 
                             sql.close();
- 
-                            if (recordset[0].ErrorMessage) reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: recordset[0].ErrorMessage })
+
+                            if (err || recordset[0].ErrorMessage) return reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: (err) ? err.message : recordset[0].ErrorMessage })
 
                             const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
                                 expiresIn: 86400,
@@ -95,11 +95,11 @@ const signup = async (payload) => {
                             sendEmail(payload.usuario).catch(err => error.push(err));
                             sendSms(payload.pessoa).catch(err => error.push(err));
 
-                            resolve({ 
+                            return resolve({
                                 message: 'Usuário cadastrado com sucesso.',
-                                token, 
+                                token,
                                 error: error
-                            })     
+                            })
                         });
                     })
                 });
