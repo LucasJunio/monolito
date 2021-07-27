@@ -14,16 +14,11 @@ router.get('/email/:token', (req, res, next) => {
         .catch(err => next(err));
 })
 
-router.get('/sms/:token', auth, async (req, res) => {
+router.get('/sms/:token', auth, async (req, res, next) => {
 
-    validateSms(req.params.token, req.headers.authorization, (err, result) => {
-        if (!result.success) {
-            return res.status(400).json({ message: err });
-        } else {
-            res.status(200).json({ message: "success" });
-        }
-    })
-
+    validateSms(req.params.token, req.headers.authorization)
+        .then(result => res.status(200).send(result))
+        .catch(err => next(err));
 })
 
 

@@ -84,7 +84,7 @@ async function validateEmail(token) {
                                     select @@ROWCOUNT as rowsAffected
                                  `, async function (err, recordset) {
 
-                if (recordset[0].rowsAffected == 0) return reject({ name: 'não teve alteação', message: err })
+                if (err || recordset[0].rowsAffected == 0) return reject({ name: 'Email não validado.', message: err })
 
                 return resolve({ message: 'Email validado com sucesso.' })
             })
@@ -92,52 +92,38 @@ async function validateEmail(token) {
     })
 }
 
-function validateSms(token, authHeader, callback) {
+function validateSms(token, authHeader) {
 
-    sql.connect(config, async function (err) {
-        if (err) {
-            callback(err, false)
-        } else {
-            let select = new sql.Request();
-            let update = new sql.Request();
+    return new Promise(async function (resolve, reject) {
+
+        sql.connect(config, async function (err) {
+
+            if (err) return reject({ name: 'Conexão com o banco de dados falhou.' })
+
+            let querysql = new sql.Request();
 
             const parts = authHeader.split(' ');
             const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
 
-            await select.query(`select * from usuario where email ='${decoded.email}'`, async function (err, recordset) {
-                if (!err) {
-                    if (recordset.length == 0) {
-                        callback('email not found', false)
-                    } else {
+            await querysql.query(`update usuario
+                                    set validacao = ( case
+                                                        when validacao = 0 then 1                
+                                                        when validacao = 1 then 1
+                                                        when validacao = 2 then 3
+                                                        when validacao = 3 then 3
+                                                    end)
+                                    where email='${decoded.email}' AND token_sms='${token}' 
+                                    AND validacao is not null
+                                    select @@ROWCOUNT as rowsAffected
+                                `, async function (err, recordset) {
 
-                        if (recordset[0].token_sms == token) {
-                            await update.query(`update usuario
-                                            set validacao = ( case
-                                                                when validacao = 0 then 1                
-                                                                when validacao = 1 then 1
-                                                                when validacao = 2 then 3
-                                                                when validacao = 3 then 3
-                                                             end)
-                                            where email='${decoded.email}' AND validacao is not null`, async function (err, recordset) {
+                if (err || recordset[0].rowsAffected == 0) return reject({ name: 'SMS não validado.', message: err })
 
-                                if (!err) {
-                                    callback(null, { success: true })
-                                } else {
-                                    callback('not updated', false)
-                                    sql.close();
-                                }
-                            })
-                        } else {
-                            callback('invalid token_sms', false)
-                        }
-                    }
-                } else {
-                    console.error(err)
-                    sql.close();
-                }
+                return resolve({ message: 'SMS validado com sucesso.' })
             });
-        }
-    });
+        })
+    })
 }
+
 
 module.exports = { sendEmail, sendSms, validateEmail, validateSms }
