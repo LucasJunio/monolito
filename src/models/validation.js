@@ -42,7 +42,7 @@ async function sendSms(payload) {
 
                 sql.close();
 
-                if (err) return reject({ name: 'E-mail do usuário não encontrado.', message: err })
+                if (err) return reject({ name: 'Token SMS não encontrado.', message: err })
 
                 const mobilenumber = payload.celular.toString().replace(/[() -]/g, '')
 
@@ -52,7 +52,7 @@ async function sendSms(payload) {
                         from: '+14158549567',
                         to: `+55${mobilenumber}`
                     })
-                    .catch(err => reject({ name: 'E-mail do usuário não encontrado.', message: err }))
+                    .catch(err => reject({ name: 'Erro de envio TWILLIO.', message: err }))
 
                 return resolve()
             });

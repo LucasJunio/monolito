@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-async function validationAddress(payload) {
+async function validateAddress(payload) {
 
   return new Promise(async function (resolve, reject) {
 
@@ -64,4 +64,4 @@ const addressSchema = Joi.object().keys({
 
 })
 
-module.exports = { validationAddress, addressSchema }
+module.exports = { validateAddress, addressSchema }

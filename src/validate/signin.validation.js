@@ -1,10 +1,10 @@
 const Joi = require('joi');
 
-async function validateUser(payload) {
+async function validateSignin(payload) {
 
   return new Promise(async function (resolve, reject) {
 
-    const { error } = await userSchema.validate(payload)
+    const { error } = await signinSchema.validate(payload)
 
     if (error)
       return reject({ name: 'Falha na validação dos dados.', message: error })
@@ -13,15 +13,8 @@ async function validateUser(payload) {
   })
 }
 
-const userSchema = Joi.object().keys({
-  
-  nome: Joi.string().min(10).max(150).required().messages({
-    'string.base': `Nome deve ser do tipo texto.`,
-    'string.empty': `Nome não deve ser um campo vazio.`,
-    'string.max': `Nome deve ter no máximo {#limit} caracteres.`,
-    'string.min': `Nome deve ter no mínimo {#limit} caracteres.`,
-    'any.required': `Nome é um campo requerido`
-  }),
+const signinSchema = Joi.object().keys({
+
   email: Joi.string().min(10).max(150).required().messages({
     'string.base': `Email deve ser do tipo texto.`,
     'string.empty': `Email não deve ser um campo vazio.`,
@@ -39,4 +32,4 @@ const userSchema = Joi.object().keys({
 
 })
 
-module.exports = { validateUser, userSchema }
+module.exports = { validateSignin, signinSchema }

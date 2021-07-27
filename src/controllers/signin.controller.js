@@ -1,18 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const { sigin } = require('../models/sigin');
+const { signin } = require('../models/signin');
 
 // Signin user
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 
-    sigin(req.body, (err, result) => {
-        if (!result.success) {
-            return res.status(400).json({ message: err });
-        } else {
-            res.status(200).json({ message: "success ", token: result.token });
-        }
-    })
+    signin(req.body)
+        .then(result => res.status(200).send(result))
+        .catch(err => next(err));    
 })
 
 

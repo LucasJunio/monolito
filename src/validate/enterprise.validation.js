@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-async function validationEnterprise(payload) {
+async function validateEnterprise(payload) {
 
   return new Promise(async function (resolve, reject) {
 
@@ -59,4 +59,4 @@ const enterpriseSchema = Joi.object().keys({
 
 })
 
-module.exports = { validationEnterprise, enterpriseSchema }
+module.exports = { validateEnterprise, enterpriseSchema }
