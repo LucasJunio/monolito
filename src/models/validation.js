@@ -22,8 +22,8 @@ async function sendEmail(payload) {
         }
 
         email.sendMail(message, function (err, info) {
-            if (err) reject({ name: 'E-mail não enviado.', message: err })
-            resolve()
+            if (err) return reject({ name: 'E-mail não enviado.', message: err })
+            return resolve()
         });
     })
 }
@@ -34,7 +34,7 @@ async function sendSms(payload) {
 
         sql.connect(config, async function (err) {
 
-            if (err) reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+            if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
             let request = new sql.Request();
 
@@ -42,7 +42,7 @@ async function sendSms(payload) {
 
                 sql.close();
 
-                if (err) reject({ name: 'E-mail do usuário não encontrado.', message: err })
+                if (err) return reject({ name: 'E-mail do usuário não encontrado.', message: err })
 
                 const mobilenumber = payload.celular.toString().replace(/[() -]/g, '')
 
@@ -54,53 +54,42 @@ async function sendSms(payload) {
                     })
                     .catch(err => reject({ name: 'E-mail do usuário não encontrado.', message: err }))
 
-                resolve()
+                return resolve()
             });
         });
     });
 }
 
-function validateEmail(token, callback) {
 
-    sql.connect(config, async function (err) {
-        if (err) {
-            callback(err, false)
-        } else {
-            let select = new sql.Request();
-            let update = new sql.Request();
+async function validateEmail(token) {
+
+    return new Promise(async function (resolve, reject) {
+
+        await sql.connect(config, async function (err) {
+
+            if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+            let querysql = new sql.Request();
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            await select.query(`select * from usuario where email ='${decoded.email}'`, async function (err, recordset) {
-                if (!err) {
-                    if (recordset.length == 0) {
-                        callback('email not found', false)
-                    } else {
+            await querysql.query(`update usuario
+                                    set validacao = ( case
+                                                        when validacao = 0 then 2                
+                                                        when validacao = 1 then 3
+                                                        when validacao = 2 then 2
+                                                        when validacao = 3 then 3
+                                                    end)
+                                    WHERE email='${decoded.email}' AND validacao is not null
+                                    select @@ROWCOUNT as rowsAffected
+                                 `, async function (err, recordset) {
 
-                        await update.query(`update usuario
-                                            set validacao = ( case
-                                                                when validacao = 0 then 2                
-                                                                when validacao = 1 then 3
-                                                                when validacao = 2 then 2
-                                                                when validacao = 3 then 3
-                                                            end)
-                                            WHERE email='${decoded.email}' AND validacao is not null`, async function (err, recordset) {
+                if (recordset[0].rowsAffected == 0) return reject({ name: 'não teve alteação', message: err })
 
-                            if (!err) {
-                                callback(null, { success: true })
-                            } else {
-                                callback('not updated', false)
-                                sql.close();
-                            }
-                        })
-                    }
-                } else {
-                    console.error(err)
-                    sql.close();
-                }
-            });
-        }
-    });
+                return resolve({ message: 'Email validado com sucesso.' })
+            })
+        });
+    })
 }
 
 function validateSms(token, authHeader, callback) {

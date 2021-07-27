@@ -13,21 +13,21 @@ async function signup(payload) {
 
         await sql.connect(config, function (err) {
 
-            if (err) reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+            if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
             let request = new sql.Request();
 
             validationMiddleware(payload, async (err, result) => {
 
-                if (!result) reject({ name: 'Falha na validação dos dados.', message: err })
+                if (!result) return reject({ name: 'Falha na validação dos dados.', message: err })
 
                 await bcrypt.genSalt(10, function (err, salt) {
 
-                    if (err) reject({ name: 'Falha na genSalt bcrypt.', message: err })
+                    if (err) return reject({ name: 'Falha na genSalt bcrypt.', message: err })
 
                     bcrypt.hash(payload.usuario.senha, salt, function (err, hash) {
 
-                        if (err) reject({ name: 'Falha no hash da senha via bcrypt.', message: err })
+                        if (err) return reject({ name: 'Falha no hash da senha via bcrypt.', message: err })
 
                         payload.usuario.tokenSms = generateOTP()
 
@@ -48,7 +48,7 @@ async function signup(payload) {
                                             '${payload.pessoa.sexo}')
 
                                         insert into empresa (id_pessoa, cnpj, cnae, razao_social, telefone_fixo, celular, nome_fantasia, site) 
-                                            values ((SELECT SCOPE_IDENTITY()), '${payload.empresa.cnpj}', '${payload.empresa.cnae}', '${payload.empresa.razao_social}',
+                                            values ((SELECT SCOPE_IDENTITY()), '${payload.empresa.cnpj}', ${payload.empresa.cnae}, '${payload.empresa.razao_social}',
                                             '${payload.empresa.telefone_fixo}', '${payload.empresa.celular}', '${payload.empresa.nome_fantasia}', '${payload.empresa.site}')
 
                                         insert into conta (id, banco, agencia, conta, operacao, pix) 
@@ -66,7 +66,8 @@ async function signup(payload) {
                                             values ('${payload.pessoa.cpf}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
                                             '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                             '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
-                                        select * from usuario where email ='${payload.usuario.email}'
+                                        
+                                        select * from usuario where email='${payload.usuario.email}'
                                         COMMIT TRAN
                                         END TRY
                                         BEGIN CATCH
@@ -80,11 +81,12 @@ async function signup(payload) {
                                         ROLLBACK TRAN
                                         END CATCH
                                         `
-                        request.query(querysql, async function (err, recordset) {
+                                    request.query(querysql, async function (err, recordset) {
+                            
 
                             sql.close();
 
-                            if (err || recordset[0].ErrorMessage) return reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: (err) ? err.message : recordset[0].ErrorMessage })
+                            if (err || recordset[0].ErrorMessage) return reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: (err) ? 'Syntax error: ' +  err.message : 'Insert error: ' + recordset[0].ErrorMessage })
 
                             const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
                                 expiresIn: 86400,
