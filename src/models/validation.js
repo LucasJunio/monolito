@@ -18,7 +18,7 @@ async function sendEmail(payload) {
             html: `
             Olá ${payload.nome}, <br>
             <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
-            <br> <a href='http://localhost:3000/validation/email/${token}'>Clique para confirmar sua conta</a> <br>  `
+            <br> <a href='https://vileveway-backend-lb-develop.vileveway.com.br/api/v1/validation/email/${token}'>Clique para confirmar sua conta</a> <br>  `
         }
 
         email.sendMail(message, function (err, info) {
