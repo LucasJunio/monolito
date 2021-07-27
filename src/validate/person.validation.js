@@ -1,14 +1,16 @@
 const Joi = require('joi');
 
-const validationMiddleware = async (object, callback) => {
+async function validationPerson(payload) {
 
-  const { error } = await personSchema.validate(object)
+  return new Promise(async function (resolve, reject) {
 
-  if (error) {
-    callback(error, false)
-  } else {    
-    callback(null, true);
-  }
+    const { error } = await personSchema.validate(payload)
+
+    if (error)
+      return reject({ name: 'Falha na validação dos dados.', message: error })
+
+    return resolve()
+  })
 }
 
 const personSchema = Joi.object().keys({
@@ -96,4 +98,4 @@ const personSchema = Joi.object().keys({
 
 })
 
-module.exports = { validationMiddleware, personSchema }
+module.exports = { validationPerson, personSchema }
