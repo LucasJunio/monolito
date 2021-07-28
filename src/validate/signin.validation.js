@@ -7,7 +7,7 @@ async function validateSignin(payload) {
     const { error } = await signinSchema.validate(payload)
 
     if (error)
-      return reject({ name: 'Falha na validação dos dados.', message: error })
+      return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
 
     return resolve()
   })
