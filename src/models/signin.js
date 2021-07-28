@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { config } = require('../config/settings');
 const { validateSignin } = require('../validate/signin.validation');
 
-async function signin(payload, callback) {
+async function signin(payload) {
 
     return new Promise(async function (resolve, reject) {
 
@@ -13,11 +13,14 @@ async function signin(payload, callback) {
 
             if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
-            let request = new sql.Request();
-
             validateSignin(payload)
                 .then(result => {
+                    
+                    let request = new sql.Request();
+
                     request.query(`select * from usuario where email ='${payload.email}'`, async function (err, recordset) {
+
+                        sql.close();
 
                         if (err || recordset.length == 0) return reject({ name: 'Email ou senha incorreta.', message: (err) ? 'Syntax error: ' + err.message : 'Select error: ' + recordset[0].ErrorMessage })
 

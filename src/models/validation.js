@@ -83,6 +83,7 @@ async function validateEmail(token) {
                                     WHERE email='${decoded.email}' AND validacao is not null
                                     select @@ROWCOUNT as rowsAffected
                                  `, async function (err, recordset) {
+                sql.close();
 
                 if (err || recordset[0].rowsAffected == 0) return reject({ name: 'Email não validado.', message: err })
 
@@ -116,6 +117,7 @@ function validateSms(token, authHeader) {
                                     AND validacao is not null
                                     select @@ROWCOUNT as rowsAffected
                                 `, async function (err, recordset) {
+                sql.close();
 
                 if (err || recordset[0].rowsAffected == 0) return reject({ name: 'SMS não validado.', message: err })
 

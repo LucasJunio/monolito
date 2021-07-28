@@ -15,10 +15,9 @@ async function signupCNPJ(payload) {
 
             if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
-            let request = new sql.Request();
-
             validateSignupCNPJ(payload)
                 .then(result => {
+
                     bcrypt.genSalt(10, function (err, salt) {
 
                         if (err) return reject({ name: 'Falha na genSalt bcrypt.', message: err })
@@ -79,8 +78,10 @@ async function signupCNPJ(payload) {
                                             ROLLBACK TRAN
                                             END CATCH
                                             `
-                            request.query(querysql, async function (err, recordset) {
 
+                            let request = new sql.Request();
+
+                            request.query(querysql, async function (err, recordset) {
 
                                 sql.close();
 
@@ -171,7 +172,6 @@ async function signupCPF(payload) {
                                             END CATCH
                                             `
                             request.query(querysql, async function (err, recordset) {
-
 
                                 sql.close();
 
