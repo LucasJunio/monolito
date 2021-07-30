@@ -14,7 +14,7 @@ async function validatePerson(payload) {
 }
 
 const personSchema = Joi.object().keys({
-  
+
   cpf: Joi.string().min(11).max(45).required().messages({
     'string.base': `CPF deve ser do tipo número (string).`,
     'string.empty': `CPF não deve ser um campo vazio.`,
@@ -98,4 +98,14 @@ const personSchema = Joi.object().keys({
 
 })
 
-module.exports = { validatePerson, personSchema }
+const cellphoneSchema = Joi.object().keys({
+  celular: Joi.string().min(8).max(45).required().messages({
+    'string.base': `Celular deve ser do tipo número (string).`,
+    'string.min': `Celular deve ter no mínimo {#limit} caracteres.`,
+    'string.max': `Celular deve ter no máximo {#limit} caracteres.`,
+    'string.empty': `Celular não deve ser um campo vazio.`,
+    'any.required': `Celular é um campo requerido`
+  }),
+})
+
+module.exports = { validatePerson, personSchema, cellphoneSchema }
