@@ -28,7 +28,7 @@ async function sendEmail(payload) {
     })
 }
 
-async function sendSms(payload) {
+async function sendSms(token) {
 
     return new Promise(async function (resolve, reject) {
 
@@ -38,13 +38,16 @@ async function sendSms(payload) {
 
             let request = new sql.Request();
 
-            await request.query(`select u.token_sms token_sms from usuario u join pessoa p on p.id_usuario = u.id where p.cpf ='${payload.cpf}'`, async function (err, recordset) {
+            const parts = token.split(' ');
+            const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+
+            await request.query(`select * from usuario u join pessoa p on p.id_usuario = u.id where u.email ='${decoded.email}'`, async function (err, recordset) {
 
                 sql.close();
 
                 if (err) return reject({ name: 'Token SMS não encontrado.', message: err })
 
-                const mobilenumber = payload.celular.toString().replace(/[() -]/g, '')
+                const mobilenumber = recordset[0].celular.toString().replace(/[() -]/g, '')
 
                 twilio.messages
                     .create({
@@ -54,7 +57,7 @@ async function sendSms(payload) {
                     })
                     .catch(err => reject({ name: 'Erro de envio TWILLIO.', message: err }))
 
-                return resolve()
+                return resolve({ name: 'success' })
             });
         });
     });
@@ -76,7 +79,7 @@ async function validateEmail(token) {
             await querysql.query(`update usuario
                                     set validacao = (case
                                                         when validacao = 'Não validado' then 'Email validado'
-                                                        when validacao = 'SMS validado' then SMS e Email validado
+                                                        when validacao = 'SMS validado' then 'Email validado'
                                                         when validacao = 'Email validado' then 'Email validado'  
                                                         when validacao = 'SMS e Email validado' then 'SMS e Email validado'
                                                      end)
@@ -108,10 +111,10 @@ function validateSms(token, authHeader) {
 
             await querysql.query(`update usuario
                                     set validacao = ( case
-                                                        when validacao = 0 then 1                
-                                                        when validacao = 1 then 1
-                                                        when validacao = 2 then 3
-                                                        when validacao = 3 then 3
+                                                        when validacao = 'Não validado' then 'SMS validado'                
+                                                        when validacao = 'SMS validado' then 'SMS validado'
+                                                        when validacao = 'Email validado' then 'SMS e Email validado'
+                                                        when validacao = 'SMS e Email validado' then 'SMS e Email validado'
                                                     end)
                                     where email='${decoded.email}' AND token_sms='${token}' 
                                     AND validacao is not null
@@ -140,14 +143,13 @@ function returnStatusValidation(authHeader) {
                 const parts = authHeader.split(' ');
                 const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
     
-                await querysql.query(`select validacao from usuario                                    
-                                      where email='${decoded.email}'
-                                    `, async (err, recordset) => {
+                await querysql.query(`select * from usuario u join pessoa p 
+                                      on p.id_usuario = u.id where u.email ='${decoded.email}'`, async (err, recordset) => {
                     await sql.close();
     
                     if (err || recordset === undefined) return reject({ message: err || 'Registro não encontrado.' })
     
-                    return resolve({ name: 'success', message: recordset[0].validacao })
+                    return resolve({ name: 'success', message: recordset[0].validacao, celular: recordset[0].celular })
                 });
             })
             

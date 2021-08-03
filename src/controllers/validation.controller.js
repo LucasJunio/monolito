@@ -4,7 +4,7 @@ require('dotenv').config()
 
 const auth = require('../middleware/auth');
 
-const { validateEmail, validateSms, returnStatusValidation } = require('../models/validation');
+const { validateEmail, validateSms, sendSms, returnStatusValidation } = require('../models/validation');
 
 
 router.get('/email/:token', (req, res, next) => {
@@ -24,6 +24,15 @@ router.get('/sms/:token', auth, async (req, res, next) => {
 router.get('/status', auth, async (req, res, next) => {
     try {
         const result = await returnStatusValidation(req.headers.authorization)
+        res.status(200).send(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/resendsms', auth, async (req, res, next) => {
+    try {
+        const result = await sendSms(req.headers.authorization)
         res.status(200).send(result)
     } catch (error) {
         next(error)
