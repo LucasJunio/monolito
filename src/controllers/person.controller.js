@@ -3,11 +3,15 @@ const router = express.Router();
 
 const { updateCellphone } = require('../models/person');
 
-router.put('/cellphone', async (req, res, next) => {
+const auth = require('../middleware/auth');
 
-    updateCellphone(req.body)
-        .then(result => res.status(200).send(result))
-        .catch(err => next(err));    
+router.put('/cellphone',  auth, async (req, res, next) => {
+    try {
+        const result = await updateCellphone(req.body, req.headers.authorization)
+        res.status(200).send(result)
+    } catch (error) {
+        next(error)
+    }
 })
 
 

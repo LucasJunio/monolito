@@ -98,7 +98,7 @@ const personSchema = Joi.object().keys({
 
 })
 
-const cellphoneSchema = Joi.object().keys({
+const putCellphoneSchema = Joi.object().keys({
   celular: Joi.string().min(8).max(45).required().messages({
     'string.base': `Celular deve ser do tipo número (string).`,
     'string.min': `Celular deve ter no mínimo {#limit} caracteres.`,
@@ -108,4 +108,4 @@ const cellphoneSchema = Joi.object().keys({
   }),
 })
 
-module.exports = { validatePerson, personSchema, cellphoneSchema }
+module.exports = { validatePerson, personSchema, putCellphoneSchema }
