@@ -74,12 +74,12 @@ async function validateEmail(token) {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             await querysql.query(`update usuario
-                                    set validacao = ( case
-                                                        when validacao = 0 then 2                
-                                                        when validacao = 1 then 3
-                                                        when validacao = 2 then 2
-                                                        when validacao = 3 then 3
-                                                    end)
+                                    set validacao = (case
+                                                        when validacao = 'Não validado' then 'Email validado'
+                                                        when validacao = 'SMS validado' then SMS e Email validado
+                                                        when validacao = 'Email validado' then 'Email validado'  
+                                                        when validacao = 'SMS e Email validado' then 'SMS e Email validado'
+                                                     end)
                                     WHERE email='${decoded.email}' AND validacao is not null
                                     select @@ROWCOUNT as rowsAffected
                                  `, async function (err, recordset) {
@@ -127,5 +127,34 @@ function validateSms(token, authHeader) {
     })
 }
 
+function returnStatusValidation(authHeader) {
 
-module.exports = { sendEmail, sendSms, validateEmail, validateSms }
+    return new Promise(async (resolve, reject) => {
+        try {
+            await sql.connect(config, async (err) => {
+    
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.' })
+    
+                let querysql = new sql.Request();
+    
+                const parts = authHeader.split(' ');
+                const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+    
+                await querysql.query(`select validacao from usuario                                    
+                                      where email='${decoded.email}'
+                                    `, async (err, recordset) => {
+                    await sql.close();
+    
+                    if (err || recordset === undefined) return reject({ message: err || 'Registro não encontrado.' })
+    
+                    return resolve({ name: 'success', message: recordset[0].validacao })
+                });
+            })
+            
+        } catch (error) {
+            reject(error)            
+        }
+    })
+}
+
+module.exports = { sendEmail, sendSms, validateEmail, validateSms, returnStatusValidation }
