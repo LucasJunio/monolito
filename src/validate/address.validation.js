@@ -55,11 +55,11 @@ const addressSchema = Joi.object().keys({
     'any.required': `Estado é um campo requerido`
   }),
   numero: Joi.string().min(1).max(45).required().messages({
-    'string.base': `Estado deve ser do tipo número (string).`,
-    'string.min': `Estado deve ter no mínimo {#limit} caracteres.`,
-    'string.max': `Estado deve ter no maximo {#limit} caracteres.`,
-    'string.empty': `Estado não deve ser um campo vazio.`,
-    'any.required': `Estado é um campo requerido`
+    'string.base': `Número deve ser do tipo número (string).`,
+    'string.min': `Número deve ter no mínimo {#limit} caracteres.`,
+    'string.max': `Número deve ter no maximo {#limit} caracteres.`,
+    'string.empty': `Número não deve ser um campo vazio.`,
+    'any.required': `Número é um campo requerido`
   }),
 
 })

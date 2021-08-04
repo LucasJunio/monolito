@@ -34,7 +34,7 @@ async function signupCNPJ(payload) {
                                             insert into usuario
                                                     (data, nome, email, senha, token_sms, validacao) 
                                                     values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
-                                                    '${hash}', '${payload.usuario.tokenSms}', 0)
+                                                    '${hash}', '${payload.usuario.tokenSms}', 'Não validado')
     
                                             insert into pessoa (cpf, id_usuario, celular, emissao, 
                                                 emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
@@ -94,7 +94,7 @@ async function signupCNPJ(payload) {
                                 let error = []
 
                                 sendEmail(payload.usuario).catch(err => error.push(err));
-                                sendSms(payload.pessoa).catch(err => error.push(err));
+                                sendSms(token).catch(err => error.push(err));
 
                                 return resolve({
                                     message: 'Usuário cadastrado com sucesso.',
@@ -138,7 +138,7 @@ async function signupCPF(payload) {
                                             insert into usuario
                                                     (data, nome, email, senha, token_sms, validacao) 
                                                     values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
-                                                    '${hash}', '${payload.usuario.tokenSms}', 0)
+                                                    '${hash}', '${payload.usuario.tokenSms}', 'Não validado')
     
                                             insert into pessoa (cpf, id_usuario, celular, emissao, 
                                                 emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
