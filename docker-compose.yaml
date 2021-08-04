@@ -1,9 +1,9 @@
-version: '3.0'
+version: "3.0"
 
 services:
-    # [name aplication]
-  app: 
-    restart: always    
+  # [name aplication]
+  app:
+    restart: always
     env_file:
       - .env
     build:
@@ -14,19 +14,19 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./:/app
-      - /app/node_modules      
-    entrypoint: npm start
+      - .:/app
+      - /app/node_modules
+    entrypoint: npm run dev
 
     #   [name database]
   db_gateway:
-    image:  mcr.microsoft.com/mssql/server:2019-CU10-ubuntu-20.04
+    image: mcr.microsoft.com/mssql/server:2019-CU10-ubuntu-20.04
     environment:
       - TZ=America/Belem
       - ACCEPT_EULA=Y
-      - MSSQL_AGENT_ENABLED=True  
+      - MSSQL_AGENT_ENABLED=True
       - MSSQL_SA_PASSWORD=@#Vileve123*%a
-      - MSSQL_PID=Express 
+      - MSSQL_PID=Express
     ports:
       - "1434:1433"
     volumes:

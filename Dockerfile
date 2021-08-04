@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . /app/
 
-EXPOSE 80
+EXPOSE 3002
 
-CMD [ "node", "index.js" ]
+CMD [ "npm", "run dev" ]
