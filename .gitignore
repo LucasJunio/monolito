@@ -1,6 +1,7 @@
 .index.js
 .azure-pipelines.yml
 .idea/
+.Dockerfile
 
 # Logs
 logs
