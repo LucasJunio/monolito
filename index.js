@@ -28,7 +28,7 @@ app.use((err, req, res, next) => {
   const { name, message, stack } = err;
   res.status(500).json({ name, message, stack });
   next(err);
-});
+}); 
 
 // Not found 404
 app.use((req, res) => {
