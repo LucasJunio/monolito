@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next){
-  res.setHeader('Cache-Control', 'max-age=2592000, public')
+  res.setHeader('Cache-Control', 'max-age=15, public')
   next();
 })
 
