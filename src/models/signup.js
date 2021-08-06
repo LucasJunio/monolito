@@ -94,7 +94,7 @@ async function signupCNPJ(payload) {
                                 let error = []
 
                                 sendEmail(payload.usuario).catch(err => error.push(err));
-                                sendSms(token).catch(err => error.push(err));
+                                sendSms(`Bearer ${token}`).catch(err => error.push(err));
 
                                 return resolve({
                                     message: 'Usuário cadastrado com sucesso.',
@@ -184,7 +184,7 @@ async function signupCPF(payload) {
                                 let error = []
 
                                 sendEmail(payload.usuario).catch(err => error.push(err));
-                                sendSms(token).catch(err => error.push(err));
+                                sendSms(`Bearer ${token}`).catch(err => error.push(err));
 
                                 return resolve({
                                     message: 'Usuário cadastrado com sucesso.',
