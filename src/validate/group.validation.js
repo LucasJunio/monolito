@@ -10,4 +10,17 @@ const postGroupSchema = Joi.object().keys({
   }),
 })
 
-module.exports = { postGroupSchema }
+const relationshipUserGroupSchema = Joi.object().keys({
+  fk_id_usu_adm: Joi.number().required().messages({
+    'number.base': `fk_id_usu_adm deve ser do tipo número (int).`,
+    'number.empty': `fk_id_usu_adm não deve ser um campo vazio.`,
+    'any.required': `fk_id_usu_adm é um campo requerido`
+  }),
+  fk_id_grupo: Joi.number().required().messages({
+    'number.base': `fk_id_grupo deve ser do tipo número (int).`,
+    'number.empty': `fk_id_grupo não deve ser um campo vazio.`,
+    'any.required': `fk_id_grupo é um campo requerido`
+  }),
+})
+
+module.exports = { postGroupSchema, relationshipUserGroupSchema }
