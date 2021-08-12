@@ -1,5 +1,6 @@
 require('dotenv').config()
 const sql = require("mssql");
+const jwt = require("jsonwebtoken");
 
 const { config } = require('../config/settings');
 
@@ -91,6 +92,40 @@ async function relationshipUserGroup(payload) {
     });
 }
 
+async function returnRelationshipUserGroup(token) {
 
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
 
-module.exports = { createGroup, readGroup, relationshipUserGroup }
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+                let request = new sql.Request();
+
+                // const parts = token.split(" ");
+                // const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+
+                request.query(`
+                        SELECT gp.nome
+                        FROM grupo gp
+                        INNER JOIN usu_admin_grupo uag 
+                            ON gp.id = uag.fk_id_grupo 
+                        INNER JOIN usuario_admin ua
+                            ON ua.id = uag.fk_id_usu_adm    
+                        WHERE ua.id = 1`, async (err, recordset) => {
+
+                    await sql.close();
+
+                    if (err) return reject({ name: 'Error', message: err })
+
+                    return resolve({ name: 'success', message: recordset })
+                });
+            });
+        } catch (error) {
+            await sql.close();
+            return reject(error)
+        }
+    });
+}
+
+module.exports = { createGroup, readGroup, relationshipUserGroup, returnRelationshipUserGroup }
