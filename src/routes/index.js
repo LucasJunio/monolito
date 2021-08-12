@@ -5,5 +5,6 @@ router.use('/signin', require('../controllers/signin.controller'))
 router.use('/validation', require('../controllers/validation.controller'))  
 router.use('/person', require('../controllers/person.controller'))  
 router.use('/group', require('../controllers/group.controller'))  
+router.use('/user', require('../controllers/user.controller'))  
 
 module.exports = router;
