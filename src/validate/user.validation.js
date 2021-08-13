@@ -48,14 +48,14 @@ const userAdminSchema = Joi.object().keys({
     'any.required': `Senha é um campo requerido`
   }),
   cpf: Joi.string().min(11).max(45).required().messages({
-    'string.base': `CPF deve ser do tipo número (string).`,
+    'string.base': `CPF deve ser do tipo texto (string).`,
     'string.empty': `CPF não deve ser um campo vazio.`,
     'string.max': `CPF deve ter no máximo {#limit} caracteres.`,
     'string.min': `CPF deve ter no mínimo {#limit} caracteres.`,
     'any.required': `CPF é um campo requerido`
   }),
   status: Joi.string().min(1).max(45).required().messages({
-    'string.base': `Status deve ser do tipo número (string).`,
+    'string.base': `Status deve ser do tipo texto (string).`,
     'string.empty': `Status não deve ser um campo vazio.`,
     'string.max': `Status deve ter no máximo {#limit} caracteres.`,
     'string.min': `Status deve ter no mínimo {#limit} caracteres.`,
