@@ -103,9 +103,7 @@ async function putUserAdmin(payload, authHeader) {
 
                     await sql.close();
 
-                    console.log(recordset)
-
-                    if (err) return reject({ name: 'Registro não encontrado.', message: err })
+                    if (err) return reject({ name: 'Usuário administrativo não atualizado.', message: err })
 
                     return resolve({ name: 'success' })
                 });
@@ -116,4 +114,35 @@ async function putUserAdmin(payload, authHeader) {
     });
 }
 
-module.exports = { createUserAdmin, readUserAdmin, putUserAdmin }
+async function delUserAdmin(authHeader) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
+
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+                let request = new sql.Request();
+
+                const parts = authHeader.split(' ');
+                const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+
+                request.query(`delete 
+                               from usuario_admin
+                               where email ='${decoded.email}'
+                               select @@ROWCOUNT as rowsAffected`, async (err, recordset) => {
+
+                    await sql.close();
+
+                    if (err) return reject({ name: 'Usuário administrativo não deletado.', message: err })
+
+                    return resolve({ name: 'success' })
+                });
+            });
+        } catch (error) {
+            reject(error)
+        }
+    });
+}
+
+module.exports = { createUserAdmin, readUserAdmin, putUserAdmin, delUserAdmin }
