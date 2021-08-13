@@ -48,5 +48,32 @@ async function createUserAdmin(payload) {
     });
 }
 
+async function readUserAdmin() {
 
-module.exports = { createUserAdmin }
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
+
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+                let request = new sql.Request();
+
+                request.query(`select * from usuario_admin`, async (err, recordset) => {
+
+                    await sql.close();
+
+                    if (err) return reject({ name: 'Error', message: err })
+
+                    return resolve({ name: 'success', message: recordset })
+                });
+            });
+        } catch (error) {
+            await sql.close();
+            return reject(error)
+        }
+    });
+}
+
+
+
+module.exports = { createUserAdmin, readUserAdmin }
