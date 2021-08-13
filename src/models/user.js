@@ -1,6 +1,7 @@
 require('dotenv').config()
 const sql = require("mssql");
 const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 
 const { config } = require('../config/settings');
 
@@ -75,5 +76,44 @@ async function readUserAdmin() {
 }
 
 
+async function putUserAdmin(payload, authHeader) {
 
-module.exports = { createUserAdmin, readUserAdmin }
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
+
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+                const { error } = await userAdminSchema.validate(payload)
+
+                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+
+                let request = new sql.Request();
+
+                const parts = authHeader.split(' ');
+                const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+
+                request.query(`update ua 
+                                set email ='${payload.email}', nome ='${payload.nome}', 
+                                status ='${payload.status}', cpf ='${payload.cpf}'
+                                from 
+                                usuario_admin ua
+                                where ua.email ='${decoded.email}'
+                                select @@ROWCOUNT as rowsAffected`, async (err, recordset) => {
+
+                    await sql.close();
+
+                    console.log(recordset)
+
+                    if (err) return reject({ name: 'Registro não encontrado.', message: err })
+
+                    return resolve({ name: 'success' })
+                });
+            });
+        } catch (error) {
+            reject(error)
+        }
+    });
+}
+
+module.exports = { createUserAdmin, readUserAdmin, putUserAdmin }

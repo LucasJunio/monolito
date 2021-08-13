@@ -3,11 +3,20 @@ const router = express.Router();
 
 const auth = require('../middleware/auth');
 
-const { createUserAdmin, readUserAdmin } = require('../models/user');
+const { createUserAdmin, readUserAdmin, putUserAdmin } = require('../models/user');
 
 router.get('/',  auth, async (req, res, next) => {
     try {
         const result = await readUserAdmin()
+        res.status(200).send(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.put('/',  auth, async (req, res, next) => {
+    try {
+        const result = await putUserAdmin(req.body, req.headers.authorization)
         res.status(200).send(result)
     } catch (error) {
         next(error)
