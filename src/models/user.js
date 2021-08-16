@@ -19,8 +19,6 @@ async function createUserAdmin(payload) {
 
                 if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
 
-                let request = new sql.Request();
-
                 bcrypt.genSalt(10, function (err, salt) {
 
                     if (err) return reject({ name: 'Falha na genSalt bcrypt.', message: err })
@@ -29,18 +27,20 @@ async function createUserAdmin(payload) {
 
                         if (err) return reject({ name: 'Falha no hash da senha via bcrypt.', message: err })
 
+                        let request = new sql.Request();
+
                         request.query(`insert into usuario_admin (nome, email, senha, cpf, status) 
                                         values ('${payload.nome}', '${payload.email}', 
-                                        '${payload.senha}', '${payload.cpf}', '${payload.status}')`, async (err, recordset) => {
+                                        '${hash}', '${payload.cpf}', '${payload.status}')`, async (err, recordset) => {
 
                             await sql.close();
-        
+
                             if (err) return reject({ name: 'Usuário administrativo não cadastrado.', message: err })
-        
+
                             return resolve({ name: 'success' })
-                        });                     
+                        });
                     })
-                });                
+                });
             });
         } catch (error) {
             await sql.close();
