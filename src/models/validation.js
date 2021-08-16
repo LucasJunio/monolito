@@ -65,6 +65,7 @@ async function sendSms(token) {
               from: "+14158549567",
               to: `+55${mobilenumber}`,
             })
+            .then(result => console.log(result))
             .catch((err) =>
               reject({ name: "Erro de envio TWILLIO.", message: err })
             );
