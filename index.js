@@ -16,6 +16,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next){
   res.setHeader('Cache-Control', 'max-age=15, public')
+  res.setTimeout(3000, () => {
+    console.log('Request has timed out.');
+        res.status(408).send({ "name": "error", "message": "Request has timed out" });
+    });
   next();
 })
 
