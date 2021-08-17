@@ -66,7 +66,7 @@ async function sendSms(token) {
               to: `+55${mobilenumber}`,
             })
             .then(result => console.log(result))
-            .catch((err) =>{
+            .catch((err) => {
               console.log(err)
               return reject({ name: "Erro de envio TWILLIO.", message: err })
             });
@@ -80,19 +80,20 @@ async function sendSms(token) {
 
 async function validateEmail(token) {
   return new Promise(async function (resolve, reject) {
-    await sql.connect(config, async function (err) {
-      if (err)
-        return reject({
-          name: "Conexão com o banco de dados falhou.",
-          message: err,
-        });
+    try {
+      await sql.connect(config, async function (err) {
+        if (err)
+          return reject({
+            name: "Conexão com o banco de dados falhou.",
+            message: err,
+          });
 
-      let querysql = new sql.Request();
+        let querysql = new sql.Request();
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      await querysql.query(
-        `update usuario
+        await querysql.query(
+          `update usuario
                                     set validacao = (case
                                                         when validacao = 'Não validado' then 'Email validado'
                                                         when validacao = 'SMS validado' then 'SMS e Email validado'
@@ -102,51 +103,58 @@ async function validateEmail(token) {
                                     WHERE email='${decoded.email}' AND validacao is not null
                                     select @@ROWCOUNT as rowsAffected
                                  `,
-        async function (err, recordset) {
-          sql.close();
+          async function (err, recordset) {
+            sql.close();
 
-          if (err || recordset[0].rowsAffected == 0)
-            return reject({ name: "Email não validado.", message: err });
+            if (err || recordset[0].rowsAffected == 0)
+              return reject({ name: "Email não validado.", message: err });
 
-          return resolve({ message: "Email validado com sucesso." });
-        }
-      );
-    });
+            return resolve({ message: "Email validado com sucesso." });
+          }
+        );
+      });
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
 function validateSms(token, authHeader) {
   return new Promise(async function (resolve, reject) {
-    sql.connect(config, async function (err) {
-      if (err) return reject({ name: "Conexão com o banco de dados falhou." });
+    try {
+      sql.connect(config, async function (err) {
+        if (err) return reject({ name: "Conexão com o banco de dados falhou." });
 
-      let querysql = new sql.Request();
+        let querysql = new sql.Request();
 
-      const parts = authHeader.split(" ");
-      const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+        const parts = authHeader.split(" ");
+        const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
 
-      await querysql.query(
-        `update usuario
-                                    set validacao = ( case
-                                                        when validacao = 'Não validado' then 'SMS validado'                
-                                                        when validacao = 'SMS validado' then 'SMS validado'
-                                                        when validacao = 'Email validado' then 'SMS e Email validado'
-                                                        when validacao = 'SMS e Email validado' then 'SMS e Email validado'
-                                                    end)
-                                    where email='${decoded.email}' AND token_sms='${token}' 
-                                    AND validacao is not null
-                                    select @@ROWCOUNT as rowsAffected
-                                `,
-        async function (err, recordset) {
-          sql.close();
+        await querysql.query(
+          `update usuario
+                                      set validacao = ( case
+                                                          when validacao = 'Não validado' then 'SMS validado'                
+                                                          when validacao = 'SMS validado' then 'SMS validado'
+                                                          when validacao = 'Email validado' then 'SMS e Email validado'
+                                                          when validacao = 'SMS e Email validado' then 'SMS e Email validado'
+                                                      end)
+                                      where email='${decoded.email}' AND token_sms='${token}' 
+                                      AND validacao is not null
+                                      select @@ROWCOUNT as rowsAffected
+                                  `,
+          async function (err, recordset) {
+            sql.close();
 
-          if (err || recordset[0].rowsAffected == 0)
-            return reject({ name: "SMS não validado.", message: err });
+            if (err || recordset[0].rowsAffected == 0)
+              return reject({ name: "SMS não validado.", message: err });
 
-          return resolve({ message: "SMS validado com sucesso." });
-        }
-      );
-    });
+            return resolve({ message: "SMS validado com sucesso." });
+          }
+        );
+      });
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 

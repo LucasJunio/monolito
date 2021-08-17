@@ -7,18 +7,22 @@ const auth = require('../middleware/auth');
 const { validateEmail, validateSms, sendSms, returnStatusValidation } = require('../models/validation');
 
 
-router.get('/email/:token', (req, res, next) => {
-
-    validateEmail(req.params.token)
-        .then(result => res.status(200).send(result))
-        .catch(err => next(err));
+router.get('/email/:token', async (req, res, next) => {
+    try {
+        const result = await validateEmail(req.params.token)
+        res.status(200).send(result)
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.get('/sms/:token', auth, async (req, res, next) => {
-
-    validateSms(req.params.token, req.headers.authorization)
-        .then(result => res.status(200).send(result))
-        .catch(err => next(err));
+    try {
+        const result = await validateSms(req.params.token, req.headers.authorization)
+        res.status(200).send(result)
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.get('/status', auth, async (req, res, next) => {

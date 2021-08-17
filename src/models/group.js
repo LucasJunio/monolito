@@ -26,7 +26,7 @@ async function createGroup(payload) {
 
                     if (err) return reject({ name: 'Grupo não cadastrado.', message: err })
 
-                    return resolve({ name: 'success' })
+                    return resolve({ name: 'success', message: 'Grupo cadastrado.' })
                 });
             });
         } catch (error) {

@@ -5,10 +5,12 @@ const { signin, signinAdmin } = require('../models/signin');
 
 // Signin user
 router.post('/', async (req, res, next) => {
-
-    signin(req.body)
-        .then(result => res.status(200).send(result))
-        .catch(err => next(err));    
+    try {
+        const result = await signin(req.body)
+        res.status(200).send(result)
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.post('/admin', async (req, res, next) => {

@@ -7,37 +7,40 @@ const { validateSignin, signinSchema } = require('../validate/signin.validation'
 
 async function signin(payload) {
 
-    return new Promise(async function (resolve, reject) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
 
-        sql.connect(config, async function (err) {
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
-            if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                const { error } = await signinSchema.validate(payload)
 
-            validateSignin(payload)
-                .then(result => {
-                    
-                    let request = new sql.Request();
+                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
 
-                    request.query(`select * from usuario where email ='${payload.email}'`, async function (err, recordset) {
+                let request = new sql.Request();
 
-                        sql.close();
+                request.query(`select * from usuario where email ='${payload.email}'`, async function (err, recordset) {
 
-                        if (err || recordset.length == 0) return reject({ name: 'Email ou senha incorreta.', message: (err) ? 'Syntax error: ' + err.message : 'Select error: ' + recordset[0].ErrorMessage })
+                    sql.close();
 
-                        if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
+                    if (err || recordset.length == 0) return reject({ name: 'Email incorreto.', message:  'Syntax error: ' + err.message })
 
-                            const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {
-                                expiresIn: 86400,
-                            })
+                    if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
 
-                            return resolve({ message: 'Usuário logado.', token })
+                        const token = await jwt.sign({ email: payload.email }, process.env.JWT_SECRET, {
+                            expiresIn: 86400,
+                        })
 
-                        } else { return reject({ name: 'Email ou senha incorreta.' }) }
-                    });
-                })
-                .catch(err => reject(err));
-        });
-    })
+                        return resolve({ message: 'Usuário logado.', token })
+
+                    } else { return reject({ name: 'Senha incorreta.' }) }
+                });
+            });
+        } catch (error) {
+            await sql.close();
+            return reject(error)
+        }
+    });
 }
 
 async function signinAdmin(payload) {
