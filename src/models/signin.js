@@ -61,7 +61,7 @@ async function signinAdmin(payload) {
 
                     sql.close();
 
-                    if (err || recordset.length == 0) return reject({ name: 'Email incorreto.', message:  'Syntax error: ' + err.message })
+                    if (err || recordset.length == 0) return reject({ name: 'Email incorreto.', message:  'Syntax error: ' + err })
 
                     if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
 

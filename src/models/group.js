@@ -92,7 +92,7 @@ async function relationshipUserGroup(payload) {
     });
 }
 
-async function returnRelationshipUserGroup(token) {
+async function returnRelationshipUserGroup(id) {
 
     return new Promise(async (resolve, reject) => {
         try {
@@ -102,9 +102,6 @@ async function returnRelationshipUserGroup(token) {
 
                 let request = new sql.Request();
 
-                // const parts = token.split(" ");
-                // const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
-
                 request.query(`
                         SELECT gp.nome
                         FROM grupo gp
@@ -112,7 +109,7 @@ async function returnRelationshipUserGroup(token) {
                             ON gp.id = uag.fk_id_grupo 
                         INNER JOIN usuario_admin ua
                             ON ua.id = uag.fk_id_usu_adm    
-                        WHERE ua.id = 1`, async (err, recordset) => {
+                        WHERE ua.id = ${id}`, async (err, recordset) => {
 
                     await sql.close();
 

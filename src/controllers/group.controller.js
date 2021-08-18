@@ -35,9 +35,9 @@ router.post('/user-group',  auth, async (req, res, next) => {
     }
 })
 
-router.get('/user-group',  auth, async (req, res, next) => {
+router.get('/user-group/:id',  auth, async (req, res, next) => {
     try {
-        const result = await returnRelationshipUserGroup(req.body)
+        const result = await returnRelationshipUserGroup(req.params.id)
         res.status(200).send(result)
     } catch (error) {
         next(error)
