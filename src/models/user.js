@@ -19,29 +19,19 @@ async function createUserAdmin(payload) {
 
                 if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
 
-                bcrypt.genSalt(10, function (err, salt) {
+                let request = new sql.Request();
 
-                    if (err) return reject({ name: 'Falha na genSalt bcrypt.', message: err })
+                request.query(`insert into usuario_admin (nome, email, status) 
+                                values ('${payload.nome}', '${payload.email}', 
+                                '${payload.status}')
+                                select * from usuario_admin where email='${payload.email}'
+                                `, async (err, recordset) => {
 
-                    bcrypt.hash(payload.senha, salt, function (err, hash) {
+                    await sql.close();
 
-                        if (err) return reject({ name: 'Falha no hash da senha via bcrypt.', message: err })
+                    if (err) return reject({ name: 'Usuário administrativo não cadastrado.', message: err })
 
-                        let request = new sql.Request();
-
-                        request.query(`insert into usuario_admin (nome, email, senha, cpf, status) 
-                                        values ('${payload.nome}', '${payload.email}', 
-                                        '${hash}', '${payload.cpf}', '${payload.status}')
-                                        select * from usuario_admin where email='${payload.email}'
-                                        `, async (err, recordset) => {
-
-                            await sql.close();
-
-                            if (err) return reject({ name: 'Usuário administrativo não cadastrado.', message: err })
-
-                            return resolve({ name: 'success', message: [{ id: recordset[0].id, nome: recordset[0].nome }]})
-                        });
-                    })
+                    return resolve({ name: 'success', message: [{ id: recordset[0].id, nome: recordset[0].nome }] })
                 });
             });
         } catch (error) {
