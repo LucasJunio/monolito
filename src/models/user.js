@@ -31,13 +31,15 @@ async function createUserAdmin(payload) {
 
                         request.query(`insert into usuario_admin (nome, email, senha, cpf, status) 
                                         values ('${payload.nome}', '${payload.email}', 
-                                        '${hash}', '${payload.cpf}', '${payload.status}')`, async (err, recordset) => {
+                                        '${hash}', '${payload.cpf}', '${payload.status}')
+                                        select * from usuario_admin where email='${payload.email}'
+                                        `, async (err, recordset) => {
 
                             await sql.close();
 
                             if (err) return reject({ name: 'Usuário administrativo não cadastrado.', message: err })
 
-                            return resolve({ name: 'success' })
+                            return resolve({ name: 'success', message: [{ id: recordset[0].id, nome: recordset[0].nome }]})
                         });
                     })
                 });
