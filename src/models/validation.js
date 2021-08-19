@@ -59,6 +59,8 @@ async function sendSms(token) {
             .toString()
             .replace(/[() -]/g, "");
 
+            console.log(twilio)
+
           twilio.messages
             .create({
               body: "Vileve Way - Token: " + recordset[0].token_sms,
