@@ -51,7 +51,7 @@ async function sendSms(token) {
         `select * from usuario u join pessoa p on p.id_usuario = u.id where u.email ='${decoded.email}'`,
         async function (err, recordset) {
           sql.close();
-
+ 
           if (err)
             return reject({ name: "Token SMS não encontrado.", message: err });
 
