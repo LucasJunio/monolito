@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const { config } = require('../config/settings');
 
-const { postGroupSchema, relationshipUserGroupSchema } = require('../validate/group.validation');
+const { postGroupSchema, ArrayRelationshipUserGroup } = require('../validate/group.validation');
 
 async function createGroup(payload) {
 
@@ -70,9 +70,9 @@ async function relationshipUserGroup(payload) {
 
                 if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
-                // const { error } = await relationshipUserGroupSchema.validate(payload)
+                const { error } = await ArrayRelationshipUserGroup.validate(payload)
 
-                // if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
 
                 let request = new sql.Request();
 

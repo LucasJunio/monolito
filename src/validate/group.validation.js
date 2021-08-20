@@ -23,4 +23,6 @@ const relationshipUserGroupSchema = Joi.object().keys({
   }),
 })
 
-module.exports = { postGroupSchema, relationshipUserGroupSchema }
+const ArrayRelationshipUserGroup = Joi.array().items(relationshipUserGroupSchema)
+
+module.exports = { postGroupSchema, ArrayRelationshipUserGroup }
