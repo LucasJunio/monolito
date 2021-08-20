@@ -59,17 +59,13 @@ async function sendSms(token) {
             .toString()
             .replace(/[() -]/g, "");
 
-            console.log(twilio)
-
           twilio.messages
             .create({
               body: "Vileve Way - Token: " + recordset[0].token_sms,
               from: "+14158549567",
               to: `+55${mobilenumber}`,
             })
-            .then(result => console.log(result))
             .catch((err) => {
-              console.log(err)
               return reject({ name: "Erro de envio TWILLIO.", message: err })
             });
 
