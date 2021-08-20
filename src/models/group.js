@@ -70,20 +70,21 @@ async function relationshipUserGroup(payload) {
 
                 if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
 
-                const { error } = await relationshipUserGroupSchema.validate(payload)
+                // const { error } = await relationshipUserGroupSchema.validate(payload)
 
-                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+                // if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
 
                 let request = new sql.Request();
 
-                request.query(`insert into usu_admin_grupo (fk_id_usu_adm, fk_id_grupo) values (${payload.fk_id_usu_adm}, ${payload.fk_id_grupo})`, async (err, recordset) => {
+                for (const key in payload) {
+                    request.query(`insert into usu_admin_grupo (fk_id_usu_adm, fk_id_grupo) values (${payload[key].fk_id_usu_adm}, ${payload[key].fk_id_grupo})`, async (err, recordset) => {
+                        if (err) return reject({ name: 'Relacionamento grupo e usuário não cadastrada.', message: { grupo: payload[key].fk_id_grupo, err } })
+                    });
+                }
 
-                    await sql.close();
+                await sql.close();
 
-                    if (err) return reject({ name: 'Relacionamento grupo e usuário não cadastrada.', message: err })
-
-                    return resolve({ name: 'success' })
-                });
+                return resolve({ name: 'success' })
             });
         } catch (error) {
             await sql.close();

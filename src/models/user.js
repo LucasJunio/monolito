@@ -72,6 +72,31 @@ async function readUserAdmin() {
         }
     });
 }
+async function readUserAdminID(id) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
+
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+                let request = new sql.Request();
+
+                request.query(`select * from usuario_admin where id ='${id}'`, async (err, recordset) => {
+
+                    await sql.close();
+
+                    if (err) return reject({ name: 'Error', message: err })
+
+                    return resolve({ name: 'success', message: recordset })
+                });
+            });
+        } catch (error) {
+            await sql.close();
+            return reject(error)
+        }
+    });
+}
 
 
 async function putUserAdmin(payload, id) {
@@ -100,9 +125,7 @@ async function putUserAdmin(payload, id) {
                                 select 0 as rowsAffected
                                 END`, async (err, recordset) => {
 
-                    await sql.close();
-
-                    console.log(recordset)
+                    await sql.close();                    
 
                     if (err || recordset[0].rowsAffected == 0) return reject({ name: 'Usuário administrativo não atualizado.', message: (recordset[0].rowsAffected === 0) ? 'Email não cadastrado.' : err, status: 400 })
 
@@ -146,4 +169,4 @@ async function delUserAdmin(authHeader) {
     });
 }
 
-module.exports = { createUserAdmin, readUserAdmin, putUserAdmin, delUserAdmin }
+module.exports = { createUserAdmin, readUserAdmin, putUserAdmin, delUserAdmin, readUserAdminID }
