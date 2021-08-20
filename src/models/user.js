@@ -21,15 +21,21 @@ async function createUserAdmin(payload) {
 
                 let request = new sql.Request();
 
-                request.query(`insert into usuario_admin (nome, email, status) 
-                                values ('${payload.nome}', '${payload.email}', 
-                                '${payload.status}')
-                                select * from usuario_admin where email='${payload.email}'
+                request.query(` IF EXISTS(SELECT 'True' FROM usuario_admin WHERE Email= '${payload.email}')
+                                BEGIN
+                                select 0 as rowsAffected
+                                END
+                                ELSE
+                                BEGIN                                
+                                INSERT into usuario_admin (nome, email, status) 
+                                OUTPUT Inserted.id, Inserted.nome
+                                values ('${payload.nome}', '${payload.email}', '${payload.status}')
+                                END
                                 `, async (err, recordset) => {
 
                     await sql.close();
 
-                    if (err) return reject({ name: 'Usuário administrativo não cadastrado.', message: err })
+                    if (err || recordset[0].rowsAffected !== undefined) return reject({ name: 'Usuário administrativo não cadastrado.', message: (recordset[0].rowsAffected !== undefined) ? 'Email já cadastrado.' : err, status: 400 })
 
                     return resolve({ name: 'success', message: [{ id: recordset[0].id, nome: recordset[0].nome }] })
                 });
@@ -68,7 +74,7 @@ async function readUserAdmin() {
 }
 
 
-async function putUserAdmin(payload, authHeader) {
+async function putUserAdmin(payload, id) {
 
     return new Promise(async (resolve, reject) => {
         try {
@@ -82,20 +88,23 @@ async function putUserAdmin(payload, authHeader) {
 
                 let request = new sql.Request();
 
-                const parts = authHeader.split(' ');
-                const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
-
-                request.query(`update ua 
-                                set email ='${payload.email}', nome ='${payload.nome}', 
-                                status ='${payload.status}', cpf ='${payload.cpf}'
-                                from 
-                                usuario_admin ua
-                                where ua.email ='${decoded.email}'
-                                select @@ROWCOUNT as rowsAffected`, async (err, recordset) => {
+                request.query(`IF EXISTS(SELECT 'True' FROM usuario_admin WHERE id= '${id}')
+                                BEGIN
+                                update usuario_admin
+                                set email ='${payload.email}', nome ='${payload.nome}', status ='${payload.status}'                                
+                                where id ='${id}'                                
+                                select @@ROWCOUNT as rowsAffected
+                                END
+                                ELSE
+                                BEGIN                                
+                                select 0 as rowsAffected
+                                END`, async (err, recordset) => {
 
                     await sql.close();
 
-                    if (err) return reject({ name: 'Usuário administrativo não atualizado.', message: err })
+                    console.log(recordset)
+
+                    if (err || recordset[0].rowsAffected == 0) return reject({ name: 'Usuário administrativo não atualizado.', message: (recordset[0].rowsAffected === 0) ? 'Email não cadastrado.' : err, status: 400 })
 
                     return resolve({ name: 'success' })
                 });

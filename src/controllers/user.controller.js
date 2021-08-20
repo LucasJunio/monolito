@@ -14,9 +14,9 @@ router.get('/',  auth, async (req, res, next) => {
     }
 })
 
-router.put('/',  auth, async (req, res, next) => {
+router.put('/:id',  auth, async (req, res, next) => {
     try {
-        const result = await putUserAdmin(req.body, req.headers.authorization)
+        const result = await putUserAdmin(req.body, req.params.id)
         res.status(200).send(result)
     } catch (error) {
         next(error)
