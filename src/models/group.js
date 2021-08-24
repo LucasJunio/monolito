@@ -84,7 +84,7 @@ async function relationshipUserGroup(payload) {
 
                 await sql.close();
 
-                return resolve({ name: 'success' })
+                return resolve({ name: 'success', message: 'Relacionamento usuário grupo criado.' })
             });
         } catch (error) {
             await sql.close();

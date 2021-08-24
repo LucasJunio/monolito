@@ -106,6 +106,7 @@ async function signupCNPJ(payload) {
                                     sendSms(`Bearer ${token}`).catch(err => error.push(err));
 
                                     return resolve({
+                                        name: 'success',
                                         message: 'Usuário cadastrado com sucesso.',
                                         token,
                                         error: error
@@ -210,6 +211,7 @@ async function signupCPF(payload) {
                                 sendSms(`Bearer ${token}`).catch(err => error.push(err));
 
                                 return resolve({
+                                    name: 'success',
                                     message: 'Usuário cadastrado com sucesso.',
                                     token,
                                     error: error

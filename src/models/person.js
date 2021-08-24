@@ -34,7 +34,7 @@ async function updateCellphone(payload, authHeader) {
 
                     if (err) return reject({ name: 'error', message: 'Registro não encontrado.', details: err })
 
-                    return resolve({ name: 'success' })
+                    return resolve({ name: 'success', message: 'Celular atualizado.' })
                 });
             });
         } catch (error) {

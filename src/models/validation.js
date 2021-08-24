@@ -70,7 +70,7 @@ async function sendSms(token) {
               return reject({ name: 'error', message: "Erro de envio TWILLIO.", details: err })
             });
 
-          return resolve({ name: "success" });
+          return resolve({ name: "success",  message: "SMS enviado."});
         }
       );
     });

@@ -129,7 +129,7 @@ async function putUserAdmin(payload, id) {
 
                     if (err || recordset[0].rowsAffected == 0) return reject({ name: 'error', message: 'Usuário administrativo não atualizado.', details: (recordset[0].rowsAffected === 0) ? 'Email não cadastrado.' : err, status: 400 })
 
-                    return resolve({ name: 'success' })
+                    return resolve({ name: 'success', message: 'Usuário administrador atualizado.' })
                 });
             });
         } catch (error) {
@@ -160,7 +160,7 @@ async function delUserAdmin(authHeader) {
 
                     if (err) return reject({ name: 'error', message: 'Usuário administrativo não deletado.', details: err })
 
-                    return resolve({ name: 'success' })
+                    return resolve({ name: 'success', message: 'Usuário administrador excluído.' })
                 });
             });
         } catch (error) {
