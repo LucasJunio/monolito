@@ -138,6 +138,15 @@ async function signupCPF(payload) {
                             payload.usuario.tokenSms = generateOTP()
 
                             let querysql = `
+
+                                IF EXISTS(SELECT 'True' FROM pessoa WHERE cpf= '${payload.pessoa.cpf}') OR
+                                IF EXISTS(SELECT 'True' FROM empresa WHERE cnpj= '${payload.empresa.cnpj}') OR
+                                IF EXISTS(SELECT 'True' FROM usuario WHERE email= '${payload.usuario.email}') OR
+                                BEGIN
+                                select 0 as rowsAffected
+                                END
+                                ELSE
+                                BEGIN                                
                                             BEGIN TRAN
                                             BEGIN TRY
                                             insert into usuario
@@ -175,6 +184,12 @@ async function signupCPF(payload) {
                                                 ERROR_MESSAGE() AS ErrorMessage;
                                             ROLLBACK TRAN
                                             END CATCH
+                                END
+
+
+
+
+                                            
                                             `
                             request.query(querysql, async function (err, recordset) {
 
