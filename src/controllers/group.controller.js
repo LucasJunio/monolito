@@ -3,7 +3,8 @@ const router = express.Router();
 
 const { 
     createGroup, readGroup, 
-    relationshipUserGroup, returnRelationshipUserGroup 
+    relationshipUserGroup, returnRelationshipUserGroup,
+    putRelationshipUserGroup
 } = require('../models/group');
 
 const auth = require('../middleware/auth');
@@ -30,6 +31,15 @@ router.post('/user-group',  auth, async (req, res, next) => {
     try {
         const result = await relationshipUserGroup(req.body)
         res.status(201).send(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.put('/user-group/:id',  auth, async (req, res, next) => {
+    try {
+        const result = await putRelationshipUserGroup(req.body, req.params.id)
+        res.status(200).send(result)
     } catch (error) {
         next(error)
     }

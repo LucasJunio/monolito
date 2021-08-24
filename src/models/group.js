@@ -78,7 +78,45 @@ async function relationshipUserGroup(payload) {
 
                 for (const key in payload) {
                     request.query(`insert into usu_admin_grupo (fk_id_usu_adm, fk_id_grupo) values (${payload[key].fk_id_usu_adm}, ${payload[key].fk_id_grupo})`, async (err, recordset) => {
-                        if (err) return reject({ name: 'Relacionamento grupo e usuário não cadastrada.', message: { grupo: payload[key].fk_id_grupo, err } })
+                        if (err) return reject({ name: 'Relacionamento grupo e usuário não cadastrado.', message: { grupo: payload[key].fk_id_grupo, err } })
+                    });
+                }
+
+                await sql.close();
+
+                return resolve({ name: 'success' })
+            });
+        } catch (error) {
+            await sql.close();
+            return reject(error)
+        }
+    });
+}
+
+async function putRelationshipUserGroup(payload, id) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            sql.connect(config, async (err) => {
+
+                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+
+                const { error } = await ArrayRelationshipUserGroup.validate(payload)
+
+                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+
+                let request = new sql.Request();
+
+                request.query(`delete 
+                                from usu_admin_grupo
+                                where fk_id_usu_adm ='${id}'
+                                select @@ROWCOUNT as rowsAffected`, async (err, recordset) => {
+                    if (err) return reject({ name: 'Exclusão de relacionamentos usuário e grupo não efetuada.', message: err })
+                });
+
+                for (const key in payload) {
+                    request.query(`insert into usu_admin_grupo (fk_id_usu_adm, fk_id_grupo) values (${payload[key].fk_id_usu_adm}, ${payload[key].fk_id_grupo})`, async (err, recordset) => {
+                        if (err) return reject({ name: 'Relacionamento grupo e usuário não cadastrado.', message: { grupo: payload[key].fk_id_grupo, err } })
                     });
                 }
 
@@ -126,4 +164,7 @@ async function returnRelationshipUserGroup(id) {
     });
 }
 
-module.exports = { createGroup, readGroup, relationshipUserGroup, returnRelationshipUserGroup }
+module.exports = { createGroup, readGroup, 
+    relationshipUserGroup, returnRelationshipUserGroup,
+    putRelationshipUserGroup
+}
