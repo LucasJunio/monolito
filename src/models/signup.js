@@ -13,18 +13,18 @@ async function signupCNPJ(payload) {
         try { 
             await sql.connect(config, function (err) {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
     
                 validateSignupCNPJ(payload)
                     .then(result => {
     
                         bcrypt.genSalt(10, function (err, salt) {
     
-                            if (err) return reject({ name: 'Falha na genSalt bcrypt.', message: err })
+                            if (err) return reject({ name: 'error', message: 'Falha na genSalt bcrypt.', details: err })
     
                             bcrypt.hash(payload.usuario.senha, salt, function (err, hash) {
     
-                                if (err) return reject({ name: 'Falha no hash da senha via bcrypt.', message: err })
+                                if (err) return reject({ name: 'error', message: 'Falha no hash da senha via bcrypt.', details: err })
     
                                 payload.usuario.tokenSms = generateOTP()
     
@@ -85,7 +85,7 @@ async function signupCNPJ(payload) {
     
                                     sql.close();
     
-                                    if (err || recordset[0].ErrorMessage) return reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: (err) ? 'Syntax error: ' + err.message : 'Insert error: ' + recordset[0].ErrorMessage })
+                                    if (err || recordset[0].ErrorMessage) return reject({ name: 'error', message: 'Falha no cadastro do usuário, tente efetuar novamente.', details: (err) ? 'Syntax error: ' + err.message : 'Insert error: ' + recordset[0].ErrorMessage })
     
                                     const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
                                         expiresIn: 86400,
@@ -121,7 +121,7 @@ async function signupCPF(payload) {
 
         await sql.connect(config, function (err) {
 
-            if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+            if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
             let request = new sql.Request();
 
@@ -129,11 +129,11 @@ async function signupCPF(payload) {
                 .then(result => {
                     bcrypt.genSalt(10, function (err, salt) {
 
-                        if (err) return reject({ name: 'Falha na genSalt bcrypt.', message: err })
+                        if (err) return reject({ name: 'error', message: 'Falha na genSalt bcrypt.', details: err })
 
                         bcrypt.hash(payload.usuario.senha, salt, function (err, hash) {
 
-                            if (err) return reject({ name: 'Falha no hash da senha via bcrypt.', message: err })
+                            if (err) return reject({ name: 'error', message: 'Falha no hash da senha via bcrypt.', details: err })
 
                             payload.usuario.tokenSms = generateOTP()
 
@@ -180,7 +180,7 @@ async function signupCPF(payload) {
 
                                 sql.close();
 
-                                if (err || recordset[0].ErrorMessage) return reject({ name: 'Falha no cadastro do usuário, tente efetuar novamente.', message: (err) ? 'Syntax error: ' + err.message : 'Insert error: ' + recordset[0].ErrorMessage })
+                                if (err || recordset[0].ErrorMessage) return reject({ name: 'error', message: 'Falha no cadastro do usuário, tente efetuar novamente.', details: (err) ? 'Syntax error: ' + err.message : 'Insert error: ' + recordset[0].ErrorMessage })
 
                                 const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
                                     expiresIn: 86400,

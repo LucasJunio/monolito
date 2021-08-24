@@ -29,14 +29,14 @@ app.use("/api/v1", require("./src/routes"));
 
 // Error validation  
 app.use((err, req, res, next) => {
-  const { name, message, stack, status } = err;
+  const { name, message, stack, details, status } = err;
 
   switch (status) {
     case 400:
-      res.status(400).json({ name, message, stack });
+      res.status(400).json({ name, message, details, stack });
       break;
     default:
-      res.status(500).json({ name, message, stack });
+      res.status(500).json({ name, message, details, stack });
   }
   next(err);
 }); 

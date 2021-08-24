@@ -27,7 +27,7 @@ async function sendEmail(payload) {
     };
 
     email.sendMail(message, function (err, info) {
-      if (err) return reject({ name: "E-mail não enviado.", message: err });
+      if (err) return reject({ name: 'error',  message: "E-mail não enviado.", details: err });
       return resolve();
     });
   });
@@ -38,8 +38,9 @@ async function sendSms(token) {
     sql.connect(config, async function (err) {
       if (err)
         return reject({
-          name: "Conexão com o banco de dados falhou.",
-          message: err,
+          name: 'error',
+          message: "Conexão com o banco de dados falhou.",
+          details: err,
         });
 
       let request = new sql.Request();
@@ -53,7 +54,7 @@ async function sendSms(token) {
           sql.close();
  
           if (err)
-            return reject({ name: "Token SMS não encontrado.", message: err });
+            return reject({ name: 'error', message: "Token SMS não encontrado.", details: err });
 
           const mobilenumber = recordset[0].celular
             .toString()
@@ -66,7 +67,7 @@ async function sendSms(token) {
               to: `+55${mobilenumber}`,
             })
             .catch((err) => {
-              return reject({ name: "Erro de envio TWILLIO.", message: err })
+              return reject({ name: 'error', message: "Erro de envio TWILLIO.", details: err })
             });
 
           return resolve({ name: "success" });
@@ -82,8 +83,9 @@ async function validateEmail(token) {
       await sql.connect(config, async function (err) {
         if (err)
           return reject({
-            name: "Conexão com o banco de dados falhou.",
-            message: err,
+            name: 'error',
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
           });
 
         let querysql = new sql.Request();
@@ -105,9 +107,9 @@ async function validateEmail(token) {
             sql.close();
 
             if (err || recordset[0].rowsAffected == 0)
-              return reject({ name: "Email não validado.", message: err });
+              return reject({ name: 'success',message: "Email não validado.", details: err });
 
-            return resolve({ message: "Email validado com sucesso." });
+            return resolve({ name: 'succes', message: "Email validado com sucesso." });
           }
         );
       });
@@ -121,7 +123,7 @@ function validateSms(token, authHeader) {
   return new Promise(async function (resolve, reject) {
     try {
       sql.connect(config, async function (err) {
-        if (err) return reject({ name: "Conexão com o banco de dados falhou." });
+        if (err) return reject({ name: 'error', message: "Conexão com o banco de dados falhou.", details: err });
 
         let querysql = new sql.Request();
 
@@ -144,9 +146,9 @@ function validateSms(token, authHeader) {
             sql.close();
 
             if (err || recordset[0].rowsAffected == 0)
-              return reject({ name: "SMS não validado.", message: err });
+              return reject({ name: 'error', message: "SMS não validado.", details: err });
 
-            return resolve({ message: "SMS validado com sucesso." });
+            return resolve({ name: 'success', message: "SMS validado com sucesso." });
           }
         );
       });
@@ -161,7 +163,7 @@ function returnStatusValidation(authHeader) {
     try {
       await sql.connect(config, async (err) => {
         if (err)
-          return reject({ name: "Conexão com o banco de dados falhou." });
+          return reject({ name: 'error', message: "Conexão com o banco de dados falhou.", details: err });
 
         let querysql = new sql.Request();
 

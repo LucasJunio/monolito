@@ -11,11 +11,11 @@ async function signin(payload) {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
                 const { error } = await signinSchema.validate(payload)
 
-                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+                if (error) return reject({ name: 'error', message: 'Falha na validação dos dados.', details: error.details[0].message })
 
                 let request = new sql.Request();
 
@@ -23,7 +23,7 @@ async function signin(payload) {
 
                     sql.close();
 
-                    if (err || recordset.length == 0) return reject({ name: 'Email incorreto.', message:  'Syntax error: ' + err.message })
+                    if (err || recordset.length == 0) return reject({ name: 'error',  message: 'Email incorreto.', details: 'Syntax error: ' + err.message })
 
                     if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
 
@@ -31,9 +31,9 @@ async function signin(payload) {
                             expiresIn: 86400,
                         })
 
-                        return resolve({ message: 'Usuário logado.', token })
+                        return resolve({ name: 'success', message: 'Usuário logado.', token })
 
-                    } else { return reject({ name: 'Senha incorreta.' }) }
+                    } else { return reject({ name:'error', message:'Senha incorreta.' }) }
                 });
             });
         } catch (error) {
@@ -49,11 +49,11 @@ async function signinAdmin(payload) {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error',message: 'Conexão com o banco de dados falhou.', details: err })
 
                 const { error } = await signinSchema.validate(payload)
 
-                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+                if (error) return reject({ name: 'success',message: 'Falha na validação dos dados.', details: error.details[0].message })
 
                 let request = new sql.Request();
 
@@ -61,7 +61,7 @@ async function signinAdmin(payload) {
 
                     sql.close();
 
-                    if (err || recordset.length == 0) return reject({ name: 'Email incorreto.', message:  'Syntax error: ' + err })
+                    if (err || recordset.length == 0) return reject({ name: 'error', message: 'Email incorreto.', details:  'Syntax error: ' + err })
 
                     if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
 
@@ -69,9 +69,9 @@ async function signinAdmin(payload) {
                             expiresIn: 86400,
                         })
 
-                        return resolve({ message: 'Usuário logado.', token })
+                        return resolve({ name: 'success', message: 'Usuário logado.', token })
 
-                    } else { return reject({ name: 'Senha incorreta.' }) }
+                    } else { return reject({ name: 'error', message: 'Senha incorreta.' }) }
                 });
             });
         } catch (error) {

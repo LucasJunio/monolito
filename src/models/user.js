@@ -13,11 +13,11 @@ async function createUserAdmin(payload) {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
                 const { error } = await userAdminSchema.validate(payload)
 
-                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+                if (error) return reject({ name: 'error', message: 'Falha na validação dos dados.', details: error.details[0].message })
 
                 let request = new sql.Request();
 
@@ -35,7 +35,7 @@ async function createUserAdmin(payload) {
 
                     await sql.close();
 
-                    if (err || recordset[0].rowsAffected !== undefined) return reject({ name: 'Usuário administrativo não cadastrado.', message: (recordset[0].rowsAffected !== undefined) ? 'Email já cadastrado.' : err, status: 400 })
+                    if (err || recordset[0].rowsAffected !== undefined) return reject({ name: 'error', message: 'Usuário administrativo não cadastrado.', details: (recordset[0].rowsAffected !== undefined) ? 'Email já cadastrado.' : err, status: 400 })
 
                     return resolve({ name: 'success', message: [{ id: recordset[0].id, nome: recordset[0].nome }] })
                 });
@@ -53,7 +53,7 @@ async function readUserAdmin() {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
                 let request = new sql.Request();
 
@@ -61,7 +61,7 @@ async function readUserAdmin() {
 
                     await sql.close();
 
-                    if (err) return reject({ name: 'Error', message: err })
+                    if (err) return reject({ name: 'error', message: err })
 
                     return resolve({ name: 'success', message: recordset })
                 });
@@ -78,7 +78,7 @@ async function readUserAdminID(id) {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
                 let request = new sql.Request();
 
@@ -105,11 +105,11 @@ async function putUserAdmin(payload, id) {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
                 const { error } = await userAdminSchema.validate(payload)
 
-                if (error) return reject({ name: 'Falha na validação dos dados.', message: error.details[0].message })
+                if (error) return reject({ name: 'error', message: 'Falha na validação dos dados.', details: error.details[0].message })
 
                 let request = new sql.Request();
 
@@ -127,7 +127,7 @@ async function putUserAdmin(payload, id) {
 
                     await sql.close();                    
 
-                    if (err || recordset[0].rowsAffected == 0) return reject({ name: 'Usuário administrativo não atualizado.', message: (recordset[0].rowsAffected === 0) ? 'Email não cadastrado.' : err, status: 400 })
+                    if (err || recordset[0].rowsAffected == 0) return reject({ name: 'error', message: 'Usuário administrativo não atualizado.', details: (recordset[0].rowsAffected === 0) ? 'Email não cadastrado.' : err, status: 400 })
 
                     return resolve({ name: 'success' })
                 });
@@ -144,7 +144,7 @@ async function delUserAdmin(authHeader) {
         try {
             sql.connect(config, async (err) => {
 
-                if (err) return reject({ name: 'Conexão com o banco de dados falhou.', message: err })
+                if (err) return reject({ name: 'error', message: 'Conexão com o banco de dados falhou.', details: err })
 
                 let request = new sql.Request();
 
@@ -158,7 +158,7 @@ async function delUserAdmin(authHeader) {
 
                     await sql.close();
 
-                    if (err) return reject({ name: 'Usuário administrativo não deletado.', message: err })
+                    if (err) return reject({ name: 'error', message: 'Usuário administrativo não deletado.', details: err })
 
                     return resolve({ name: 'success' })
                 });
