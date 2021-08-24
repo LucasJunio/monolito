@@ -122,7 +122,7 @@ async function putRelationshipUserGroup(payload, id) {
 
                 await sql.close();
 
-                return resolve({ name: 'success' })
+                return resolve({ name: 'success', message: 'Relacionamento usuário grupo atualizado' })
             });
         } catch (error) {
             await sql.close();
