@@ -142,7 +142,7 @@ async function returnRelationshipUserGroup(id) {
                 let request = new sql.Request();
 
                 request.query(`
-                        SELECT gp.nome
+                        SELECT gp.nome, gp.id
                         FROM grupo gp
                         INNER JOIN usu_admin_grupo uag 
                             ON gp.id = uag.fk_id_grupo 
