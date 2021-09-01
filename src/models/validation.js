@@ -80,17 +80,25 @@ async function sendSms(token) {
 async function validateEmail(token) {
   return new Promise(async function (resolve, reject) {
     try {
+
       await sql.connect(config, async function (err) {
-        if (err)
+        if (err) {
           return reject({
             name: 'error',
             message: "Conexão com o banco de dados falhou.",
             details: err,
           });
-
+        }
+        
         let querysql = new sql.Request();
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
+          if (err) {
+            return reject({ name: 'error', message: "Email inválido.", status: 400 });
+          } else {
+            return decode;            
+          }
+        });
 
         await querysql.query(
           `update usuario
@@ -107,7 +115,7 @@ async function validateEmail(token) {
             sql.close();
 
             if (err || recordset[0].rowsAffected == 0)
-              return reject({ name: 'success',message: "Email não validado.", details: err });
+              return reject({ name: 'error',message: "Email não validado.", details: err });
 
             return resolve({ name: 'succes', message: "Email validado com sucesso." });
           }
@@ -153,6 +161,8 @@ function validateSms(token, authHeader) {
         );
       });
     } catch (error) {
+      console.log('dddddddddd');
+      console.log(error);
       reject(error);
     }
   });
