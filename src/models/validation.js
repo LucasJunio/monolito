@@ -16,8 +16,7 @@ async function sendEmail(payload) {
       {}
     );
 
-    // ###########IMPORTANTE ALTERAR URL PARA HTTPS POIS AINDA ESTÁ HTTP
-    const urlfront = 'http://vileveway-develop.s3-website-us-east-1.amazonaws.com/email/' //URL de ROTA EMAIL FRONT
+ 
 
     const message = {
       from: "contato@vilevepay.com.br",
@@ -26,7 +25,7 @@ async function sendEmail(payload) {
       html: `
             Olá ${payload.nome}, <br>
             <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
-            <br> <a href='${urlfront}${token}'>Clique para confirmar sua conta</a> <br>  `,
+            <br> <a href='https://dev.vileveway.com.br/email/${token}'>Clique para confirmar sua conta</a> <br>  `,
     };
 
     email.sendMail(message, function (err, info) {
