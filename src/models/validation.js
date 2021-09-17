@@ -16,8 +16,6 @@ async function sendEmail(payload) {
       {}
     );
 
- 
-
     const message = {
       from: "contato@vilevepay.com.br",
       to: payload.email,
@@ -29,7 +27,12 @@ async function sendEmail(payload) {
     };
 
     email.sendMail(message, function (err, info) {
-      if (err) return reject({ name: 'error',  message: "E-mail não enviado.", details: err });
+      if (err)
+        return reject({
+          name: "error",
+          message: "E-mail não enviado.",
+          details: err,
+        });
       return resolve();
     });
   });
@@ -40,7 +43,7 @@ async function sendSms(token) {
     sql.connect(config, async function (err) {
       if (err)
         return reject({
-          name: 'error',
+          name: "error",
           message: "Conexão com o banco de dados falhou.",
           details: err,
         });
@@ -54,9 +57,13 @@ async function sendSms(token) {
         `select * from usuario u join pessoa p on p.id_usuario = u.id where u.email ='${decoded.email}'`,
         async function (err, recordset) {
           sql.close();
- 
+
           if (err)
-            return reject({ name: 'error', message: "Token SMS não encontrado.", details: err });
+            return reject({
+              name: "error",
+              message: "Token SMS não encontrado.",
+              details: err,
+            });
 
           const mobilenumber = recordset[0].celular
             .toString()
@@ -69,10 +76,14 @@ async function sendSms(token) {
               to: `+55${mobilenumber}`,
             })
             .catch((err) => {
-              return reject({ name: 'error', message: "Erro de envio TWILLIO.", details: err })
+              return reject({
+                name: "error",
+                message: "Erro de envio TWILLIO.",
+                details: err,
+              });
             });
 
-          return resolve({ name: "success",  message: "SMS enviado."});
+          return resolve({ name: "success", message: "SMS enviado." });
         }
       );
     });
@@ -82,25 +93,32 @@ async function sendSms(token) {
 async function validateEmail(token) {
   return new Promise(async function (resolve, reject) {
     try {
-
       await sql.connect(config, async function (err) {
         if (err) {
           return reject({
-            name: 'error',
+            name: "error",
             message: "Conexão com o banco de dados falhou.",
             details: err,
           });
         }
-        
+
         let querysql = new sql.Request();
-        
-        const decoded = jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
-          if (err) {
-            return reject({ name: 'error', message: "Email inválido.", status: 400 });
-          } else {
-            return decode;            
+
+        const decoded = jwt.verify(
+          token,
+          process.env.JWT_SECRET,
+          (err, decode) => {
+            if (err) {
+              return reject({
+                name: "error",
+                message: "Email inválido.",
+                status: 400,
+              });
+            } else {
+              return decode;
+            }
           }
-        });
+        );
 
         await querysql.query(
           `update usuario
@@ -117,9 +135,16 @@ async function validateEmail(token) {
             sql.close();
 
             if (err || recordset[0].rowsAffected == 0)
-              return reject({ name: 'error',message: "Email não validado.", details: err });
+              return reject({
+                name: "error",
+                message: "Email não validado.",
+                details: err,
+              });
 
-            return resolve({ name: 'succes', message: "Email validado com sucesso." });
+            return resolve({
+              name: "succes",
+              message: "Email validado com sucesso.",
+            });
           }
         );
       });
@@ -133,7 +158,12 @@ function validateSms(token, authHeader) {
   return new Promise(async function (resolve, reject) {
     try {
       sql.connect(config, async function (err) {
-        if (err) return reject({ name: 'error', message: "Conexão com o banco de dados falhou.", details: err });
+        if (err)
+          return reject({
+            name: "error",
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
+          });
 
         let querysql = new sql.Request();
 
@@ -156,14 +186,21 @@ function validateSms(token, authHeader) {
             sql.close();
 
             if (err || recordset[0].rowsAffected == 0)
-              return reject({ name: 'error', message: "SMS não validado.", details: err });
+              return reject({
+                name: "error",
+                message: "SMS não validado.",
+                details: err,
+              });
 
-            return resolve({ name: 'success', message: "SMS validado com sucesso." });
+            return resolve({
+              name: "success",
+              message: "SMS validado com sucesso.",
+            });
           }
         );
       });
     } catch (error) {
-      console.log('dddddddddd');
+      console.log("dddddddddd");
       console.log(error);
       reject(error);
     }
@@ -175,7 +212,11 @@ function returnStatusValidation(authHeader) {
     try {
       await sql.connect(config, async (err) => {
         if (err)
-          return reject({ name: 'error', message: "Conexão com o banco de dados falhou.", details: err });
+          return reject({
+            name: "error",
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
+          });
 
         let querysql = new sql.Request();
 
