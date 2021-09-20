@@ -51,7 +51,7 @@ router.get("/resendsms", auth, async (req, res, next) => {
   }
 });
 
-router.get("/emailinvitation", auth, async (req, res, next) => {
+router.post("/emailinvitation", auth, async (req, res, next) => {
   try {
     const result = await emailInvitation(req.body);
     res.status(200).send(result);
