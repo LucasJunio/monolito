@@ -38,9 +38,9 @@ async function signin(payload) {
               return reject({
                 name: "error",
                 message: "Email incorreto.",
-                details: !err
+                details: !!err
                   ? "Syntax error: " + err.message
-                  : "rowsAffected: " + recordset[0].rowsAffected,
+                  : "rowsAffected: " + recordset.length,
               });
 
             if (await bcrypt.compare(payload.senha, recordset[0].senha)) {

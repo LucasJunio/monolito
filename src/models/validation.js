@@ -154,6 +154,56 @@ async function validateEmail(token) {
   });
 }
 
+function emailInvitation(payload) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      sql.connect(config, async (err) => {
+        if (err)
+          return reject({
+            name: "error",
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
+          });
+      });
+      const { email: emailPayload, name, id } = payload;
+      (!emailPayload || !name || !id) &&
+        reject({
+          name: "error",
+          message: "Nome, id e email são campos obrigatórios",
+        });
+
+      const json = `{"id": "${id}","email": "${emailPayload}","nome": "${name}"}`;
+      const base64 = Buffer.from(json).toString("base64");
+
+      const message = {
+        from: "contato@vilevepay.com.br",
+        to: emailPayload,
+        subject: "Convite VileveWay Admin",
+        html: `
+            Olá ${name}, <br>
+            <h2>Seja bem vindo ao vileve way admin.</h2> <br> Clique no link abaixo para confirmar sua conta e finalizar o cadastro.
+            <br> <a href='https://dev.vileveway.com.br/finishRegister/${base64}'>Clique para confirmar sua conta</a> <br>  `,
+      };
+
+      email.sendMail(message, (err) => {
+        if (err)
+          return reject({
+            name: "error",
+            message: "E-mail não enviado.",
+            details: err,
+          });
+        return resolve({
+          name: "success",
+          message: "Email enviado para o usuário",
+          status: 200,
+        });
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 function validateSms(token, authHeader) {
   return new Promise(async function (resolve, reject) {
     try {
@@ -200,8 +250,6 @@ function validateSms(token, authHeader) {
         );
       });
     } catch (error) {
-      console.log("dddddddddd");
-      console.log(error);
       reject(error);
     }
   });
@@ -252,4 +300,5 @@ module.exports = {
   validateEmail,
   validateSms,
   returnStatusValidation,
+  emailInvitation,
 };
