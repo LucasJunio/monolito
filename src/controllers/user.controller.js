@@ -9,6 +9,7 @@ const {
   putUserAdmin,
   delUserAdmin,
   readUserAdminID,
+  finishRegister,
 } = require("../models/user");
 
 router.get("/", auth, async (req, res, next) => {
@@ -51,6 +52,15 @@ router.post("/user-admin", auth, async (req, res, next) => {
   try {
     const result = await createUserAdmin(req.body);
     res.status(201).send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch("/finishregister", async (req, res, next) => {
+  try {
+    const result = await finishRegister(req.body);
+    res.status(200).send(result);
   } catch (error) {
     next(error);
   }

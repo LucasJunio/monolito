@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const { config } = require("../config/settings");
 
 const { userAdminSchema } = require("../validate/user.validation");
+const { resolve } = require("mssql/lib/connectionstring");
+const { reject } = require("bcrypt/promises");
 
 async function createUserAdmin(payload) {
   return new Promise(async (resolve, reject) => {
@@ -232,10 +234,88 @@ async function delUserAdmin(authHeader) {
   });
 }
 
+function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
+  return new Promise((resolve, reject) => {
+    try {
+      (!email || !nome || !cpf || !celular || !senha || !id) &&
+        reject({
+          name: "error",
+          message: "Os campos email, nome, cpf, celular, id e senha",
+        });
+
+      sql.connect(config, async (err) => {
+        if (err)
+          return reject({
+            name: "error",
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
+          });
+
+        const request = new sql.Request();
+        bcrypt.genSalt(10, (err, salt) => {
+          if (err)
+            return reject({
+              name: "error",
+              message: "Falha na genSalt bcrypt.",
+              details: err,
+            });
+          bcrypt.hash(senha, salt, (err, hash) => {
+            if (err)
+              return reject({
+                name: "error",
+                message: "Falha no hash da senha via bcrypt.",
+                details: err,
+              });
+            request.query(
+              `IF EXISTS(SELECT 'True' FROM usuario_admin WHERE id= '${id}')
+                BEGIN
+                  update usuario_admin 
+                  set 
+                    nome = '${nome}', 
+                    email = '${email}', 
+                    cpf = '${cpf}', 
+                    celular = '${celular}',
+                    ramal = '${ramal}',
+                    senha = '${hash}'
+                  where id = ${id};                           
+                  select @@ROWCOUNT as rowsAffected
+              END
+                ELSE
+                BEGIN                                
+                  select 0 as rowsAffected
+                END`,
+              async (err, recordset) => {
+                console.log(recordset);
+                sql.close();
+                if (err || recordset[0].rowsAffected === 0)
+                  return reject({
+                    name: "error",
+                    message: "Usuário não encontrado",
+                    details: !!err
+                      ? "Syntax error: " + err.message
+                      : "rowsAffected: " + recordset.length,
+                  });
+
+                return resolve({
+                  name: "success",
+                  message: "Usuário atualizado.",
+                });
+              }
+            );
+          });
+        });
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = {
   createUserAdmin,
   readUserAdmin,
   putUserAdmin,
   delUserAdmin,
   readUserAdminID,
+  finishRegister,
 };

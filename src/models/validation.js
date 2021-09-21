@@ -157,7 +157,7 @@ async function validateEmail(token) {
 function emailInvitation(payload) {
   return new Promise(async (resolve, reject) => {
     try {
-      sql.connect(config, async (err) => {
+      await sql.connect(config, async (err) => {
         if (err)
           return reject({
             name: "error",
@@ -165,6 +165,7 @@ function emailInvitation(payload) {
             details: err,
           });
       });
+      const querysql = new sql.Request();
       const { email: emailPayload, name, id } = payload;
       (!emailPayload || !name || !id) &&
         reject({
@@ -172,7 +173,16 @@ function emailInvitation(payload) {
           message: "Nome, id e email são campos obrigatórios",
         });
 
-      const json = `{"id": "${id}","email": "${emailPayload}","nome": "${name}"}`;
+      const dateExpiration = new Intl.DateTimeFormat("af-ZA", {
+        day: "numeric",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      }).format(new Date(new Date().setDate(new Date().getDate() + 1)));
+
+      const json = `{"id": "${id}","email": "${emailPayload}","nome": "${name}", "dateExpiration": "${dateExpiration}"}`;
       const base64 = Buffer.from(json).toString("base64");
 
       const message = {
@@ -192,6 +202,10 @@ function emailInvitation(payload) {
             message: "E-mail não enviado.",
             details: err,
           });
+        querysql.query(
+          `update usuario_admin set validacao = 'Email enviado' where email = '${emailPayload}';`
+        );
+        sql.close();
         return resolve({
           name: "success",
           message: "Email enviado para o usuário",
