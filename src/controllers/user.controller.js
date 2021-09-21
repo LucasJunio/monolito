@@ -10,6 +10,7 @@ const {
   delUserAdmin,
   readUserAdminID,
   finishRegister,
+  getUserValidation,
 } = require("../models/user");
 
 router.get("/", auth, async (req, res, next) => {
@@ -60,6 +61,15 @@ router.post("/user-admin", auth, async (req, res, next) => {
 router.patch("/finishregister", async (req, res, next) => {
   try {
     const result = await finishRegister(req.body);
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/getuservalidation/:email", async (req, res, next) => {
+  try {
+    const result = await getUserValidation(req.params);
     res.status(200).send(result);
   } catch (error) {
     next(error);

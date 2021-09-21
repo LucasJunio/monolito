@@ -311,6 +311,46 @@ function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
   });
 }
 
+function getUserValidation({ email }) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      sql.connect(config, async (err) => {
+        if (err)
+          return reject({
+            name: "error",
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
+          });
+        const request = new sql.Request();
+        request.query(
+          `select validacao from usuario_admin where email = '${email}'`,
+          async (err, recordset) => {
+            sql.close();
+            console.log(err);
+            console.log(recordset);
+            if (err || recordset.length === 0)
+              return reject({
+                name: "error",
+                message: "Email não encontrado.",
+                details: !!err
+                  ? "Syntax error: " + err.message
+                  : "rowsAffected: " + recordset.length,
+              });
+            return resolve({
+              name: "sucess",
+              message: {
+                validation: recordset[0].validacao,
+              },
+            });
+          }
+        );
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 module.exports = {
   createUserAdmin,
   readUserAdmin,
@@ -318,4 +358,5 @@ module.exports = {
   delUserAdmin,
   readUserAdminID,
   finishRegister,
+  getUserValidation,
 };
