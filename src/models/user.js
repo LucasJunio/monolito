@@ -243,10 +243,10 @@ async function delUserAdmin(authHeader) {
 function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
   return new Promise((resolve, reject) => {
     try {
-      (!email || !nome || !cpf || !celular || !senha || !id) &&
+      (!email || !nome || !cpf || !senha || !id) &&
         reject({
           name: "error",
-          message: "Os campos email, nome, cpf, celular, id e senha",
+          message: "Os campos email, nome, cpf, id e senha",
         });
 
       sql.connect(config, async (err) => {
@@ -282,6 +282,7 @@ function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
                     cpf = '${cpf}', 
                     celular = '${celular}',
                     ramal = '${ramal}',
+                    validacao = 'Email Validado',
                     senha = '${hash}'
                   where id = ${id};                           
                   select @@ROWCOUNT as rowsAffected
