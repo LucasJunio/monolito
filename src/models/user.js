@@ -38,14 +38,14 @@ async function createUserAdmin(payload) {
                                 END
                                 ELSE
                                 BEGIN                                
-                                INSERT into usuario_admin (nome, email, status) 
-                                OUTPUT Inserted.id, Inserted.nome
-                                values ('${payload.nome}', '${payload.email}', '${payload.status}')
+                                INSERT into usuario_admin (nome, email, status, validacao) 
+                                OUTPUT Inserted.id, Inserted.nome, Inserted.validacao
+                                values ('${payload.nome}', '${payload.email}', '${payload.status}', 'email não validado')
                                 END
                                 `,
           async (err, recordset) => {
             await sql.close();
-
+            console.log(recordset);
             if (err || recordset[0].rowsAffected !== undefined)
               return reject({
                 name: "error",
@@ -59,7 +59,13 @@ async function createUserAdmin(payload) {
 
             return resolve({
               name: "success",
-              message: [{ id: recordset[0].id, nome: recordset[0].nome }],
+              message: [
+                {
+                  id: recordset[0].id,
+                  nome: recordset[0].nome,
+                  validacao: recordset[0].validacao,
+                },
+              ],
             });
           }
         );
@@ -321,13 +327,16 @@ function getUserValidation({ email }) {
             message: "Conexão com o banco de dados falhou.",
             details: err,
           });
+        !email &&
+          reject({
+            name: "error",
+            message: "email é um parametro obrigatório",
+          });
         const request = new sql.Request();
         request.query(
           `select validacao from usuario_admin where email = '${email}'`,
           async (err, recordset) => {
             sql.close();
-            console.log(err);
-            console.log(recordset);
             if (err || recordset.length === 0)
               return reject({
                 name: "error",
