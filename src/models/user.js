@@ -282,7 +282,7 @@ function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
                     cpf = '${cpf}', 
                     celular = '${celular}',
                     ramal = '${ramal}',
-                    validacao = 'Email Validado',
+                    validacao = 'email validado',
                     senha = '${hash}'
                   where id = ${id};                           
                   select @@ROWCOUNT as rowsAffected
@@ -347,10 +347,8 @@ function getUserValidation({ email }) {
                   : "rowsAffected: " + recordset.length,
               });
             return resolve({
-              name: "sucess",
-              message: {
-                validation: recordset[0].validacao,
-              },
+              name: "success",
+              message: recordset[0].validacao,
             });
           }
         );
