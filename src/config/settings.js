@@ -1,11 +1,9 @@
-require('dotenv').config()
-const nodemailer = require('nodemailer');
-const twilio = require('twilio');
+require("dotenv").config();
+const nodemailer = require("nodemailer");
+const twilio = require("twilio");
 
 module.exports = {
-
   config: {
-
     server: process.env.DB_HOST,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
@@ -14,13 +12,13 @@ module.exports = {
     requestTimeout: 300000,
     pool: {
       idleTimeoutMillis: 300000,
-      max: 100
+      max: 100,
     },
 
     options: {
       port: process.env.DB_PORT,
-      database: process.env.DB_NAME
-    }
+      database: process.env.DB_NAME,
+    },
   },
 
   email: nodemailer.createTransport({
@@ -28,14 +26,14 @@ module.exports = {
     port: process.env.EMAILPORT,
     auth: {
       user: process.env.EMAILUSER,
-      pass: process.env.EMAILPASS
+      pass: process.env.EMAILPASS,
     },
     secureConnection: false,
-    tls: { ciphers: 'SSLv3' }
+    tls: { ciphers: "SSLv3" },
   }),
 
   twilioconfig: {
     accountSid: process.env.TWILIO_ACCOUNT_SID,
-    authToken: process.env.TWILIO_AUTH_TOKEN
-  }
-}
+    authToken: process.env.TWILIO_AUTH_TOKEN,
+  },
+};

@@ -16,8 +16,11 @@ const {
 router.get("/", auth, async (req, res, next) => {
   try {
     const result = await readUserAdmin();
+    console.log("Deu bom");
     res.status(200).send(result);
   } catch (error) {
+    console.log("Deu ruim");
+    console.log(error);
     next(error);
   }
 });
