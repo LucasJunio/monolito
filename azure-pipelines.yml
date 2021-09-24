@@ -4,13 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- develop
+- sandbox
 
 resources:
 - repo: self
 
 variables:
-  tag: 'image-develop-$(Build.BuildId)'
+  tag: 'image-sandbox-$(Build.BuildId)'
 
 stages:
 - stage: Build
@@ -36,4 +36,4 @@ stages:
         sourceImageTag: '$(Build.BuildId)'
         repositoryName: 'vileveway-backend'        
         autoCreateRepository: true
-        pushTag: 'develop'  
+        pushTag: 'sandbox'  
