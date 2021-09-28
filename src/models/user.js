@@ -33,16 +33,16 @@ async function createUserAdmin(payload) {
 
         request.query(
           ` IF EXISTS(SELECT 'True' FROM usuario_admin WHERE Email= '${payload.email}')
-                                BEGIN
-                                select 0 as rowsAffected
-                                END
-                                ELSE
-                                BEGIN                                
-                                INSERT into usuario_admin (nome, email, status, validacao) 
-                                OUTPUT Inserted.id, Inserted.nome, Inserted.validacao
-                                values ('${payload.nome}', '${payload.email}', '${payload.status}', 'email não validado')
-                                END
-                                `,
+            BEGIN
+            select 0 as rowsAffected
+            END
+            ELSE
+            BEGIN                                
+            INSERT into usuario_admin (nome, email, status, validacao) 
+            OUTPUT Inserted.id, Inserted.nome, Inserted.validacao
+            values ('${payload.nome}', '${payload.email}', '${payload.status}', 'email não validado')
+            END
+            `,
           async (err, recordset) => {
             await sql.close();
             console.log(recordset);
@@ -89,31 +89,12 @@ async function readUserAdmin() {
         });
         connuser.close();
       });
-
-      // sql.connect(config, async (err) => {
-      //   if (err)
-      //     return reject({
-      //       name: "error",
-      //       message: "Conexão com o banco de dados falhou.",
-      //       details: err,
-      //     });
-
-      //   let request = new sql.Request();
-
-      //   request.query(`select * from usuario_admin`, async (err, recordset) => {
-      //     // await sql.close();
-
-      //     if (err) return reject({ name: "error", message: err });
-
-      //     return resolve({ name: "success", message: recordset });
-      //   });
-      // });
     } catch (error) {
-      // await sql.close();
       return reject(error);
     }
   });
 }
+
 async function readUserAdminID(id) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -168,17 +149,17 @@ async function putUserAdmin(payload, id) {
         let request = new sql.Request();
 
         request.query(
-          `IF EXISTS(SELECT 'True' FROM usuario_admin WHERE id= '${id}')
-                                BEGIN
-                                update usuario_admin
-                                set email ='${payload.email}', nome ='${payload.nome}', status ='${payload.status}'                                
-                                where id ='${id}'                                
-                                select @@ROWCOUNT as rowsAffected
-                                END
-                                ELSE
-                                BEGIN                                
-                                select 0 as rowsAffected
-                                END`,
+           `IF EXISTS(SELECT 'True' FROM usuario_admin WHERE id= '${id}')
+            BEGIN
+            update usuario_admin
+            set email ='${payload.email}', nome ='${payload.nome}', status ='${payload.status}'                                
+            where id ='${id}'                                
+            select @@ROWCOUNT as rowsAffected
+            END
+            ELSE
+            BEGIN                                
+            select 0 as rowsAffected
+            END`,
           async (err, recordset) => {
             await sql.close();
 
@@ -218,8 +199,6 @@ async function delUserAdmin(id) {
           });
 
         let request = new sql.Request();
-
-        console.log(id);
 
         request.query(
           `  
@@ -315,7 +294,7 @@ function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
                     senha = '${hash}'
                   where id = ${id};                           
                   select @@ROWCOUNT as rowsAffected
-              END
+                END
                 ELSE
                 BEGIN                                
                   select 0 as rowsAffected
