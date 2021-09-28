@@ -80,26 +80,36 @@ async function createUserAdmin(payload) {
 async function readUserAdmin() {
   return new Promise(async (resolve, reject) => {
     try {
-      sql.connect(config, async (err) => {
-        if (err)
-          return reject({
-            name: "error",
-            message: "Conexão com o banco de dados falhou.",
-            details: err,
-          });
-
-        let request = new sql.Request();
-
-        request.query(`select * from usuario_admin`, async (err, recordset) => {
-          await sql.close();
-
-          if (err) return reject({ name: "error", message: err });
-
-          return resolve({ name: "success", message: recordset });
+      const connuser = new sql.Connection(config);
+      connuser.connect().then(() => {
+        var req = new sql.Request(connuser);
+        req.query(`select * from usuario_admin`, async (err, recordset) => {
+          if (err) reject({ name: "error", message: err });
+          resolve({ name: "success", message: recordset });
         });
+        connuser.close();
       });
+
+      // sql.connect(config, async (err) => {
+      //   if (err)
+      //     return reject({
+      //       name: "error",
+      //       message: "Conexão com o banco de dados falhou.",
+      //       details: err,
+      //     });
+
+      //   let request = new sql.Request();
+
+      //   request.query(`select * from usuario_admin`, async (err, recordset) => {
+      //     // await sql.close();
+
+      //     if (err) return reject({ name: "error", message: err });
+
+      //     return resolve({ name: "success", message: recordset });
+      //   });
+      // });
     } catch (error) {
-      await sql.close();
+      // await sql.close();
       return reject(error);
     }
   });
