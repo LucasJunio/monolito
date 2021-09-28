@@ -40,9 +40,9 @@ router.put("/:id", auth, async (req, res, next) => {
   }
 });
 
-router.delete("/", auth, async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
-    const result = await delUserAdmin(req.headers.authorization);
+    const result = await delUserAdmin(req.params.id);
     res.status(200).send(result);
   } catch (error) {
     next(error);

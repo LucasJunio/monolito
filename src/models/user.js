@@ -196,7 +196,7 @@ async function putUserAdmin(payload, id) {
   });
 }
 
-async function delUserAdmin(authHeader) {
+async function delUserAdmin(id) {
   return new Promise(async (resolve, reject) => {
     try {
       sql.connect(config, async (err) => {
@@ -209,16 +209,35 @@ async function delUserAdmin(authHeader) {
 
         let request = new sql.Request();
 
-        const parts = authHeader.split(" ");
-        const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
+        console.log(id);
 
         request.query(
-          `delete 
-                               from usuario_admin
-                               where email ='${decoded.email}'
-                               select @@ROWCOUNT as rowsAffected`,
+          `  
+          IF EXISTS(SELECT 'True' FROM usuario_admin WHERE id= '${id}')
+          BEGIN
+            delete usu_admin_grupo where
+            fk_id_usu_adm ='${id}';
+
+            delete usuario_admin where
+            id='${id}';                           
+            select @@ROWCOUNT as rowsAffected
+          END
+          ELSE
+          BEGIN                                
+            select 0 as rowsAffected
+          END
+          `,
           async (err, recordset) => {
             await sql.close();
+
+            if (err || recordset[0].rowsAffected === 0)
+                  return reject({
+                    name: "error",
+                    message: "Falha na exclusão do usuário, tente efetuar novamente.",
+                    details: !!err
+                      ? "Syntax error: " + err.message
+                      : "rowsAffected: " + recordset[0].rowsAffected,
+                  });
 
             if (err)
               return reject({
@@ -291,8 +310,7 @@ function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
                 BEGIN                                
                   select 0 as rowsAffected
                 END`,
-              async (err, recordset) => {
-                console.log(recordset);
+              async (err, recordset) => {                
                 sql.close();
                 if (err || recordset[0].rowsAffected === 0)
                   return reject({
@@ -300,7 +318,7 @@ function finishRegister({ email, nome, cpf, celular, ramal, senha, id }) {
                     message: "Usuário não encontrado",
                     details: !!err
                       ? "Syntax error: " + err.message
-                      : "rowsAffected: " + recordset.length,
+                      : "rowsAffected: " + recordset[0].rowsAffected,
                   });
 
                 return resolve({
