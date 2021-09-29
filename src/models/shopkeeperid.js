@@ -106,9 +106,6 @@ async function readShopkeeperid({ id }) {
                             }
                         }
                     }
-
-
-
                     resolve({ name: "success", message: bodyjson });
                 });
                 connuser.close();
