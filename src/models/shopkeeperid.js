@@ -14,11 +14,16 @@ async function readShopkeeperid({ id }) {
                     if (!!recordset[0].cnpj) {
                         bodyjson = {
                             "usuario": {
+                                "id": recordset[0].id,
                                 "nome": recordset[0].nome,
                                 "email": recordset[0].email,
-                                "senha": recordset[0].senha
+                                "senha": recordset[0].senha,
+                                "client_id": recordset[0].client_id,
+                                "cliente_secret": recordset[0].cliente_secret,
+                                "base_64": recordset[0].base_64,
                             },
                             "pessoa": {
+                                "id": recordset[0].id_pessoa,
                                 "cpf": recordset[0].cpf,
                                 "celular": recordset[0].celular,
                                 "nascimento": recordset[0].nascimento,
@@ -33,6 +38,7 @@ async function readShopkeeperid({ id }) {
                                 "pai": recordset[0].pai
                             },
                             "empresa": {
+                                "id": recordset[0].id_empresa,
                                 "cnpj": recordset[0].cnpj,
                                 "cnae": recordset[0].cnae,
                                 "razao_social": recordset[0].razao_social,
@@ -42,6 +48,7 @@ async function readShopkeeperid({ id }) {
                                 "site": recordset[0].site
                             },
                             "conta": {
+                                "id": recordset[0].pj_conta_id,
                                 "banco": recordset[0].pj_banco,
                                 "agencia": recordset[0].pj_agencia,
                                 "conta": recordset[0].pj_conta,
@@ -49,6 +56,7 @@ async function readShopkeeperid({ id }) {
                                 "pix": recordset[0].pj_pix
                             },
                             "endereco_cnpj": {
+                                "id": recordset[0].pj_id_endereco,
                                 "cep": recordset[0].pj_cep,
                                 "endereco": recordset[0].pj_endereco,
                                 "complemento": recordset[0].pj_complemento,
@@ -58,6 +66,7 @@ async function readShopkeeperid({ id }) {
                                 "estado": recordset[0].pj_estado
                             },
                             "endereco_cpf": {
+                                "id": recordset[0].pf_id_endereco,
                                 "cep": recordset[0].pf_cep,
                                 "complemento": recordset[0].pf_complemento,
                                 "endereco": recordset[0].pf_endereco,
@@ -65,16 +74,31 @@ async function readShopkeeperid({ id }) {
                                 "bairro": recordset[0].pf_bairro,
                                 "cidade": recordset[0].pf_cidade,
                                 "estado": recordset[0].pf_estado
+                            },
+                            "pagamentos": {
+                                "id": recordset[0].id_pagamentos,
+                                "risco": recordset[0].risco,
+                                "periodo": recordset[0].periodo,
+                                "observacao": recordset[0].observacao,
+                                "seguimento": recordset[0].seguimento,
+                                "cobranca": recordset[0].cobranca,
+                                "faturamento": recordset[0].faturamento,
+                                "taxa": recordset[0].taxa
                             }
                         }
                     } else {
                         bodyjson = {
                             "usuario": {
+                                "id": recordset[0].id,
                                 "nome": recordset[0].nome,
                                 "email": recordset[0].email,
-                                "senha": recordset[0].senha
+                                "senha": recordset[0].senha,
+                                "client_id": recordset[0].client_id,
+                                "cliente_secret": recordset[0].cliente_secret,
+                                "base_64": recordset[0].base_64,
                             },
                             "pessoa": {
+                                "id": recordset[0].id_pessoa,
                                 "cpf": recordset[0].cpf,
                                 "celular": recordset[0].celular,
                                 "nascimento": recordset[0].nascimento,
@@ -89,6 +113,7 @@ async function readShopkeeperid({ id }) {
                                 "pai": recordset[0].pai
                             },
                             "conta": {
+                                "id": recordset[0].pf_conta_id,
                                 "banco": recordset[0].pf_banco,
                                 "agencia": recordset[0].pf_agencia,
                                 "conta": recordset[0].pf_conta,
@@ -96,6 +121,7 @@ async function readShopkeeperid({ id }) {
                                 "pix": recordset[0].pf_pix
                             },
                             "endereco_cpf": {
+                                "id": recordset[0].pf_id_endereco,
                                 "cep": recordset[0].pf_cep,
                                 "complemento": recordset[0].pf_complemento,
                                 "endereco": recordset[0].pf_endereco,
@@ -103,7 +129,18 @@ async function readShopkeeperid({ id }) {
                                 "bairro": recordset[0].pf_bairro,
                                 "cidade": recordset[0].pf_cidade,
                                 "estado": recordset[0].pf_estado
+                            },
+                            "pagamentos": {
+                                "id": recordset[0].id_pagamentos,
+                                "risco": recordset[0].risco,
+                                "periodo": recordset[0].periodo,
+                                "observacao": recordset[0].observacao,
+                                "seguimento": recordset[0].seguimento,
+                                "cobranca": recordset[0].cobranca,
+                                "faturamento": recordset[0].faturamento,
+                                "taxa": recordset[0].taxa
                             }
+
                         }
                     }
                     resolve({ name: "success", message: bodyjson });
@@ -116,20 +153,9 @@ async function readShopkeeperid({ id }) {
     });
 }
 
-async function updateShopkeeperid({ body }) {
-    return new Promise(async (resolve, reject) => {
-
-        try {
-        } catch (error) {
-            return reject(error);
-        }
-
-    });
-}
 
 
 module.exports = {
-    readShopkeeperid,
-    updateShopkeeperid
+    readShopkeeperid
 };
 

@@ -3,7 +3,7 @@ const router = express.Router();
 
 const auth = require("../middleware/auth");
 
-const { readShopkeeperid, updateShopkeeperid } = require("../models/shopkeeperid");
+const { readShopkeeperid } = require("../models/shopkeeperid");
 
 router.get("/", auth, async (req, res, next) => {
     try {
@@ -15,13 +15,5 @@ router.get("/", auth, async (req, res, next) => {
 });
 
 
-router.put("/", auth, async (req, res, next) => {
-    try {
-        const result = await updateShopkeeperid(req.body);
-        res.status(200).send(result);
-    } catch (error) {
-        next(error);
-    }
-});
 
 module.exports = router;
