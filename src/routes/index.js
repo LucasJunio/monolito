@@ -8,7 +8,6 @@ router.use("/group", require("../controllers/group.controller"));
 router.use("/user", require("../controllers/user.controller"));
 router.use("/status", require("../controllers/status.controller"));
 router.use("/shopkeepers", require("../controllers/shopkeepers.controller"));
-router.use("/shopkeeperid", require("../controllers/shopkeeperid.controller"));
 router.use("/segments", require("../controllers/segments.controller"));
 
 module.exports = router;

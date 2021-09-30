@@ -2,14 +2,18 @@ require("dotenv").config();
 const sql = require("mssql");
 const { config } = require("../config/settings");
 
-async function readShopkeeperid({ id }) {
+async function readShopkeeperid(id) {
+
     return new Promise(async (resolve, reject) => {
         try {
             const connuser = new sql.Connection(config);
             connuser.connect().then(() => {
                 var req = new sql.Request(connuser);
                 req.query(`select * from View_Cadastro_Lojista where id_usuario = ${id}`, async (err, recordset) => {
-                    if (err) reject({ name: "error", message: err });
+
+                    if (err) return reject({ name: "error", message: err });
+                    if (!recordset[0]) return reject({ name: "error", message: 'id não encontrado na base de dados' });
+
                     let bodyjson = ''
                     if (!!recordset[0].cnpj) {
                         bodyjson = {
@@ -142,7 +146,73 @@ async function readShopkeeperid({ id }) {
 
                         }
                     }
-                    resolve({ name: "success", message: bodyjson });
+                    return resolve({ name: "success", message: bodyjson });
+                });
+                connuser.close();
+            });
+        } catch (error) {
+            return reject(error);
+        }
+    });
+}
+
+async function updateShopkeeperid({ payload }) {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            const connuser = new sql.Connection(config);
+            connuser.connect().then(() => {
+                var req = new sql.Request(connuser);
+
+                let querysql = ''
+
+                if (!!payload.usuario) {
+                    querysql += `  UPDATE usuario SET 
+                              nome = '${payload.usuario.nome}'
+                            , email = '${payload.usuario.email}'
+                            , client_id = '${payload.usuario.client_id}'
+                            , cliente_secret = '${payload.usuario.cliente_secret}'
+                            , base_64 = '${payload.usuario.base_64}'
+                            , status = ${payload.usuario.status}
+                            WHERE id= ${payload.usuario.id}`
+                }
+
+                if (!!payload.pessoa) {
+                    querysql += `  UPDATE pessoa
+                                SET cpf = '${payload.pessoa.cpf}'
+                                    ,celular = '${payload.pessoa.celular}'
+                                    ,emissao = '${payload.pessoa.emissao}'
+                                    ,emissor =  '${payload.pessoa.emissor}'
+                                    ,estado_civil =  '${payload.pessoa.estado_civil}'
+                                    ,mae = '${payload.pessoa.mae}'
+                                    ,pai = '${payload.pessoa.pai}'
+                                    ,nacionalidade =  '${payload.pessoa.nacionalidade}'
+                                    ,nascimento = '${payload.pessoa.nascimento}'
+                                    ,naturalidade = '${payload.pessoa.naturalidade}'
+                                    ,rg = '${payload.pessoa.rg}'
+                                    ,sexo = '${payload.pessoa.sexo}'
+                                WHERE id = ${payload.pessoa.id}`
+                }
+
+                if (!!payload.empresa) {
+                    querysql += ` 
+                                UPDATE empresa
+                                SET  
+                                     cnpj = '${payload.empresa.cnpj}'
+                                    ,cnae ='${payload.empresa.cnae}'
+                                    ,razao_social = '${payload.empresa.razao_social}'
+                                    ,telefone_fixo = '${payload.empresa.telefone_fixo}'
+                                    ,celular ='${payload.empresa.celular}'
+                                    ,nome_fantasia = '${payload.empresa.nome_fantasia}'
+                                    ,site = '${payload.empresa.site}'
+                                WHERE id = ${payload.empresa.id}`
+                }
+
+
+
+                req.query(querysql, async (err, recordset) => {
+                    if (err) return reject({ name: "error", message: err });
+                    return resolve({ name: "success", message: recordset });
                 });
                 connuser.close();
             });
@@ -154,7 +224,27 @@ async function readShopkeeperid({ id }) {
 
 
 
+async function readShopkeepers({ status }) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const connuser = new sql.Connection(config);
+            connuser.connect().then(() => {
+                var req = new sql.Request(connuser);
+                req.query(`select id, nome, email, cpf, validacao, status from View_Cadastro_Lojista where status in (${status})`, async (err, recordset) => {
+                    if (err) return reject({ name: "error", message: err });
+                    return resolve({ name: "success", message: recordset });
+                });
+                connuser.close();
+            });
+        } catch (error) {
+            return reject(error);
+        }
+    });
+}
+
 module.exports = {
-    readShopkeeperid
+    readShopkeepers,
+    readShopkeeperid,
+    updateShopkeeperid
 };
 
