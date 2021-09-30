@@ -4,7 +4,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const { readShopkeepers, readShopkeeperid, updateShopkeeperid } = require("../models/shopkeepers");
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", auth, async (req, res, next) => {
     try {
         const result = await readShopkeeperid(req.params.id);
         res.status(200).send(result);
@@ -13,7 +13,7 @@ router.get("/:id", async (req, res, next) => {
     }
 });
 
-router.put("/", async (req, res, next) => {
+router.put("/", auth, async (req, res, next) => {
     try {
         const result = await updateShopkeeperid(req);
         res.status(200).send(result);
