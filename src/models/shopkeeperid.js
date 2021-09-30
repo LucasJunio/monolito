@@ -8,13 +8,13 @@ async function readShopkeeperid({ id }) {
             const connuser = new sql.Connection(config);
             connuser.connect().then(() => {
                 var req = new sql.Request(connuser);
-                req.query(`select * from View_Cadastro_Lojista where id = ${id}`, async (err, recordset) => {
+                req.query(`select * from View_Cadastro_Lojista where id_usuario = ${id}`, async (err, recordset) => {
                     if (err) reject({ name: "error", message: err });
                     let bodyjson = ''
                     if (!!recordset[0].cnpj) {
                         bodyjson = {
                             "usuario": {
-                                "id": recordset[0].id,
+                                "id": recordset[0].id_usuario,
                                 "nome": recordset[0].nome,
                                 "email": recordset[0].email,
                                 "senha": recordset[0].senha,
@@ -89,7 +89,7 @@ async function readShopkeeperid({ id }) {
                     } else {
                         bodyjson = {
                             "usuario": {
-                                "id": recordset[0].id,
+                                "id": recordset[0].id_usuario,
                                 "nome": recordset[0].nome,
                                 "email": recordset[0].email,
                                 "senha": recordset[0].senha,
