@@ -17,7 +17,6 @@ async function readShopkeeperid({ id }) {
                                 "id": recordset[0].id_usuario,
                                 "nome": recordset[0].nome,
                                 "email": recordset[0].email,
-                                "senha": recordset[0].senha,
                                 "client_id": recordset[0].client_id,
                                 "cliente_secret": recordset[0].cliente_secret,
                                 "base_64": recordset[0].base_64,
@@ -75,8 +74,8 @@ async function readShopkeeperid({ id }) {
                                 "cidade": recordset[0].pf_cidade,
                                 "estado": recordset[0].pf_estado
                             },
-                            "pagamentos": {
-                                "id": recordset[0].id_pagamentos,
+                            "tarifa": {
+                                "id": recordset[0].id_tarifa,
                                 "risco": recordset[0].risco,
                                 "periodo": recordset[0].periodo,
                                 "observacao": recordset[0].observacao,
@@ -130,8 +129,8 @@ async function readShopkeeperid({ id }) {
                                 "cidade": recordset[0].pf_cidade,
                                 "estado": recordset[0].pf_estado
                             },
-                            "pagamentos": {
-                                "id": recordset[0].id_pagamentos,
+                            "tarifa": {
+                                "id": recordset[0].id_tarifa,
                                 "risco": recordset[0].risco,
                                 "periodo": recordset[0].periodo,
                                 "observacao": recordset[0].observacao,
