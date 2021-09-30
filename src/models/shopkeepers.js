@@ -24,6 +24,7 @@ async function readShopkeeperid(id) {
                                 "client_id": recordset[0].client_id,
                                 "cliente_secret": recordset[0].cliente_secret,
                                 "base_64": recordset[0].base_64,
+                                "status": recordset[0].status
                             },
                             "pessoa": {
                                 "id": recordset[0].id_pessoa,
@@ -99,6 +100,7 @@ async function readShopkeeperid(id) {
                                 "client_id": recordset[0].client_id,
                                 "cliente_secret": recordset[0].cliente_secret,
                                 "base_64": recordset[0].base_64,
+                                "status": recordset[0].status
                             },
                             "pessoa": {
                                 "id": recordset[0].id_pessoa,
@@ -156,7 +158,8 @@ async function readShopkeeperid(id) {
     });
 }
 
-async function updateShopkeeperid({ payload }) {
+async function updateShopkeeperid(payload) {
+
 
     return new Promise(async (resolve, reject) => {
         try {
@@ -166,19 +169,23 @@ async function updateShopkeeperid({ payload }) {
 
                 let querysql = ''
 
-                if (!!payload.usuario) {
-                    querysql += `  UPDATE usuario SET 
-                              nome = '${payload.usuario.nome}'
-                            , email = '${payload.usuario.email}'
-                            , client_id = '${payload.usuario.client_id}'
-                            , cliente_secret = '${payload.usuario.cliente_secret}'
-                            , base_64 = '${payload.usuario.base_64}'
-                            , status = ${payload.usuario.status}
-                            WHERE id= ${payload.usuario.id}`
+
+
+                if (!!payload?.usuario) {
+                    querysql += `  
+                                UPDATE usuario 
+                                SET nome = '${payload.usuario.nome}'
+                                    , email = '${payload.usuario.email}'
+                                    , client_id = '${payload.usuario.client_id}'
+                                    , cliente_secret = '${payload.usuario.cliente_secret}'
+                                    , base_64 = '${payload.usuario.base_64}'
+                                    , status = '${payload.usuario.status}'
+                                WHERE id= ${payload.usuario.id}`
                 }
 
-                if (!!payload.pessoa) {
-                    querysql += `  UPDATE pessoa
+                if (!!payload?.pessoa) {
+                    querysql += `  
+                                UPDATE pessoa
                                 SET cpf = '${payload.pessoa.cpf}'
                                     ,celular = '${payload.pessoa.celular}'
                                     ,emissao = '${payload.pessoa.emissao}'
@@ -194,11 +201,10 @@ async function updateShopkeeperid({ payload }) {
                                 WHERE id = ${payload.pessoa.id}`
                 }
 
-                if (!!payload.empresa) {
+                if (!!payload?.empresa) {
                     querysql += ` 
                                 UPDATE empresa
-                                SET  
-                                     cnpj = '${payload.empresa.cnpj}'
+                                SET cnpj = '${payload.empresa.cnpj}'
                                     ,cnae ='${payload.empresa.cnae}'
                                     ,razao_social = '${payload.empresa.razao_social}'
                                     ,telefone_fixo = '${payload.empresa.telefone_fixo}'
@@ -208,7 +214,55 @@ async function updateShopkeeperid({ payload }) {
                                 WHERE id = ${payload.empresa.id}`
                 }
 
+                if (!!payload?.conta) {
+                    querysql += ` 
+                                UPDATE  conta
+                                SET banco = '${payload.conta.banco}'
+                                    ,agencia = '${payload.conta.agencia}'
+                                    ,conta = '${payload.conta.conta}'
+                                    ,operacao = '${payload.conta.operacao}'
+                                    ,pix = '${payload.conta.pix}'
+                                WHERE id = ${payload.conta.id} `
+                }
 
+                if (!!payload?.endereco_cnpj) {
+                    querysql += ` 
+                                UPDATE endereco
+                                SET cep ='${payload.endereco_cnpj.cep}'
+                                    ,complemento = '${payload.endereco_cnpj.complemento}'
+                                    ,endereco = '${payload.endereco_cnpj.endereco}'
+                                    ,bairro = '${payload.endereco_cnpj.bairro}'
+                                    ,numero = '${payload.endereco_cnpj.numero}'
+                                    ,cidade = '${payload.endereco_cnpj.cidade}'
+                                    ,estado = '${payload.endereco_cnpj.estado}'
+                                WHERE id = ${payload.endereco_cnpj.id} `
+                }
+
+                if (!!payload?.endereco_cpf) {
+                    querysql += ` 
+                                UPDATE endereco
+                                SET  cep ='${payload.endereco_cpf.cep}'
+                                    ,complemento = '${payload.endereco_cpf.complemento}'
+                                    ,endereco = '${payload.endereco_cpf.endereco}'
+                                    ,bairro = '${payload.endereco_cpf.bairro}'
+                                    ,numero = '${payload.endereco_cpf.numero}'
+                                    ,cidade = '${payload.endereco_cpf.cidade}'
+                                    ,estado = '${payload.endereco_cpf.estado}'
+                                WHERE id = ${payload.endereco_cpf.id} `
+                }
+
+                if (!!payload?.tarifa) {
+                    querysql += ` 
+                                UPDATE tarifa
+                                SET  risco = '${payload.tarifa.risco}'
+                                    ,periodo = '${payload.tarifa.periodo}'
+                                    ,observacao = '${payload.tarifa.observacao}'
+                                    ,seguimento = '${payload.tarifa.seguimento}'
+                                    ,cobranca = '${payload.tarifa.cobranca}'
+                                    ,faturamento = '${payload.tarifa.faturamento}'
+                                    ,taxa = '${payload.tarifa.risco}'
+                                WHERE id = '${payload.tarifa.id}' `
+                }
 
                 req.query(querysql, async (err, recordset) => {
                     if (err) return reject({ name: "error", message: err });
