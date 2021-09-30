@@ -116,7 +116,20 @@ async function readShopkeeperid({ id }) {
     });
 }
 
+async function updateShopkeeperid({ body }) {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+        } catch (error) {
+            return reject(error);
+        }
+
+    });
+}
+
+
 module.exports = {
-    readShopkeeperid
+    readShopkeeperid,
+    updateShopkeeperid
 };
 
