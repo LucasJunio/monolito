@@ -230,7 +230,7 @@ async function readShopkeepers({ status }) {
             const connuser = new sql.Connection(config);
             connuser.connect().then(() => {
                 var req = new sql.Request(connuser);
-                req.query(`select id, nome, email, cpf, validacao, status from View_Cadastro_Lojista where status in (${status})`, async (err, recordset) => {
+                req.query(`select id_usuario as id, nome, email, cpf, validacao, status from View_Cadastro_Lojista where status in (${status})`, async (err, recordset) => {
                     if (err) return reject({ name: "error", message: err });
                     return resolve({ name: "success", message: recordset });
                 });
