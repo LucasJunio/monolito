@@ -93,9 +93,6 @@ async function signupCNPJ(payload) {
                                 request.query(querysql, async function (err, recordset) {
 
                                     sql.close();
-
-                                    console.log(err)
-
                                     if (err || recordset[0].rowsAffected == 0) return reject({ name: 'error', message: 'Falha no cadastro do usuário cpnj, tente efetuar novamente.', details: (err) ? 'Syntax error: ' + err.message : 'rowsAffected: ' + recordset[0].rowsAffected })
 
                                     const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
