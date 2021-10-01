@@ -16,6 +16,8 @@ async function readShopkeeperid(id) {
 
                     let bodyjson = ''
                     if (!!recordset[0].cnpj) {
+
+
                         bodyjson = {
                             "usuario": {
                                 "id": recordset[0].id_usuario,
@@ -91,6 +93,7 @@ async function readShopkeeperid(id) {
                             }
                         }
                     } else {
+
                         bodyjson = {
                             "usuario": {
                                 "id": recordset[0].id_usuario,

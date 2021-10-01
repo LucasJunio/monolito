@@ -40,9 +40,9 @@ async function signupCNPJ(payload) {
                                                     BEGIN TRAN
                                                     BEGIN TRY
                                                     insert into usuario
-                                                            (data, nome, email, senha, token_sms, validacao) 
+                                                            (data, nome, email, senha, token_sms, validacao, status) 
                                                             values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
-                                                            '${hash}', '${payload.usuario.tokenSms}', 'Não validado')
+                                                            '${hash}', '${payload.usuario.tokenSms}', 'Não validado', 'Pendente Documentacao')
             
                                                     insert into pessoa (cpf, id_usuario, celular, emissao, 
                                                         emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
@@ -72,8 +72,8 @@ async function signupCNPJ(payload) {
                                                         '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                                         '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
                                                     
+                                                        COMMIT TRAN
                                                     select * from usuario where email='${payload.usuario.email}'
-                                                    COMMIT TRAN
                                                     END TRY
                                                     BEGIN CATCH
                                                     SELECT
@@ -93,6 +93,8 @@ async function signupCNPJ(payload) {
                                 request.query(querysql, async function (err, recordset) {
 
                                     sql.close();
+
+                                    console.log(err)
 
                                     if (err || recordset[0].rowsAffected == 0) return reject({ name: 'error', message: 'Falha no cadastro do usuário cpnj, tente efetuar novamente.', details: (err) ? 'Syntax error: ' + err.message : 'rowsAffected: ' + recordset[0].rowsAffected })
 
