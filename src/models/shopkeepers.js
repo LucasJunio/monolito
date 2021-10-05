@@ -299,9 +299,71 @@ async function readShopkeepers({ status }) {
     });
 }
 
+
+async function uploadDocuments(payload) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const conndocs = new sql.Connection(config);
+            conndocs.connect().then(() => {
+                let req = new sql.Request(conndocs);
+                payload.files.forEach(file => {
+
+                    const body = JSON.parse(payload.body.info)
+                    const info = body.itens.filter(info => info.filename === file.originalname)
+                    const [{ categorie, filename }] = info
+                    const { idClient, product } = body
+
+                    const file64 = Buffer.from(file.buffer).toString("base64")
+
+                    req.query(`
+
+                    IF (EXISTS(SELECT * FROM usuario WHERE id = ${idClient}))
+                    BEGIN
+
+                    INSERT INTO documentos
+                    (data
+                    ,produto
+                    ,id_usario
+                    ,nome
+                    ,categoria
+                    ,alterado_por
+                    ,status
+                    ,data_status
+                    ,base64)
+                    VALUES
+                    (GETDATE()
+                    ,'${product}'
+                    , ${idClient}
+                    ,'${filename}'
+                    ,'${categorie}'
+                    ,NULL
+                    ,NULL
+                    ,GETDATE()
+                    ,'${file64}')
+
+                    select 1 as rowsAffected
+                    END
+                    ELSE
+                    BEGIN
+                    select 0 as rowsAffected
+                    END                    
+                    `, async (err, recordset) => {
+                        if (err || recordset[0].rowsAffected == 0) return reject({ name: "error", message: err });
+                    });
+                })
+                conndocs.close();
+                return resolve({ name: "success", message: 'Upload realizado com sucesso!' });
+            });
+        } catch (error) {
+            return reject(error);
+        }
+    });
+}
+
 module.exports = {
     readShopkeepers,
     readShopkeeperid,
-    updateShopkeeperid
+    updateShopkeeperid,
+    uploadDocuments
 };
 
