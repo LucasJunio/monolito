@@ -14,14 +14,14 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(function (req, res, next) {
-  res.setHeader("Cache-Control", "max-age=15, public");
-  res.setTimeout(10000, () => {
-    console.log("Request has timed out.");
-    res.status(408).send({ name: "error", message: "Request has timed out" });
-  });
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.setHeader("Cache-Control", "max-age=15, public");
+//   res.setTimeout(50000, () => {
+//     console.log("Request has timed out.");
+//     res.status(408).send({ name: "error", message: "Request has timed out" });
+//   });
+//   next();
+// });
 
 // Routes
 app.use("/api/v1", require("./src/routes"));

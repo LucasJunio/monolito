@@ -32,8 +32,9 @@ router.get("/", auth, async (req, res, next) => {
 });
 
 router.post("/upload", upload.array('file', 3), async (req, res, next) => {
+
     try {
-        if (req.files) {
+        if (req.files.length > 0) {
             const result = await uploadDocuments(req);
             res.send({ status: "success" });
         } else {
