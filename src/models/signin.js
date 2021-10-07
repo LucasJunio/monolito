@@ -55,6 +55,8 @@ async function signin(payload) {
               return resolve({
                 name: "success",
                 message: "Usuário logado.",
+                userId: recordset[0].id,
+                userName: recordset[0].nome,
                 token,
               });
             } else {
