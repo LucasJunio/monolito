@@ -9,4 +9,5 @@ router.use("/user", require("../controllers/user.controller"));
 router.use("/status", require("../controllers/status.controller"));
 router.use("/shopkeepers", require("../controllers/shopkeepers.controller"));
 router.use("/segments", require("../controllers/segments.controller"));
+router.use("/documents", require("../controllers/documents.controller"));
 module.exports = router;
