@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { response } = require("express");
 const sql = require("mssql");
 const { config } = require("../config/settings");
 
@@ -86,7 +87,7 @@ async function readShopkeeperid(id) {
                                 "risco": recordset[0].risco,
                                 "periodo": recordset[0].periodo,
                                 "observacao": recordset[0].observacao,
-                                "seguimento": recordset[0].seguimento,
+                                "segmento": recordset[0].segmento,
                                 "cobranca": recordset[0].cobranca,
                                 "faturamento": recordset[0].faturamento,
                                 "taxa": recordset[0].taxa
@@ -143,7 +144,7 @@ async function readShopkeeperid(id) {
                                 "risco": recordset[0].risco,
                                 "periodo": recordset[0].periodo,
                                 "observacao": recordset[0].observacao,
-                                "seguimento": recordset[0].seguimento,
+                                "segmento": recordset[0].segmento,
                                 "cobranca": recordset[0].cobranca,
                                 "faturamento": recordset[0].faturamento,
                                 "taxa": recordset[0].taxa
@@ -260,7 +261,7 @@ async function updateShopkeeperid(payload) {
                                 SET  risco = '${payload.tarifa.risco}'
                                     ,periodo = '${payload.tarifa.periodo}'
                                     ,observacao = '${payload.tarifa.observacao}'
-                                    ,seguimento = '${payload.tarifa.seguimento}'
+                                    ,segmento = '${payload.tarifa.segmento}'
                                     ,cobranca = '${payload.tarifa.cobranca}'
                                     ,faturamento = '${payload.tarifa.faturamento}'
                                     ,taxa = '${payload.tarifa.risco}'
@@ -306,6 +307,9 @@ async function uploadDocuments(payload) {
             const conndocs = new sql.Connection(config);
             conndocs.connect().then(() => {
                 let req = new sql.Request(conndocs);
+                let arrayupdate = []
+
+
                 payload.files.forEach(file => {
 
                     const body = JSON.parse(payload.body.info)
@@ -329,7 +333,8 @@ async function uploadDocuments(payload) {
                     ,alterado_por
                     ,status
                     ,data_status
-                    ,base64)
+                    ,base64
+                    )
                     VALUES
                     (GETDATE()
                     ,'${product}'
@@ -339,20 +344,30 @@ async function uploadDocuments(payload) {
                     ,NULL
                     ,NULL
                     ,GETDATE()
-                    ,'${file64}')
+                    ,'${file64}'
+                    )
 
-                    select 1 as rowsAffected
+                    select nome from documentos where id = (SELECT SCOPE_IDENTITY())
                     END
                     ELSE
                     BEGIN
                     select 0 as rowsAffected
                     END                    
                     `, async (err, recordset) => {
-                        if (err || recordset[0].rowsAffected == 0) return reject({ name: "error", message: err });
+                        if (err) {
+                            return reject({ name: "error", message: err })
+                        };
+
+                        arrayupdate.push(recordset[0].nome)
+                        if (arrayupdate.length === payload.files.length) {
+                            console.log('upload ok')
+                            return resolve({ name: "success", message: `Upload dos arquivos: [${arrayupdate}] realizados com sucesso!` });
+                        }
+
                     });
                 })
+
                 conndocs.close();
-                return resolve({ name: "success", message: 'Upload realizado com sucesso!' });
             });
         } catch (error) {
             return reject(error);

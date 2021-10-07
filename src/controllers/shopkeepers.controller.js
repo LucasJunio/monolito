@@ -36,7 +36,7 @@ router.post("/upload", upload.array('file', 3), async (req, res, next) => {
     try {
         if (req.files.length > 0) {
             const result = await uploadDocuments(req);
-            res.send({ status: "success" });
+            res.send(result);
         } else {
             throw Error("FILE_MISSING");
         }
