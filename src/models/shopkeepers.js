@@ -327,7 +327,7 @@ async function uploadDocuments(payload) {
                     INSERT INTO documentos
                     (data
                     ,produto
-                    ,id_usario
+                    ,id_usuario
                     ,nome
                     ,categoria
                     ,alterado_por
