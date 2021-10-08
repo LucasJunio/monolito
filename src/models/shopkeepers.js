@@ -309,7 +309,6 @@ async function uploadDocuments(payload) {
                 let req = new sql.Request(conndocs);
                 let arrayupdate = []
 
-
                 payload.files.forEach(file => {
 
                     const body = JSON.parse(payload.body.info)
@@ -319,11 +318,12 @@ async function uploadDocuments(payload) {
 
                     const file64 = Buffer.from(file.buffer).toString("base64")
 
-                    req.query(`
 
+                    // req.input('bin', sql.Binary, file.buffer);
+                    req.query(`
+                    
                     IF (EXISTS(SELECT * FROM usuario WHERE id = ${idClient}))
                     BEGIN
-
                     INSERT INTO documentos
                     (data
                     ,produto
@@ -334,6 +334,7 @@ async function uploadDocuments(payload) {
                     ,status
                     ,data_status
                     ,base64
+                    --,binario
                     )
                     VALUES
                     (GETDATE()
@@ -345,26 +346,24 @@ async function uploadDocuments(payload) {
                     ,NULL
                     ,GETDATE()
                     ,'${file64}'
+                    --,@bin
                     )
-
                     select nome from documentos where id = (SELECT SCOPE_IDENTITY())
                     END
                     ELSE
                     BEGIN
                     select 0 as rowsAffected
-                    END                    
-                    `, async (err, recordset) => {
+                    END`, async (err, recordset) => {
                         if (err) {
+                            console.error(err)
                             return reject({ name: "error", message: err })
                         };
-
                         arrayupdate.push(recordset[0].nome)
                         if (arrayupdate.length === payload.files.length) {
-                            console.log('upload ok')
                             return resolve({ name: "success", message: `Upload dos arquivos: [${arrayupdate}] realizados com sucesso!` });
                         }
-
                     });
+
                 })
 
                 conndocs.close();
