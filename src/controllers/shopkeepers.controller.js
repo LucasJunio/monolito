@@ -31,7 +31,7 @@ router.get("/", auth, async (req, res, next) => {
     }
 });
 
-router.post("/upload", upload.array('file', 3), async (req, res, next) => {
+router.post("/upload", upload.array('file', 10), async (req, res, next) => {
 
     try {
         if (req.files.length > 0) {
