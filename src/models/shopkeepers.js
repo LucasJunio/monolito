@@ -322,7 +322,15 @@ async function uploadDocuments(payload) {
                     // req.input('bin', sql.Binary, file.buffer);
                     req.query(`
                     
-                    IF (EXISTS(SELECT * FROM usuario WHERE id = ${idClient}))
+                    IF (EXISTS(SELECT * FROM usuario WHERE id = ${idClient}))       
+                    
+                    IF (EXISTS(SELECT * FROM documentos WHERE id_usuario = ${idClient} and categoria="${categorie}"))
+                    BEGIN
+                    UPDATE  SET base64 = '${file64}' WHERE id_usuario = ${idClient} and categoria="${categorie}"
+                    select nome from documentos WHERE id_usuario = ${idClient} and categoria="${categorie}"
+                    END
+                    ELSE
+
                     BEGIN
                     INSERT INTO documentos
                     (data
@@ -343,13 +351,15 @@ async function uploadDocuments(payload) {
                     ,'${filename}'
                     ,'${categorie}'
                     ,NULL
-                    ,NULL
+                    ,'Aguardando Aprovação'
                     ,GETDATE()
                     ,'${file64}'
                     --,@bin
                     )
                     select nome from documentos where id = (SELECT SCOPE_IDENTITY())
                     END
+
+
                     ELSE
                     BEGIN
                     select 0 as rowsAffected
