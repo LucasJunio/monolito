@@ -324,10 +324,10 @@ async function uploadDocuments(payload) {
                     
                     IF (EXISTS(SELECT * FROM usuario WHERE id = ${idClient}))       
                     
-                    IF (EXISTS(SELECT * FROM documentos WHERE id_usuario = ${idClient} and categoria="${categorie}"))
+                    IF (EXISTS(SELECT * FROM documentos WHERE id_usuario = ${idClient} and categoria='${categorie}'))
                     BEGIN
-                    UPDATE documentos SET data=GETDATE(), nome='${filename}', base64 = '${file64}' WHERE id_usuario = ${idClient} and categoria="${categorie}"
-                    select nome from documentos WHERE id_usuario = ${idClient} and categoria="${categorie}"
+                    UPDATE documentos SET data=GETDATE(), nome='${filename}', base64 = '${file64}' WHERE id_usuario = ${idClient} and categoria='${categorie}'
+                    select nome from documentos WHERE id_usuario = ${idClient} and categoria='${categorie}'
                     END
                     ELSE
 
