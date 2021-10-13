@@ -226,7 +226,7 @@ async function updateShopkeeperid(payload) {
                                     ,conta = '${payload.conta.conta}'
                                     ,operacao = '${payload.conta.operacao}'
                                     ,pix = '${payload.conta.pix}'
-                                WHERE id = ${payload.conta.id} `
+                                WHERE id = '${payload.conta.id}' `
                 }
 
                 if (!!payload?.endereco_cnpj) {
@@ -239,7 +239,7 @@ async function updateShopkeeperid(payload) {
                                     ,numero = '${payload.endereco_cnpj.numero}'
                                     ,cidade = '${payload.endereco_cnpj.cidade}'
                                     ,estado = '${payload.endereco_cnpj.estado}'
-                                WHERE id = ${payload.endereco_cnpj.id} `
+                                WHERE id = '${payload.endereco_cnpj.id}' `
                 }
 
                 if (!!payload?.endereco_cpf) {
@@ -252,7 +252,7 @@ async function updateShopkeeperid(payload) {
                                     ,numero = '${payload.endereco_cpf.numero}'
                                     ,cidade = '${payload.endereco_cpf.cidade}'
                                     ,estado = '${payload.endereco_cpf.estado}'
-                                WHERE id = ${payload.endereco_cpf.id} `
+                                WHERE id = '${payload.endereco_cpf.id}' `
                 }
 
                 if (!!payload?.tarifa) {
@@ -265,7 +265,7 @@ async function updateShopkeeperid(payload) {
                                     ,cobranca = '${payload.tarifa.cobranca}'
                                     ,faturamento = '${payload.tarifa.faturamento}'
                                     ,taxa = '${payload.tarifa.risco}'
-                                WHERE id = ${payload.tarifa.id} `
+                                WHERE id = '${payload.tarifa.id}' `
                 }
 
                 req.query(querysql, async (err, recordset) => {
