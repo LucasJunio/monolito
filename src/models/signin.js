@@ -31,7 +31,7 @@ async function signin(payload) {
         let request = new sql.Request();
 
         request.query(
-          `select * from usuario where email ='${payload.email}'`,
+          `SELECT * FROM View_Cadastro_Lojista where email ='${payload.email}'`,
           async function (err, recordset) {
             sql.close();
             if (err || recordset.length === 0)
@@ -55,8 +55,9 @@ async function signin(payload) {
               return resolve({
                 name: "success",
                 message: "Usuário logado.",
-                userId: recordset[0].id,
+                userId: recordset[0].id_usuario,
                 userName: recordset[0].nome,
+                cnpj: recordset[0].cnpj,
                 token,
               });
             } else {
