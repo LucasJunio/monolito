@@ -71,6 +71,9 @@ async function signupCNPJ(payload) {
                                                         values ('${payload.pessoa.cpf}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
                                                         '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                                         '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
+
+                                                    insert into tarifa  (id_usuario,risco,periodo,observacao,segmento,cobranca,faturamento,taxa)
+                                                        VALUES (IDENT_CURRENT('usuario'),'','','','','',0,0)                              
                                                     
                                                         COMMIT TRAN
                                                     select * from usuario where email='${payload.usuario.email}'
