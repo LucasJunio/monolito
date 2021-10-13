@@ -16,6 +16,7 @@ async function readDocuments(id) {
                         ,doc.id_usuario
                         ,doc.nome
                         ,re.categoria
+                        ,re.descricao
                         ,doc.alterado_por
                         ,doc.status
                         ,doc.data_status
