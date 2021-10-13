@@ -264,8 +264,8 @@ async function updateShopkeeperid(payload) {
                                     ,segmento = '${payload.tarifa.segmento}'
                                     ,cobranca = '${payload.tarifa.cobranca}'
                                     ,faturamento = '${payload.tarifa.faturamento}'
-                                    ,taxa = '${payload.tarifa.risco}' 
-                                WHERE id_usuario= ${payload.usuario.id} `
+                                    ,taxa = '${payload.tarifa.risco}'
+                                WHERE id = ${payload.tarifa.id} `
                 }
 
                 req.query(querysql, async (err, recordset) => {
