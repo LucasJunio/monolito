@@ -263,8 +263,8 @@ async function updateShopkeeperid(payload) {
                                     ,observacao = '${payload.tarifa.observacao}'
                                     ,segmento = '${payload.tarifa.segmento}'
                                     ,cobranca = '${payload.tarifa.cobranca}'
-                                    ,faturamento = '${payload.tarifa.faturamento}'
-                                    ,taxa = '${payload.tarifa.risco}'
+                                    ,faturamento = ${payload.tarifa.faturamento}
+                                    ,taxa = ${payload.tarifa.risco}
                                 WHERE id = '${payload.tarifa.id}' `
                 }
 
