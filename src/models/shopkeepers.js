@@ -318,7 +318,7 @@ async function uploadDocuments(payload) {
 
                     const file64 = Buffer.from(file.buffer).toString("base64")
 
-                    if (!idClient || !categorie || !filename) return reject({ name: "error", message: 'Arquivos com campos em branco!' })
+                    if (!idClient || !categorie || !filename || !product) return reject({ name: "error", message: 'Arquivos com campos em branco!' })
 
                     req.query(`
                     
