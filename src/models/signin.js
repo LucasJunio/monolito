@@ -119,6 +119,7 @@ async function signinAdmin(payload) {
               return resolve({
                 name: "success",
                 message: "Usuário logado.",
+                nome: recordset[0].nome,
                 token,
               });
             } else {
