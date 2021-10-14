@@ -318,8 +318,8 @@ async function uploadDocuments(payload) {
 
                     const file64 = Buffer.from(file.buffer).toString("base64")
 
+                    if (!idClient || !categorie || !filename) return reject({ name: "error", message: 'Arquivos com campos em branco!' })
 
-                    // req.input('bin', sql.Binary, file.buffer);
                     req.query(`
                     
                     IF (EXISTS(SELECT * FROM usuario WHERE id = ${idClient}))       
