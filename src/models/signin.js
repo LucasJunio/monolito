@@ -58,6 +58,8 @@ async function signin(payload) {
                 userId: recordset[0].id_usuario,
                 userName: recordset[0].nome,
                 cnpj: recordset[0].cnpj,
+                validation: recordset[0].validacao,
+                status: recordset[0].status,
                 token,
               });
             } else {
