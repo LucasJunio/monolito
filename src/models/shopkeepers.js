@@ -367,7 +367,6 @@ async function uploadDocuments(payload) {
                     END`,
             async (err, recordset) => {
               if (err) {
-                console.error(err);
                 return reject({ name: 'error', message: err });
               }
               arrayupdate.push(recordset[0].nome);
