@@ -30,6 +30,9 @@ async function readShopkeeperid(id) {
                                     cliente_secret: recordset[0].cliente_secret,
                                     base_64: recordset[0].base_64,
                                     status: recordset[0].status,
+                                    numero_estabelecimento: recordset[0].numero_estabelecimento,
+                                    terminal: recordset[0].terminal,
+                                    chave: recordset[0].chave
                                 },
                                 pessoa: {
                                     id: recordset[0].id_pessoa,
@@ -106,6 +109,9 @@ async function readShopkeeperid(id) {
                                     cliente_secret: recordset[0].cliente_secret,
                                     base_64: recordset[0].base_64,
                                     status: recordset[0].status,
+                                    numero_estabelecimento: recordset[0].numero_estabelecimento,
+                                    terminal: recordset[0].terminal,
+                                    chave: recordset[0].chave
                                 },
                                 pessoa: {
                                     id: recordset[0].id_pessoa,
