@@ -184,6 +184,9 @@ async function updateShopkeeperid(payload) {
                                     , cliente_secret = '${payload.usuario.cliente_secret}'
                                     , base_64 = '${payload.usuario.base_64}'
                                     , status = '${payload.usuario.status}'
+                                    , numero_estabelecimento = '${payload.usuario.numero_estabelecimento}'
+                                    , terminal = '${payload.usuario.terminal}'
+                                    , chave = '${payload.usuario.chave}'
                                 WHERE id= ${payload.usuario.id}`
                 }
 
