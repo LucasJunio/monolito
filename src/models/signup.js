@@ -161,9 +161,9 @@ async function signupCPF(payload) {
                                 BEGIN TRAN
                                 BEGIN TRY
                                 insert into usuario
-                                        (data, nome, email, senha, token_sms, validacao) 
+                                        (data, nome, email, senha, token_sms, validacao, status) 
                                         values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
-                                        '${hash}', '${payload.usuario.tokenSms}', 'Não validado')
+                                        '${hash}', '${payload.usuario.tokenSms}', 'Não validado', 'PENDENTE DE DOCUMENTAÇÃO')
 
                                 insert into pessoa (cpf, id_usuario, celular, emissao, 
                                     emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
