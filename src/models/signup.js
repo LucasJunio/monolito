@@ -110,6 +110,7 @@ async function signupCNPJ(payload) {
                                     return resolve({
                                         name: 'success',
                                         message: 'Usuário cadastrado com sucesso.',
+                                        id: recordset[0].id,
                                         token,
                                         error: error
                                     })
@@ -215,6 +216,7 @@ async function signupCPF(payload) {
                                 return resolve({
                                     name: 'success',
                                     message: 'Usuário cadastrado com sucesso.',
+                                    id: recordset[0].id,
                                     token,
                                     error: error
                                 })
