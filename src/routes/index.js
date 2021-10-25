@@ -10,4 +10,6 @@ router.use("/status", require("../controllers/status.controller"));
 router.use("/shopkeepers", require("../controllers/shopkeepers.controller"));
 router.use("/segments", require("../controllers/segments.controller"));
 router.use("/documents", require("../controllers/documents.controller"));
+router.use("/dashboard", require("../controllers/dashboard.controller"));
+
 module.exports = router;

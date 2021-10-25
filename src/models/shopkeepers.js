@@ -93,9 +93,9 @@ async function readShopkeeperid(id) {
                   periodo: recordset[0].periodo,
                   observacao: recordset[0].observacao,
                   segmento: recordset[0].segmento,
-                  cobranca: recordset[0].cobranca,
+                  tipo_cobranca: recordset[0].tipo_cobranca,
                   faturamento: recordset[0].faturamento,
-                  taxa: recordset[0].taxa,
+                  cobranca: recordset[0].cobranca,
                 },
               };
             } else {
@@ -152,9 +152,9 @@ async function readShopkeeperid(id) {
                   periodo: recordset[0].periodo,
                   observacao: recordset[0].observacao,
                   segmento: recordset[0].segmento,
-                  cobranca: recordset[0].cobranca,
+                  tipo_cobranca: recordset[0].tipo_cobranca,
                   faturamento: recordset[0].faturamento,
-                  taxa: recordset[0].taxa,
+                  cobranca: recordset[0].cobranca,
                 },
               };
             }
@@ -267,9 +267,9 @@ async function updateShopkeeperid(payload) {
                 ,periodo = '${payload.tarifa.periodo}'
                 ,observacao = '${payload.tarifa.observacao}'
                 ,segmento = '${payload.tarifa.segmento}'
-                ,cobranca = '${payload.tarifa.cobranca}'
+                ,tipo_cobranca = '${payload.tarifa.tipo_cobranca}'
                 ,faturamento = ${payload.tarifa.faturamento}
-                ,taxa = ${payload.tarifa.taxa}
+                ,cobranca = ${payload.tarifa.cobranca}
             WHERE id = '${payload.tarifa.id}';`;
         }
         req.query(querysql, async (err, recordset) => {
