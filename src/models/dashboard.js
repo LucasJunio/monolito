@@ -11,7 +11,6 @@ async function readDashboard({ startdate, enddate }, token) {
             const parts = token.split(" ");
             const decoded = jwt.verify(parts[1], process.env.JWT_SECRET);
 
-
             const conndashboard = new sql.Connection(config2);
             conndashboard.connect().then(() => {
                 var req = new sql.Request(conndashboard);
@@ -19,7 +18,6 @@ async function readDashboard({ startdate, enddate }, token) {
                 const selectsql = `
                 
                 select
-
                 CONVERT(varchar(10),CreationDate,103) data
                 , case when CardType = 0 then 'Visa'
                 when CardType = 1 then 'Master'
@@ -27,9 +25,7 @@ async function readDashboard({ startdate, enddate }, token) {
                 when CardType = 3 then 'Discover'
                 else 'Elo' end as bandeira
                 , OrderTotalAmount as valor
-
                 ,CONVERT(VARCHAR(20),AVG(OrderTotalAmount) OVER (ORDER BY DATEPART(dd,CreationDate)),1) AS movel
-
                 from CardPayments where
                 clientId = '${decoded.guuid}'
                 and  CONVERT(DATE,CreationDate) between '${startdate}' and '${enddate}'
