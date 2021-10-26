@@ -43,14 +43,16 @@ async function signin(payload) {
                   : "rowsAffected: " + recordset.length,
               });
 
+
             if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
               const token = await jwt.sign(
-                { email: payload.email },
+                { email: payload.email, guuid: recordset[0].guuid },
                 process.env.JWT_SECRET,
                 {
                   expiresIn: 86400,
                 }
               );
+
 
               return resolve({
                 name: "success",
