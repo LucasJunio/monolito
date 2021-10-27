@@ -15,8 +15,7 @@ async function readDashboard({ startdate, enddate }, token) {
             conndashboard.connect().then(() => {
                 var req = new sql.Request(conndashboard);
 
-                const selectsql = `
-                
+                const selectsql = `                
                 select
                 CONVERT(varchar(10),CreationDate,103) data
                 , case when CardType = 0 then 'Visa'
@@ -28,8 +27,7 @@ async function readDashboard({ startdate, enddate }, token) {
                 ,CONVERT(VARCHAR(20),AVG(OrderTotalAmount) OVER (ORDER BY DATEPART(dd,CreationDate)),1) AS movel
                 from CardPayments where
                 clientId = '${decoded.guuid}'
-                and  CONVERT(DATE,CreationDate) between '${startdate}' and '${enddate}'
-                                
+                and  CONVERT(DATE,CreationDate) between '${startdate}' and '${enddate}'                  
                 `
                 req.query(selectsql, async (err, recordset) => {
                     if (err) return reject({ name: "error", message: err, stack: selectsql });
