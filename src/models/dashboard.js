@@ -66,8 +66,6 @@ async function readDashboard({ startdate, enddate }, token) {
                         return acumulador + valorAtual.valor;
                     }, 0)
 
-
-
                     const returndata = [{
 
                         chartMovingAverage: dados,
@@ -77,8 +75,6 @@ async function readDashboard({ startdate, enddate }, token) {
                         valueWay: 0.0
 
                     }]
-
-
 
                     return resolve({ name: "success", message: returndata });
 
