@@ -72,7 +72,7 @@ async function signupCNPJ(payload) {
                                                         '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                                         '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
 
-                                                    insert into tarifa  (id_usuario,risco,periodo,observacao,segmento,cobranca,faturamento,taxa)
+                                                    insert into tarifa  (id_usuario,risco,periodo,observacao,segmento,tipo_cobranca,faturamento,cobranca)
                                                         VALUES (IDENT_CURRENT('usuario'),'','','','','',0,0)                              
                                                     
                                                         COMMIT TRAN
@@ -182,6 +182,10 @@ async function signupCPF(payload) {
                                     values ('${payload.pessoa.cpf}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
                                     '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                     '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
+
+                                insert into tarifa  (id_usuario,risco,periodo,observacao,segmento,tipo_cobranca,faturamento,cobranca)
+                                    VALUES (IDENT_CURRENT('usuario'),'','','','','',0,0)
+
                                 
                                 select * from usuario where email='${payload.usuario.email}'
                                 COMMIT TRAN
