@@ -10,7 +10,7 @@ async function listByType(types) {
       const selectTypes = types.tipo.split(",");
       const req = new sql.Request(connuser);
       req.query(
-        `select nome, tipo, valor from listas where tipo in (${selectTypes});`,
+        `select nome, tipo, label, valor_interno from listas where tipo in (${selectTypes});`,
         async (err, recordset) => {
           if (err) return reject({ name: "error", message: err });
           return resolve({ name: "success", message: recordset });
