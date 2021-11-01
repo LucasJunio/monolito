@@ -337,6 +337,7 @@ async function uploadDocuments(payload) {
                     IF (EXISTS(SELECT * FROM documentos WHERE id_usuario = ${idClient} and categoria='${categorie}'))
                     BEGIN
                     UPDATE documentos SET data=GETDATE(), nome='${filename}', base64 = '${file64}', status='Aguardando Aprovação' WHERE id_usuario = ${idClient} and categoria='${categorie}'
+                    UPDATE usuario SET status='AGUARDANDO APROVAÇÃO'  WHERE id = ${idClient}
                     select nome from documentos WHERE id_usuario = ${idClient} and categoria='${categorie}'
                     END
                     ELSE
