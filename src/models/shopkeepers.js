@@ -366,6 +366,8 @@ async function uploadDocuments(payload) {
                     ,'${file64}'
                     --,@bin
                     )
+
+                    UPDATE usuario SET status='AGUARDANDO APROVAÇÃO'  WHERE id = ${idClient}
                     select nome from documentos where id = (SELECT SCOPE_IDENTITY())
                     END
 
