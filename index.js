@@ -7,8 +7,11 @@ var cors = require("cors");
 const morgan = require("morgan");
 // BodyParser formated request body
 const bodyParser = require("body-parser");
+// logs
+const log = require("./src/middleware/log");
 
 // Middlewares: functions run before of create routes
+log();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
@@ -50,5 +53,10 @@ app.set("port", process.env.HTTPPORT || 80);
 
 // Starting the server
 app.listen(app.get("port"), () => {
-  console.log(`Server is running ${app.get("port")}`);
+  // console.log(`Server is running ${app.get("port")}`);
+  logger.info(`Server is running ${app.get("port")}`);
 });
+
+// const myFormat = printf(({ level, message, label, timestamp }) => {
+//   return `${timestamp} [${label}] ${level}: ${message}`;
+// });
