@@ -362,7 +362,7 @@ async function uploadDocuments(payload) {
                     ,'${filename}'
                     ,'${categorie}'
                     ,NULL
-                    ,'Aguardando Aprovação'
+                    ,'AGUARDANDO APROVAÇÃO'
                     ,GETDATE()
                     ,'${file64}'
                     --,@bin
