@@ -6,11 +6,9 @@ const { readDocuments, updateStatusDocuments } = require("../models/documents");
 
 router.get("/:id", auth, async (req, res, next) => {
   try {
-    const result2 = await readDocuments(req.params.id);
+    const result = await readDocuments(req.params.id);
     res.status(200).send(result);
   } catch (error) {
-    logger.error(error);
-    console.log("readDocuments############");
     next(error);
   }
 });
