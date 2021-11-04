@@ -2,21 +2,23 @@ const express = require("express");
 // Express: Facto standard server framework for Node.js
 const app = express();
 // Cors habilited Cross-origin resource sharing
-var cors = require("cors");
+const cors = require("cors");
 // Morgan is used for logging request details;
 const morgan = require("morgan");
 // BodyParser formated request body
 const bodyParser = require("body-parser");
 // logs
-const log = require("./src/middleware/log");
+const { log, logMiddleware } = require("./src/middleware/log");
 
 // Middlewares: functions run before of create routes
 log();
+app.use(logMiddleware());
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 // app.use(function (req, res, next) {
 //   res.setHeader("Cache-Control", "max-age=15, public");
 //   res.setTimeout(50000, () => {
@@ -32,7 +34,7 @@ app.use("/api/v1", require("./src/routes"));
 // Error validation
 app.use((err, req, res, next) => {
   const { name, message, stack, details, status } = err;
-
+  logger.error(`Message: ${message}\n stack: ${stack}`);
   switch (status) {
     case 400:
       res.status(400).json({ name, message, details, stack });
@@ -45,6 +47,7 @@ app.use((err, req, res, next) => {
 
 // Not found 404
 app.use((req, res) => {
+  logger.error("Rota não encontrada!");
   res.status(404).send("Rota não encontrada!");
 });
 

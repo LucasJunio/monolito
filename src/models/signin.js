@@ -7,6 +7,7 @@ const {
   validateSignin,
   signinSchema,
 } = require("../validate/signin.validation");
+const { loggers } = require("winston");
 
 async function signin(payload) {
   return new Promise(async (resolve, reject) => {
@@ -43,7 +44,6 @@ async function signin(payload) {
                   : "rowsAffected: " + recordset.length,
               });
 
-
             if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
               const token = await jwt.sign(
                 { email: payload.email, guuid: recordset[0].guuid },
@@ -53,6 +53,7 @@ async function signin(payload) {
                 }
               );
 
+              logger.info(`Usuário ${payload.email} logado`);
 
               return resolve({
                 name: "success",
@@ -98,7 +99,7 @@ async function signinAdmin(payload) {
           });
 
         let request = new sql.Request();
-
+        logger.debug("Busca pelo email");
         request.query(
           `select * from usuario_admin where email ='${payload.email}'`,
           async function (err, recordset) {
@@ -110,6 +111,7 @@ async function signinAdmin(payload) {
                 message: "Email incorreto.",
                 details: "Syntax error: " + err,
               });
+            logger.debug("Criação do hast da senha");
 
             if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
               const token = await jwt.sign(
@@ -119,7 +121,7 @@ async function signinAdmin(payload) {
                   expiresIn: 86400,
                 }
               );
-
+              logger.info(`Usuário ${payload.email} logado`);
               return resolve({
                 name: "success",
                 message: "Usuário logado.",
