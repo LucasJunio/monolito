@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     res.status(408).send({ name: "error", message: "Request has timed out" });
 //   });
 //   next();
-// });
+// }); 
 
 // Routes
 app.use("/api/v1", require("./src/routes"));
