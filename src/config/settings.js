@@ -21,6 +21,24 @@ module.exports = {
     },
   },
 
+  config2: {
+    server: process.env.DB_HOST2,
+    user: process.env.DB_USERNAME2,
+    password: process.env.DB_PASSWORD2,
+
+    connectionTimeout: 300000,
+    requestTimeout: 300000,
+    pool: {
+      idleTimeoutMillis: 300000,
+      max: 100,
+    },
+
+    options: {
+      port: process.env.DB_PORT2,
+      database: process.env.DB_NAME2,
+    },
+  },
+
   email: nodemailer.createTransport({
     host: process.env.EMAILHOST,
     port: process.env.EMAILPORT,

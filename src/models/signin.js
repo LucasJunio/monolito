@@ -7,6 +7,7 @@ const {
   validateSignin,
   signinSchema,
 } = require("../validate/signin.validation");
+const { loggers } = require("winston");
 
 async function signin(payload) {
   return new Promise(async (resolve, reject) => {
@@ -31,7 +32,7 @@ async function signin(payload) {
         let request = new sql.Request();
 
         request.query(
-          `select * from usuario where email ='${payload.email}'`,
+          `SELECT * FROM View_Cadastro_Lojista where email ='${payload.email}'`,
           async function (err, recordset) {
             sql.close();
             if (err || recordset.length === 0)
@@ -45,16 +46,23 @@ async function signin(payload) {
 
             if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
               const token = await jwt.sign(
-                { email: payload.email },
+                { email: payload.email, guuid: recordset[0].guuid },
                 process.env.JWT_SECRET,
                 {
                   expiresIn: 86400,
                 }
               );
 
+              logger.info(`Usuário ${payload.email} logado`);
+
               return resolve({
                 name: "success",
                 message: "Usuário logado.",
+                userId: recordset[0].id_usuario,
+                userName: recordset[0].nome,
+                cnpj: recordset[0].cnpj,
+                validation: recordset[0].validacao,
+                status: recordset[0].status,
                 token,
               });
             } else {
@@ -91,7 +99,7 @@ async function signinAdmin(payload) {
           });
 
         let request = new sql.Request();
-
+        logger.debug("Busca pelo email");
         request.query(
           `select * from usuario_admin where email ='${payload.email}'`,
           async function (err, recordset) {
@@ -103,6 +111,7 @@ async function signinAdmin(payload) {
                 message: "Email incorreto.",
                 details: "Syntax error: " + err,
               });
+            logger.debug("Criação do hast da senha");
 
             if (await bcrypt.compare(payload.senha, recordset[0].senha)) {
               const token = await jwt.sign(
@@ -112,10 +121,11 @@ async function signinAdmin(payload) {
                   expiresIn: 86400,
                 }
               );
-
+              logger.info(`Usuário ${payload.email} logado`);
               return resolve({
                 name: "success",
                 message: "Usuário logado.",
+                nome: recordset[0].nome,
                 token,
               });
             } else {

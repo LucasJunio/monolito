@@ -24,10 +24,14 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mssql": "^3.3.0",
+    "multer": "^1.4.3",
     "nodemailer": "^6.4.16",
-    "twilio": "^3.62.0"
+    "tedious": "^14.0.0",
+    "twilio": "^3.62.0",
+    "winston": "^3.3.3",
+    "winston-sql-transport": "^3.1.0"
   },
   "devDependencies": {
-    "nodemon": "2.0.7"
+    "nodemon": "^2.0.7"
   }
 }

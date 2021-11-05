@@ -40,9 +40,9 @@ async function signupCNPJ(payload) {
                                                     BEGIN TRAN
                                                     BEGIN TRY
                                                     insert into usuario
-                                                            (data, nome, email, senha, token_sms, validacao) 
+                                                            (data, nome, email, senha, token_sms, validacao, status) 
                                                             values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
-                                                            '${hash}', '${payload.usuario.tokenSms}', 'Não validado')
+                                                            '${hash}', '${payload.usuario.tokenSms}', 'Não validado', 'PENDENTE DE DOCUMENTAÇÃO')
             
                                                     insert into pessoa (cpf, id_usuario, celular, emissao, 
                                                         emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
@@ -71,9 +71,12 @@ async function signupCNPJ(payload) {
                                                         values ('${payload.pessoa.cpf}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
                                                         '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                                         '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
+
+                                                    insert into tarifa  (id_usuario,risco,periodo,observacao,segmento,tipo_cobranca,faturamento,cobranca)
+                                                        VALUES (IDENT_CURRENT('usuario'),'','','','','',0,0)                              
                                                     
+                                                        COMMIT TRAN
                                                     select * from usuario where email='${payload.usuario.email}'
-                                                    COMMIT TRAN
                                                     END TRY
                                                     BEGIN CATCH
                                                     SELECT
@@ -93,7 +96,6 @@ async function signupCNPJ(payload) {
                                 request.query(querysql, async function (err, recordset) {
 
                                     sql.close();
-
                                     if (err || recordset[0].rowsAffected == 0) return reject({ name: 'error', message: 'Falha no cadastro do usuário cpnj, tente efetuar novamente.', details: (err) ? 'Syntax error: ' + err.message : 'rowsAffected: ' + recordset[0].rowsAffected })
 
                                     const token = await jwt.sign({ email: payload.usuario.email }, process.env.JWT_SECRET, {
@@ -108,6 +110,7 @@ async function signupCNPJ(payload) {
                                     return resolve({
                                         name: 'success',
                                         message: 'Usuário cadastrado com sucesso.',
+                                        id: recordset[0].id,
                                         token,
                                         error: error
                                     })
@@ -159,9 +162,9 @@ async function signupCPF(payload) {
                                 BEGIN TRAN
                                 BEGIN TRY
                                 insert into usuario
-                                        (data, nome, email, senha, token_sms, validacao) 
+                                        (data, nome, email, senha, token_sms, validacao, status) 
                                         values (GETDATE(), '${payload.usuario.nome}', '${payload.usuario.email}',                                                 
-                                        '${hash}', '${payload.usuario.tokenSms}', 'Não validado')
+                                        '${hash}', '${payload.usuario.tokenSms}', 'Não validado', 'PENDENTE DE DOCUMENTAÇÃO')
 
                                 insert into pessoa (cpf, id_usuario, celular, emissao, 
                                     emissor, estado_civil, mae, pai, nacionalidade, nascimento, naturalidade, rg, sexo) 
@@ -179,6 +182,10 @@ async function signupCPF(payload) {
                                     values ('${payload.pessoa.cpf}', '${payload.endereco_cpf.cep}', '${payload.endereco_cpf.complemento}',
                                     '${payload.endereco_cpf.endereco}', '${payload.endereco_cpf.numero}', '${payload.endereco_cpf.bairro}',
                                     '${payload.endereco_cpf.cidade}', '${payload.endereco_cpf.estado}')
+
+                                insert into tarifa  (id_usuario,risco,periodo,observacao,segmento,tipo_cobranca,faturamento,cobranca)
+                                    VALUES (IDENT_CURRENT('usuario'),'','','','','',0,0)
+
                                 
                                 select * from usuario where email='${payload.usuario.email}'
                                 COMMIT TRAN
@@ -213,6 +220,7 @@ async function signupCPF(payload) {
                                 return resolve({
                                     name: 'success',
                                     message: 'Usuário cadastrado com sucesso.',
+                                    id: recordset[0].id,
                                     token,
                                     error: error
                                 })

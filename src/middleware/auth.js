@@ -1,27 +1,29 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config()
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 module.exports = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-    if(!authHeader)
-        return res.status(401).send({ name: 'error', message:'Notoken provided' });
+  if (!authHeader)
+    return res.status(401).send({ name: "error", message: "Notoken provided" });
 
-    const parts = authHeader.split(' ');
+  const parts = authHeader.split(" ");
 
-    if(!parts.length === 2)
-        return res.status(401).send({ name: 'error', message:'Token error' });
+  if (!parts.length === 2)
+    return res.status(401).send({ name: "error", message: "Token error" });
 
-    const [ scheme, token ] = parts;
+  const [scheme, token] = parts;
 
-    if(!/^Bearer$/.test(scheme))
-        return res.status(401).send({ name: 'error', message:'Token malformatted'});
-    
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if(err) return res.status(401).send({ name: 'error', message:'Token invalid'});
+  if (!/^Bearer$/.test(scheme))
+    return res
+      .status(401)
+      .send({ name: "error", message: "Token malformatted" });
 
-        req.userId = decoded.id;
-        return next();
-    })
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err)
+      return res.status(401).send({ name: "error", message: "Token invalid" });
 
-} 
+    req.userId = decoded.id;
+    return next();
+  });
+};
