@@ -23,7 +23,7 @@ async function sendEmail(payload) {
       html: `
             Olá ${payload.nome}, <br>
             <h2>Seja bem vindo ao gateway de pagamentos vileve.</h2> <br> Clique no link abaixo para confirmar sua conta.
-            <br> <a href='https://dev.vileveway.com.br/email/${token}'>Clique para confirmar sua conta</a> <br>  `,
+            <br> <a href='${process.env.EMAILURL + token}'>Clique para confirmar sua conta</a> <br>  `,
     };
 
     email.sendMail(message, function (err, info) {
@@ -192,7 +192,7 @@ function emailInvitation(payload) {
         html: `
             Olá ${name}, <br>
             <h2>Seja bem vindo ao vileve way admin.</h2> <br> Clique no link abaixo para confirmar sua conta e finalizar o cadastro.
-            <br> <a href='https://sb-adm.vileveway.com.br/finishRegister/${base64}'>Clique para confirmar sua conta</a> <br>  `,
+            <br> <a href='${process.env.EMAILURLREGISTER + base64}'>Clique para confirmar sua conta</a> <br>  `,
       };
 
       email.sendMail(message, (err) => {
