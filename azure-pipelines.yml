@@ -1,39 +1,38 @@
- 
 # Docker
 # Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- sandbox
+  - develop
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
-  tag: 'image-sandbox-$(Build.BuildId)'
+  tag: "image-develop-$(Build.BuildId)"
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build 
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'        
-        repository: $(tag)
-    - task: ECRPushImage@1
-      inputs:
-        awsCredentials: 'vileve-authentication'
-        regionName: 'us-east-1'
-        imageSource: 'imagename'
-        sourceImageName: '$(tag)'
-        sourceImageTag: '$(Build.BuildId)'
-        repositoryName: 'vileveway-backend'        
-        autoCreateRepository: true
-        pushTag: 'sandbox'  
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build an image
+            inputs:
+              command: build
+              dockerfile: "$(Build.SourcesDirectory)/Dockerfile"
+              repository: $(tag)
+          - task: ECRPushImage@1
+            inputs:
+              awsCredentials: "vileve-authentication"
+              regionName: "us-east-1"
+              imageSource: "imagename"
+              sourceImageName: "$(tag)"
+              sourceImageTag: "$(Build.BuildId)"
+              repositoryName: "vileveway-backend"
+              autoCreateRepository: true
+              pushTag: "develop"
