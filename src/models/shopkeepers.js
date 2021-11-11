@@ -1,7 +1,7 @@
-require('dotenv').config();
-const { response } = require('express');
-const sql = require('mssql');
-const { config } = require('../config/settings');
+require("dotenv").config();
+const { response } = require("express");
+const sql = require("mssql");
+const { config } = require("../config/settings");
 
 async function readShopkeeperid(id) {
   return new Promise(async (resolve, reject) => {
@@ -12,14 +12,14 @@ async function readShopkeeperid(id) {
         req.query(
           `select * from View_Cadastro_Lojista where id_usuario = ${id}`,
           async (err, recordset) => {
-            if (err) return reject({ name: 'error', message: err });
+            if (err) return reject({ name: "error", message: err });
             if (!recordset[0])
               return reject({
-                name: 'error',
-                message: 'id de lojista não encontrado',
+                name: "error",
+                message: "id de lojista não encontrado",
               });
 
-            let bodyjson = '';
+            let bodyjson = "";
             if (!!recordset[0].cnpj) {
               bodyjson = {
                 usuario: {
@@ -33,6 +33,7 @@ async function readShopkeeperid(id) {
                   numero_estabelecimento: recordset[0].numero_estabelecimento,
                   terminal: recordset[0].terminal,
                   chave: recordset[0].chave,
+                  guuid: recordset[0].guuid,
                 },
                 pessoa: {
                   id: recordset[0].id_pessoa,
@@ -112,6 +113,7 @@ async function readShopkeeperid(id) {
                   numero_estabelecimento: recordset[0].numero_estabelecimento,
                   terminal: recordset[0].terminal,
                   chave: recordset[0].chave,
+                  guuid: recordset[0].guuid,
                 },
                 pessoa: {
                   id: recordset[0].id_pessoa,
@@ -158,7 +160,7 @@ async function readShopkeeperid(id) {
                 },
               };
             }
-            return resolve({ name: 'success', message: bodyjson });
+            return resolve({ name: "success", message: bodyjson });
           }
         );
         connuser.close();
@@ -175,7 +177,7 @@ async function updateShopkeeperid(payload) {
       const connuser = new sql.Connection(config);
       connuser.connect().then(() => {
         const req = new sql.Request(connuser);
-        let querysql = '';
+        let querysql = "";
 
         if (!!payload?.usuario) {
           querysql += `  
@@ -273,8 +275,8 @@ async function updateShopkeeperid(payload) {
             WHERE id = '${payload.tarifa.id}';`;
         }
         req.query(querysql, async (err, recordset) => {
-          if (err) return reject({ name: 'error', message: err });
-          return resolve({ name: 'success', message: recordset });
+          if (err) return reject({ name: "error", message: err });
+          return resolve({ name: "success", message: recordset });
         });
         connuser.close();
       });
@@ -293,8 +295,8 @@ async function readShopkeepers({ status }) {
         req.query(
           `select id_usuario as id, nome, email, cpf, validacao, status, info from View_Cadastro_Lojista where status in (${status})`,
           async (err, recordset) => {
-            if (err) return reject({ name: 'error', message: err });
-            return resolve({ name: 'success', message: recordset });
+            if (err) return reject({ name: "error", message: err });
+            return resolve({ name: "success", message: recordset });
           }
         );
         connuser.close();
@@ -321,12 +323,12 @@ async function uploadDocuments(payload) {
           const [{ categorie, filename }] = info;
           const { idClient, product } = body;
 
-          const file64 = Buffer.from(file.buffer).toString('base64');
+          const file64 = Buffer.from(file.buffer).toString("base64");
 
           if (!idClient || !categorie || !filename || !product)
             return reject({
-              name: 'error',
-              message: 'Arquivos com campos em branco!',
+              name: "error",
+              message: "Arquivos com campos em branco!",
             });
 
           req.query(
@@ -379,12 +381,12 @@ async function uploadDocuments(payload) {
                     END`,
             async (err, recordset) => {
               if (err) {
-                return reject({ name: 'error', message: err });
+                return reject({ name: "error", message: err });
               }
               arrayupdate.push(recordset[0].nome);
               if (arrayupdate.length === payload.files.length) {
                 return resolve({
-                  name: 'success',
+                  name: "success",
                   message: `Upload dos arquivos: [${arrayupdate}] realizados com sucesso!`,
                 });
               }
