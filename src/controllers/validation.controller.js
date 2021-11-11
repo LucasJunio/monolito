@@ -12,6 +12,7 @@ const {
   emailInvitation,
 } = require("../models/validation");
 
+logger.debug("Rota /validation");
 router.get("/email/:token", async (req, res, next) => {
   try {
     const result = await validateEmail(req.params.token);

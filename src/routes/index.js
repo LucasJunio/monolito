@@ -12,4 +12,5 @@ router.use("/segments", require("../controllers/segments.controller"));
 router.use("/documents", require("../controllers/documents.controller"));
 router.use("/dashboard", require("../controllers/dashboard.controller"));
 router.use("/lists", require("../controllers/lists.controller"));
+router.use("/log", require("../controllers/log.controller"));
 module.exports = router;

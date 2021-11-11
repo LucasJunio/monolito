@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const { readDocuments, updateStatusDocuments } = require("../models/documents");
 
+logger.debug("Rota /documents");
 router.get("/:id", auth, async (req, res, next) => {
   try {
     const result = await readDocuments(req.params.id);

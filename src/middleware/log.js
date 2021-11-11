@@ -18,8 +18,10 @@ const log = () => {
     tableName: "logs",
   };
 
+  const listLogLevel = ["silly", "info", "error", "degub"];
+
   global.logger = winston.createLogger({
-    level: "silly",
+    level: logLevel,
     transports: [
       new winston.transports.Console(),
       new winston.transports.File({
@@ -64,7 +66,7 @@ const logMiddleware = () => {
     };
 
     global.logger = winston.createLogger({
-      level: "info",
+      level: logLevel,
       transports: [
         new winston.transports.Console(),
         new winston.transports.File({

@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 
 const { getStatus } = require("../models/status");
 
+logger.debug("Rota /status");
 router.get("/:type", auth, async (req, res, next) => {
   try {
     const result = await getStatus(req.params);

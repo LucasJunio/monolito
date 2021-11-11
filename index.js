@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 // logs
 const { log, logMiddleware } = require("./src/middleware/log");
+global.logLevel = "error";
 
 // Middlewares: functions run before of create routes
 log();
@@ -26,8 +27,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     res.status(408).send({ name: "error", message: "Request has timed out" });
 //   });
 //   next();
-// }); 
- 
+// });
+
+// log();
+
 // Routes
 app.use("/api/v1", require("./src/routes"));
 

@@ -13,6 +13,7 @@ const {
   getUserValidation,
 } = require("../models/user");
 
+logger.debug("Rota /user");
 router.get("/", auth, async (req, res, next) => {
   try {
     const result = await readUserAdmin();
@@ -49,7 +50,7 @@ router.delete("/:id", auth, async (req, res, next) => {
   }
 });
 
-router.post("/user-admin", auth, async (req, res, next) => {
+router.post("/user-admin", async (req, res, next) => {
   try {
     const result = await createUserAdmin(req.body);
     res.status(201).send(result);

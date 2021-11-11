@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { signin, signinAdmin } = require("../models/signin");
 
+logger.debug("Rota /signin");
 // Signin user
 router.post("/", async (req, res, next) => {
   try {
