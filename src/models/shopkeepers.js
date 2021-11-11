@@ -171,6 +171,38 @@ async function readShopkeeperid(id) {
   });
 }
 
+async function readShopkeeperGUUID(guuid) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      sql.connect(config, async (err) => {
+        if (err)
+          return reject({
+            name: "error",
+            message: "Conexão com o banco de dados falhou.",
+            details: err,
+          });
+
+        let request = new sql.Request();
+
+        request.query(
+          // `select guuid, cnpj, nome_fantasia, endereco, cidade, estado, cep, email, celular  from usuario where guuid ='${guuid}'`,
+          `select * from usuario where guuid ='${guuid}'`,
+          async (err, recordset) => {
+            await sql.close();
+
+            if (err) return reject({ name: "Error", message: err });
+
+            return resolve({ name: "success", message: recordset });
+          }
+        );
+      });
+    } catch (error) {
+      await sql.close();
+      return reject(error);
+    }
+  });
+}
+
 async function updateShopkeeperid(payload) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -407,4 +439,5 @@ module.exports = {
   readShopkeeperid,
   updateShopkeeperid,
   uploadDocuments,
+  readShopkeeperGUUID
 };

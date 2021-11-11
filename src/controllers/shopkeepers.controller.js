@@ -8,6 +8,7 @@ const {
   readShopkeeperid,
   updateShopkeeperid,
   uploadDocuments,
+  readShopkeeperGUUID
 } = require("../models/shopkeepers");
 
 logger.debug("Rota /shopkeepers");
@@ -40,6 +41,17 @@ router.get("/", auth, async (req, res, next) => {
     next(error);
   }
 });
+
+
+router.get("/guuid/:guuid", auth, async (req, res, next) => {
+  try {
+    const result = await readShopkeeperGUUID(req.params.guuid);
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 router.post("/upload", upload.array("file", 10), async (req, res, next) => {
   try {
