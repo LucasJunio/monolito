@@ -13,4 +13,5 @@ router.use("/documents", require("../controllers/documents.controller"));
 router.use("/dashboard", require("../controllers/dashboard.controller"));
 router.use("/lists", require("../controllers/lists.controller"));
 router.use("/log", require("../controllers/log.controller"));
+router.use("/embed", require("../controllers/embed.controller"));
 module.exports = router;
