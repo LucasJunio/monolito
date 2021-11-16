@@ -1,4 +1,7 @@
 const express = require("express");
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./src/swagger/swagger_output.json')
+const swaggerFilePublic = require('./src/swagger/public/swagger_output.json')
 // Express: Facto standard server framework for Node.js
 const app = express();
 // Cors habilited Cross-origin resource sharing
@@ -19,6 +22,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//Create swagger
+app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/api/v1/public', swaggerUi.serve, swaggerUi.setup(swaggerFilePublic))
 
 // app.use(function (req, res, next) {
 //   res.setHeader("Cache-Control", "max-age=15, public");
@@ -59,7 +66,7 @@ app.set("port", process.env.HTTPPORT || 80);
 
 // Starting the server
 app.listen(app.get("port"), () => {
-  // console.log(`Server is running ${app.get("port")}`);
+  console.log(`Server is running ${app.get("port")}`);
   logger.info(`Server is running ${app.get("port")}`);
 });
 
