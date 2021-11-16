@@ -34,7 +34,7 @@ const doc = {
     }
 }
 
-const outputFile = './src/swagger/swagger_output.json'
+const outputFile = './src/swagger/public/swagger_output.json'
 const endpointsFiles = ['./index.js']
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(() => {
