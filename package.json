@@ -7,7 +7,6 @@
     "dev": "nodemon --legacy-watch index.js",
     "start": "node index.js",
     "swagger": "node ./swagger.js",
-    "swaggerpublic": "node ./swagger-public.js",
     "test": "jest",
     "secure-mode": "jest --watch --verbose=true"
   },
