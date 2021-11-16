@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon --legacy-watch index.js",
     "start": "node index.js",
+    "swagger": "node ./swagger.js",
+    "swaggerpublic": "node ./swagger-public.js",
     "test": "jest",
     "secure-mode": "jest --watch --verbose=true"
   },
@@ -26,6 +28,8 @@
     "mssql": "^3.3.0",
     "multer": "^1.4.3",
     "nodemailer": "^6.4.16",
+    "swagger-autogen": "^2.12.6",
+    "swagger-ui-express": "^4.1.6",
     "tedious": "^14.0.0",
     "twilio": "^3.62.0",
     "winston": "^3.3.3",
