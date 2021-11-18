@@ -6,7 +6,6 @@ const { changeLogLevel } = require("../models/log");
 
 logger.debug("Rota /log");
 router.post("/", auth, async (req, res, next) => {
-
   /* 	#swagger.tags = ['Log']
        #swagger.description = 'Endpoint to sign in a specific log' */
 
@@ -14,7 +13,7 @@ router.post("/", auth, async (req, res, next) => {
           in: 'body',
           description: 'Log information.',
           required: true,
-          schema: { $ref: "#/definitions/AddLog" }
+          schema: { $ref: "#/definitions/EditLog" }
   } */
 
   /* #swagger.security = [{

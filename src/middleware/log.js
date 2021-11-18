@@ -4,6 +4,8 @@ const winston = require("winston");
 const { combine, printf, label, timestamp } = winston.format;
 const { SqlTransport } = require("winston-sql-transport");
 
+global.logLevel = "info";
+
 const log = () => {
   const transportConfig = {
     client: "mssql",
