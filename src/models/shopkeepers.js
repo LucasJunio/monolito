@@ -216,7 +216,7 @@ async function readShopkeeperGUUID(guuid) {
                 "PostalCode": recordset[0].pf_cep,
                 "Country": getOnlyInitials(recordset[0].nacionalidade),
                 "Email": recordset[0].email,
-                "PhoneNumber": recordset[0].celular
+                "PhoneNumber": recordset[0].celular_empresa
               } : {
                 "GU_ID": recordset[0].guuid,
                 "CPF": recordset[0].cpf,
