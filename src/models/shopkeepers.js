@@ -2,6 +2,7 @@ require("dotenv").config();
 const { response } = require("express");
 const sql = require("mssql");
 const { config } = require("../config/settings");
+const { getOnlyInitials } = require("../helpers/getCountries");
 
 async function readShopkeeperid(id) {
   return new Promise(async (resolve, reject) => {
@@ -203,35 +204,35 @@ async function readShopkeeperGUUID(guuid) {
 
             if (err) return reject({ name: "Error", message: err });
 
-            let response = (!!recordset[0]?.cnpj) ? 
-            {
-              "GU_ID": recordset[0].guuid,
-              "CNPJ": recordset[0].cnpj,
-              "Name": recordset[0].razao_social,
-              "Address1": `${recordset[0].pj_endereco} ${recordset[0].pj_numero} ${recordset[0].pj_complemento}`,
-              "Locality": recordset[0].pj_cidade,
-              "AdministrativeArea": recordset[0].pj_estado,
-              "Region": recordset[0].pj_bairro,
-              "PostalCode": recordset[0].pf_cep,
-              "Country": recordset[0].nacionalidade,
-              "Email": recordset[0].email,
-              "PhoneNumber": recordset[0].celular
-            } : {
-              "GU_ID": recordset[0].guuid,
-              "CPF": recordset[0].cpf,
-              "Name": recordset[0].nome,
-              "Address1": `${recordset[0].pf_endereco} ${recordset[0].pf_numero} ${recordset[0].pf_complemento}`,
-              "Locality": recordset[0].pf_cidade,
-              "AdministrativeArea": recordset[0].pf_estado,
-              "Region": recordset[0].pf_bairro,
-              "PostalCode": recordset[0].pf_cep,
-              "Country": recordset[0].nacionalidade,
-              "Email": recordset[0].email,
-              "PhoneNumber": recordset[0].celular
-            }                     
+            let response = (!!recordset[0]?.cnpj) ?
+              {
+                "GU_ID": recordset[0].guuid,
+                "CNPJ": recordset[0].cnpj,
+                "Name": recordset[0].razao_social,
+                "Address1": `${recordset[0].pj_endereco} ${recordset[0].pj_numero} ${recordset[0].pj_complemento}`,
+                "Locality": recordset[0].pj_cidade,
+                "AdministrativeArea": recordset[0].pj_estado,
+                "Region": recordset[0].pj_bairro,
+                "PostalCode": recordset[0].pf_cep,
+                "Country": getOnlyInitials(recordset[0].nacionalidade),
+                "Email": recordset[0].email,
+                "PhoneNumber": recordset[0].celular
+              } : {
+                "GU_ID": recordset[0].guuid,
+                "CPF": recordset[0].cpf,
+                "Name": recordset[0].nome,
+                "Address1": `${recordset[0].pf_endereco} ${recordset[0].pf_numero} ${recordset[0].pf_complemento}`,
+                "Locality": recordset[0].pf_cidade,
+                "AdministrativeArea": recordset[0].pf_estado,
+                "Region": recordset[0].pf_bairro,
+                "PostalCode": recordset[0].pf_cep,
+                "Country": getOnlyInitials(recordset[0].nacionalidade),
+                "Email": recordset[0].email,
+                "PhoneNumber": recordset[0].celular
+              }
 
-            return resolve({ 
-              name: "success", 
+            return resolve({
+              name: "success",
               message: response
             });
           }
