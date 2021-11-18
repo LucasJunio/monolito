@@ -1,7 +1,7 @@
 const express = require("express");
-const swaggerUi = require('swagger-ui-express')
+const swaggerUi = require("swagger-ui-express");
 // const swaggerUi2 = require('swagger-ui-express')
-const swaggerFile = require('./src/swagger/swagger_output.json')
+const swaggerFile = require("./src/swagger/swagger_output.json");
 // const swaggerFilePublic = require('./src/swagger/public/swagger_output.json')
 // Express: Facto standard server framework for Node.js
 const app = express();
@@ -13,7 +13,6 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 // logs
 const { log, logMiddleware } = require("./src/middleware/log");
-global.logLevel = "error";
 
 // Middlewares: functions run before of create routes
 log();
@@ -25,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Create swagger
-app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use("/api/v1/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 // app.use('/api/v1/public', swaggerUi2.serve, swaggerUi2.setup(swaggerFilePublic))
 
 // app.use(function (req, res, next) {
@@ -36,8 +35,6 @@ app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 //   });
 //   next();
 // });
-
-// log();
 
 // Routes
 app.use("/api/v1", require("./src/routes"));
@@ -67,10 +64,5 @@ app.set("port", process.env.HTTPPORT || 80);
 
 // Starting the server
 app.listen(app.get("port"), () => {
-  console.log(`Server is running ${app.get("port")}`);
   logger.info(`Server is running ${app.get("port")}`);
 });
-
-// const myFormat = printf(({ level, message, label, timestamp }) => {
-//   return `${timestamp} [${label}] ${level}: ${message}`;
-// });

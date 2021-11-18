@@ -1,21 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../upload");
 const auth = require("../middleware/auth");
 const getCurrentUser = require("../helpers/getCurrentUser");
 const {
   readShopkeepers,
   readShopkeeperid,
   updateShopkeeperid,
-  uploadDocuments,
-  readShopkeeperGUUID
+  readShopkeeperGUUID,
 } = require("../models/shopkeepers");
 
 logger.debug("Rota /shopkeepers");
 router.get("/:id", auth, async (req, res, next) => {
   try {
+    /* #swagger.tags = ['Shopkeepers']
+       #swagger.description = 'Endpoint to get list of shopkeepers by id' */
+
+    /* #swagger.security = [{
+          "Bearer": []
+  }] */
     const { email } = getCurrentUser(req.headers.authorization);
-    logger.info(`Chamada do usuário ${email} rota`);
+    logger.info(`Chamada do usuário ${email}`);
     const result = await readShopkeeperid(req.params.id);
     res.status(200).send(result);
   } catch (error) {
@@ -25,7 +29,22 @@ router.get("/:id", auth, async (req, res, next) => {
 
 router.put("/", auth, async (req, res, next) => {
   try {
-    console.log(req.body);
+    /* #swagger.tags = ['Shopkeepers']
+       #swagger.description = 'Endpoint to edit shopkeeper' */
+
+    /*	#swagger.parameters['json'] = {
+          in: 'body',
+          description: 'Edit a shopkeeper',
+          required: true,
+          schema: { $ref: "#/definitions/ShopkeepersEdit" }
+  } */
+
+    /* #swagger.security = [{
+          "Bearer": []
+  }] */
+    const { email } = getCurrentUser(req.headers.authorization);
+    logger.info(`Chamada do usuário ${email}`);
+    logger.infog(req.body);
     const result = await updateShopkeeperid(req.body);
     res.status(200).send(result);
   } catch (error) {
@@ -35,6 +54,14 @@ router.put("/", auth, async (req, res, next) => {
 
 router.get("/", auth, async (req, res, next) => {
   try {
+    /* #swagger.tags = ['Shopkeepers']
+       #swagger.description = 'Endpoint to get list of shopkeepers' */
+
+    /* #swagger.security = [{
+          "Bearer": []
+  }] */
+    const { email } = getCurrentUser(req.headers.authorization);
+    logger.info(`Chamada do usuário ${email}`);
     const result = await readShopkeepers(req.query);
     res.status(200).send(result);
   } catch (error) {
@@ -42,25 +69,19 @@ router.get("/", auth, async (req, res, next) => {
   }
 });
 
-
 router.get("/guuid/:guuid", auth, async (req, res, next) => {
   try {
+    /* #swagger.tags = ['Shopkeepers']
+       #swagger.description = 'Endpoint to get shopkeeper by guuid' */
+
+    /* #swagger.security = [{
+          "Bearer": []
+  }] */
+    const { email } = getCurrentUser(req.headers.authorization);
+    logger.info(`Chamada do usuário ${email}`);
+    logger.info(`Lojista por guuid: ${req.params.guuid}`);
     const result = await readShopkeeperGUUID(req.params.guuid);
     res.status(200).send(result);
-  } catch (error) {
-    next(error);
-  }
-});
-
-
-router.post("/upload", upload.array("file", 10), async (req, res, next) => {
-  try {
-    if (req.files.length > 0) {
-      const result = await uploadDocuments(req);
-      res.send(result);
-    } else {
-      throw Error("FILE_MISSING");
-    }
   } catch (error) {
     next(error);
   }
