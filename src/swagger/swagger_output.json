@@ -1,0 +1,1999 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Vileve Way Documentation - DEV",
+    "description": "Documentation to vileve way shopkeeper and admin"
+  },
+  "host": "vileveway-backend-lb-develop.vileveway.com.br",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Log",
+      "description": "Endpoints"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Authorization: Bearer {{token}}"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/signup/cnpj": {
+      "post": {
+        "tags": [
+          "Signup"
+        ],
+        "description": "Endpoint to signup CNPJ",
+        "parameters": [
+          {
+            "name": "array",
+            "in": "body",
+            "description": "Signup to CNPJ information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignupCnpj"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/signup/cpf": {
+      "post": {
+        "tags": [
+          "Signup"
+        ],
+        "description": "Endpoint to signup CPF",
+        "parameters": [
+          {
+            "name": "array",
+            "in": "body",
+            "description": "Signup to CPF information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignupCpf"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/api/v1/signin/": {
+      "post": {
+        "tags": [
+          "Signin"
+        ],
+        "description": "Endpoint to login",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Signin route",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Signin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/signin/admin": {
+      "post": {
+        "tags": [
+          "Signin"
+        ],
+        "description": "Endpoint to login Adm",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Signin route",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SigninAdm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/validation/email/{token}": {
+      "get": {
+        "tags": [
+          "Validation"
+        ],
+        "description": "Endpoint to edit validation email by token",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Edit validation email by token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validation/sms/{token}": {
+      "get": {
+        "tags": [
+          "Validation"
+        ],
+        "description": "Endpoint to edit validation sms by token",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Edit validation sms by token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validation/status": {
+      "get": {
+        "tags": [
+          "Validation"
+        ],
+        "description": "Endpoint get status shopkeeper",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "Get status shopkeeper",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validation/resendsms": {
+      "get": {
+        "tags": [
+          "Validation"
+        ],
+        "description": "Endpoint resendsms shopkeeper",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "Resend sms shopkeeper",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/validation/emailinvitation": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "description": "Endpoint to valadate a email invitation",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Valadate email invitation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmailInvatation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/person/cellphone": {
+      "put": {
+        "tags": [
+          "Person"
+        ],
+        "description": "Endpoint to edit edit cellphone of person",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Edit a relationship group with user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PersonCellphone"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/group/": {
+      "post": {
+        "tags": [
+          "Group"
+        ],
+        "description": "Endpoint to Group",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Create a Group in adm system",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Group"
+        ],
+        "description": "Get list of groups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/group/user-group": {
+      "post": {
+        "tags": [
+          "Group"
+        ],
+        "description": "Endpoint to relationship Group",
+        "parameters": [
+          {
+            "name": "array",
+            "in": "body",
+            "description": "Create a relationship group with user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/group/user-group/{id}": {
+      "put": {
+        "tags": [
+          "Group"
+        ],
+        "description": "Endpoint to edit relationship Group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "array",
+            "in": "body",
+            "description": "Edit a relationship group with user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Group"
+        ],
+        "description": "Endpoint get a list of relationship Group with user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get list of User adm",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to get user adm by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "id user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to edit a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Edit user by id.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EditUserAdm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to edit create a user admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "id user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/user-admin": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to edit create a user admin",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Create a new user admin",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserAdm"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/finishregister": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to edit create a user admin",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Create a new user admin",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FinisheRegister"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/getuservalidation/{email}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint to verify if user is validate",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Verify if user is validate"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/status/{type}": {
+      "get": {
+        "tags": [
+          "Status"
+        ],
+        "description": "Endpoint to get shopkeeper by guuid",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/shopkeepers/{id}": {
+      "get": {
+        "tags": [
+          "Shopkeepers"
+        ],
+        "description": "Endpoint to get list of shopkeepers by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/shopkeepers/": {
+      "put": {
+        "tags": [
+          "Shopkeepers"
+        ],
+        "description": "Endpoint to edit shopkeeper",
+        "parameters": [
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Edit a shopkeeper",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ShopkeepersEdit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Shopkeepers"
+        ],
+        "description": "Endpoint to get list of shopkeepers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/shopkeepers/guuid/{guuid}": {
+      "get": {
+        "tags": [
+          "Shopkeepers"
+        ],
+        "description": "Endpoint to get shopkeeper by guuid",
+        "parameters": [
+          {
+            "name": "guuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/segments/": {
+      "get": {
+        "tags": [
+          "Segments"
+        ],
+        "description": "Endpoint to get a list of segments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/documents/{id}": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "description": "Endpoint to Dashboard",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "id user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/documents/": {
+      "put": {
+        "tags": [
+          "Documents"
+        ],
+        "description": "Endpoint to Dashboard",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/documents/upload": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "description": "Endpoint to Dashboard",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "required": true,
+            "description": "Some description...",
+            "collectionFormat": "multi",
+            "items": {
+              "type": [
+                "file"
+              ]
+            },
+            "type": "string"
+          },
+          {
+            "name": "json",
+            "in": "body",
+            "description": "Signup to CPF information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DocumentsUpload"
+            }
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/dashboard/": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "description": "Endpoint to Dashboard",
+        "parameters": [
+          {
+            "name": "startdate",
+            "in": "query",
+            "description": "Initial Date",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "enddate",
+            "in": "query",
+            "description": "Finish Date",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/lists/": {
+      "get": {
+        "tags": [
+          "List"
+        ],
+        "description": "Endpoint get a list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/log/": {
+      "post": {
+        "tags": [
+          "Log"
+        ],
+        "description": "Endpoint to sign in a specific log",
+        "parameters": [
+          {
+            "name": "array",
+            "in": "body",
+            "description": "Log information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EditLog"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Signin": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "email@email.com.br"
+        },
+        "senha": {
+          "type": "string",
+          "example": "string (shar256)"
+        }
+      },
+      "required": [
+        "email",
+        "senha"
+      ]
+    },
+    "SigninAdm": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "email@email.com.br"
+        },
+        "senha": {
+          "type": "string",
+          "example": "string (shar256)"
+        }
+      },
+      "required": [
+        "email",
+        "senha"
+      ]
+    },
+    "EditLog": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "example": "debug"
+        }
+      },
+      "required": [
+        "level"
+      ]
+    },
+    "SignupCnpj": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string",
+              "example": "nome"
+            },
+            "email": {
+              "type": "string",
+              "example": "email@gmail.com"
+            },
+            "senha": {
+              "type": "string",
+              "example": "shar256"
+            }
+          },
+          "required": [
+            "nome",
+            "email",
+            "senha"
+          ]
+        },
+        "pessoa": {
+          "type": "object",
+          "properties": {
+            "cpf": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "celular": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "nascimento": {
+              "type": "string",
+              "example": "2021-01-01"
+            },
+            "naturalidade": {
+              "type": "string",
+              "example": "Belorizontino"
+            },
+            "nacionalidade": {
+              "type": "string",
+              "example": "Brasil"
+            },
+            "estado_civil": {
+              "type": "string",
+              "example": "Solteiro"
+            },
+            "rg": {
+              "type": "string",
+              "example": "MG00000000"
+            },
+            "emissor": {
+              "type": "string",
+              "example": "SSP"
+            },
+            "emissao": {
+              "type": "string",
+              "example": "2021-01-01"
+            },
+            "sexo": {
+              "type": "string",
+              "example": "M"
+            },
+            "mae": {
+              "type": "string",
+              "example": "Maria José de Oliveira"
+            },
+            "pai": {
+              "type": "string",
+              "example": "Rubens de Oliveira"
+            }
+          },
+          "required": [
+            "cpf",
+            "celular",
+            "nascimento",
+            "naturalidade",
+            "nacionalidade",
+            "estado_civil",
+            "rg",
+            "emissor",
+            "emissao",
+            "sexo",
+            "mae",
+            "pai"
+          ]
+        },
+        "empresa": {
+          "type": "object",
+          "properties": {
+            "cnpj": {
+              "type": "string",
+              "example": "000000000000000"
+            },
+            "cnae": {
+              "type": "number",
+              "example": 0
+            },
+            "razao_social": {
+              "type": "string",
+              "example": "Empresa Exemplo ltda"
+            },
+            "telefone_fixo": {
+              "type": "string",
+              "example": "0000000000"
+            },
+            "celular": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "nome_fantasia": {
+              "type": "string",
+              "example": "Nome Fantasia"
+            },
+            "site": {
+              "type": "string",
+              "example": "https://www.site.com.br"
+            }
+          },
+          "required": [
+            "cnpj",
+            "cnae",
+            "razao_social",
+            "telefone_fixo",
+            "celular",
+            "nome_fantasia",
+            "site"
+          ]
+        },
+        "conta": {
+          "type": "object",
+          "properties": {
+            "banco": {
+              "type": "string",
+              "example": "NuBank"
+            },
+            "agencia": {
+              "type": "string",
+              "example": "0000"
+            },
+            "conta": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "operacao": {
+              "type": "string",
+              "example": "Número da operação (caso tenha)"
+            },
+            "pix": {
+              "type": "string",
+              "example": "pix"
+            }
+          },
+          "required": [
+            "banco",
+            "agencia",
+            "conta",
+            "operacao",
+            "pix"
+          ]
+        },
+        "endereco_cnpj": {
+          "type": "object",
+          "properties": {
+            "cep": {
+              "type": "string",
+              "example": "00000000"
+            },
+            "endereco": {
+              "type": "string",
+              "example": "Rua fictícia"
+            },
+            "complemento": {
+              "type": "string",
+              "example": "202"
+            },
+            "numero": {
+              "type": "string",
+              "example": "71"
+            },
+            "bairro": {
+              "type": "string",
+              "example": "Centro"
+            },
+            "cidade": {
+              "type": "string",
+              "example": "Curvelo"
+            },
+            "estado": {
+              "type": "string",
+              "example": "MG"
+            }
+          },
+          "required": [
+            "cep",
+            "endereco",
+            "complemento",
+            "numero",
+            "bairro",
+            "cidade",
+            "estado"
+          ]
+        },
+        "endereco_cpf": {
+          "type": "object",
+          "properties": {
+            "cep": {
+              "type": "string",
+              "example": "00000000"
+            },
+            "complemento": {
+              "type": "string",
+              "example": ""
+            },
+            "endereco": {
+              "type": "string",
+              "example": "Rua fictícia"
+            },
+            "numero": {
+              "type": "string",
+              "example": "71"
+            },
+            "bairro": {
+              "type": "string",
+              "example": "Centro"
+            },
+            "cidade": {
+              "type": "string",
+              "example": "Curvelo"
+            },
+            "estado": {
+              "type": "string",
+              "example": "MG"
+            }
+          },
+          "required": [
+            "cep",
+            "complemento",
+            "endereco",
+            "numero",
+            "bairro",
+            "cidade",
+            "estado"
+          ]
+        }
+      }
+    },
+    "SignupCpf": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string",
+              "example": "nome"
+            },
+            "email": {
+              "type": "string",
+              "example": "email@gmail.com"
+            },
+            "senha": {
+              "type": "string",
+              "example": "shar256"
+            }
+          },
+          "required": [
+            "nome",
+            "email",
+            "senha"
+          ]
+        },
+        "pessoa": {
+          "type": "object",
+          "properties": {
+            "cpf": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "celular": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "nascimento": {
+              "type": "string",
+              "example": "2021-01-01"
+            },
+            "naturalidade": {
+              "type": "string",
+              "example": "Belorizontino"
+            },
+            "nacionalidade": {
+              "type": "string",
+              "example": "Brasil"
+            },
+            "estado_civil": {
+              "type": "string",
+              "example": "Solteiro"
+            },
+            "rg": {
+              "type": "string",
+              "example": "MG00000000"
+            },
+            "emissor": {
+              "type": "string",
+              "example": "SSP"
+            },
+            "emissao": {
+              "type": "string",
+              "example": "2021-01-01"
+            },
+            "sexo": {
+              "type": "string",
+              "example": "M"
+            },
+            "mae": {
+              "type": "string",
+              "example": "Maria José de Oliveira"
+            },
+            "pai": {
+              "type": "string",
+              "example": "Rubens de Oliveira"
+            }
+          },
+          "required": [
+            "cpf",
+            "celular",
+            "nascimento",
+            "naturalidade",
+            "nacionalidade",
+            "estado_civil",
+            "rg",
+            "emissor",
+            "emissao",
+            "sexo",
+            "mae",
+            "pai"
+          ]
+        },
+        "conta": {
+          "type": "object",
+          "properties": {
+            "banco": {
+              "type": "string",
+              "example": "NuBank"
+            },
+            "agencia": {
+              "type": "string",
+              "example": "0000"
+            },
+            "conta": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "operacao": {
+              "type": "string",
+              "example": "Número da operação (caso tenha)"
+            },
+            "pix": {
+              "type": "string",
+              "example": "pix"
+            }
+          },
+          "required": [
+            "banco",
+            "agencia",
+            "conta",
+            "operacao",
+            "pix"
+          ]
+        },
+        "endereco_cpf": {
+          "type": "object",
+          "properties": {
+            "cep": {
+              "type": "string",
+              "example": "00000000"
+            },
+            "complemento": {
+              "type": "string",
+              "example": ""
+            },
+            "endereco": {
+              "type": "string",
+              "example": "Rua fictícia"
+            },
+            "numero": {
+              "type": "string",
+              "example": "71"
+            },
+            "bairro": {
+              "type": "string",
+              "example": "Centro"
+            },
+            "cidade": {
+              "type": "string",
+              "example": "Curvelo"
+            },
+            "estado": {
+              "type": "string",
+              "example": "MG"
+            }
+          },
+          "required": [
+            "cep",
+            "complemento",
+            "endereco",
+            "numero",
+            "bairro",
+            "cidade",
+            "estado"
+          ]
+        }
+      }
+    },
+    "DocumentsUpload": {
+      "type": "object",
+      "properties": {
+        "idClient": {
+          "type": "number",
+          "example": 1
+        },
+        "product": {
+          "type": "string",
+          "example": "vilevewayclient"
+        },
+        "itens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "categorie": {
+                "type": "string",
+                "example": "cartao_cnpj"
+              },
+              "filename": {
+                "type": "string",
+                "example": "cartao_cnpj.png"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "idClient",
+        "product",
+        "itens"
+      ]
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Administração"
+        }
+      },
+      "required": [
+        "nome"
+      ]
+    },
+    "UserGroup": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fk_id_usu_adm": {
+            "type": "number",
+            "example": 10
+          },
+          "fk_id_grupo": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "fk_id_usu_adm",
+          "fk_id_grupo"
+        ]
+      }
+    },
+    "PersonCellphone": {
+      "type": "object",
+      "properties": {
+        "celular": {
+          "type": "number",
+          "example": 0
+        }
+      },
+      "required": [
+        "celular"
+      ]
+    },
+    "ShopkeepersEdit": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 10
+            },
+            "nome": {
+              "type": "string",
+              "example": "nome"
+            },
+            "email": {
+              "type": "string",
+              "example": "email@gmail.com"
+            },
+            "senha": {
+              "type": "string",
+              "example": "shar256"
+            }
+          },
+          "required": [
+            "id",
+            "nome",
+            "email",
+            "senha"
+          ]
+        },
+        "pessoa": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 10
+            },
+            "cpf": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "celular": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "nascimento": {
+              "type": "string",
+              "example": "2021-01-01"
+            },
+            "naturalidade": {
+              "type": "string",
+              "example": "Belorizontino"
+            },
+            "nacionalidade": {
+              "type": "string",
+              "example": "Brasil"
+            },
+            "estado_civil": {
+              "type": "string",
+              "example": "Solteiro"
+            },
+            "rg": {
+              "type": "string",
+              "example": "MG00000000"
+            },
+            "emissor": {
+              "type": "string",
+              "example": "SSP"
+            },
+            "emissao": {
+              "type": "string",
+              "example": "2021-01-01"
+            },
+            "sexo": {
+              "type": "string",
+              "example": "M"
+            },
+            "mae": {
+              "type": "string",
+              "example": "Maria José de Oliveira"
+            },
+            "pai": {
+              "type": "string",
+              "example": "Rubens de Oliveira"
+            }
+          },
+          "required": [
+            "id",
+            "cpf",
+            "celular",
+            "nascimento",
+            "naturalidade",
+            "nacionalidade",
+            "estado_civil",
+            "rg",
+            "emissor",
+            "emissao",
+            "sexo",
+            "mae",
+            "pai"
+          ]
+        },
+        "empresa": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "cnpj"
+            },
+            "cnpj": {
+              "type": "string",
+              "example": "000000000000000"
+            },
+            "cnae": {
+              "type": "number",
+              "example": 0
+            },
+            "razao_social": {
+              "type": "string",
+              "example": "Empresa Exemplo ltda"
+            },
+            "telefone_fixo": {
+              "type": "string",
+              "example": "0000000000"
+            },
+            "celular": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "nome_fantasia": {
+              "type": "string",
+              "example": "Nome Fantasia"
+            },
+            "site": {
+              "type": "string",
+              "example": "https://www.site.com.br"
+            }
+          },
+          "required": [
+            "id",
+            "cnpj",
+            "cnae",
+            "razao_social",
+            "telefone_fixo",
+            "celular",
+            "nome_fantasia",
+            "site"
+          ]
+        },
+        "conta": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "cnpj"
+            },
+            "banco": {
+              "type": "string",
+              "example": "NuBank"
+            },
+            "agencia": {
+              "type": "string",
+              "example": "0000"
+            },
+            "conta": {
+              "type": "string",
+              "example": "00000000000"
+            },
+            "operacao": {
+              "type": "string",
+              "example": "Número da operação (caso tenha)"
+            },
+            "pix": {
+              "type": "string",
+              "example": "pix"
+            }
+          },
+          "required": [
+            "id",
+            "banco",
+            "agencia",
+            "conta",
+            "operacao",
+            "pix"
+          ]
+        },
+        "endereco_cnpj": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "cnpj"
+            },
+            "cep": {
+              "type": "string",
+              "example": "00000000"
+            },
+            "endereco": {
+              "type": "string",
+              "example": "Rua fictícia"
+            },
+            "complemento": {
+              "type": "string",
+              "example": "202"
+            },
+            "numero": {
+              "type": "string",
+              "example": "71"
+            },
+            "bairro": {
+              "type": "string",
+              "example": "Centro"
+            },
+            "cidade": {
+              "type": "string",
+              "example": "Curvelo"
+            },
+            "estado": {
+              "type": "string",
+              "example": "MG"
+            }
+          },
+          "required": [
+            "id",
+            "cep",
+            "endereco",
+            "complemento",
+            "numero",
+            "bairro",
+            "cidade",
+            "estado"
+          ]
+        },
+        "endereco_cpf": {
+          "type": "object",
+          "properties": {
+            "cpf": {
+              "type": "string",
+              "example": "cpf"
+            },
+            "cep": {
+              "type": "string",
+              "example": "00000000"
+            },
+            "complemento": {
+              "type": "string",
+              "example": ""
+            },
+            "endereco": {
+              "type": "string",
+              "example": "Rua fictícia"
+            },
+            "numero": {
+              "type": "string",
+              "example": "71"
+            },
+            "bairro": {
+              "type": "string",
+              "example": "Centro"
+            },
+            "cidade": {
+              "type": "string",
+              "example": "Curvelo"
+            },
+            "estado": {
+              "type": "string",
+              "example": "MG"
+            }
+          },
+          "required": [
+            "cpf",
+            "cep",
+            "complemento",
+            "endereco",
+            "numero",
+            "bairro",
+            "cidade",
+            "estado"
+          ]
+        },
+        "tarifa": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 10
+            },
+            "risco": {
+              "type": "string",
+              "example": "alto"
+            },
+            "periodo": {
+              "type": "string",
+              "example": "Mensal"
+            },
+            "observacao": {
+              "type": "string",
+              "example": "Obs"
+            },
+            "segmento": {
+              "type": "string",
+              "example": "Segmentos"
+            },
+            "tipo_cobranca": {
+              "type": "string",
+              "example": "Fixo"
+            },
+            "faturamento": {
+              "type": "number",
+              "example": 50
+            },
+            "cobranca": {
+              "type": "number",
+              "example": 555
+            }
+          },
+          "required": [
+            "id",
+            "risco",
+            "periodo",
+            "observacao",
+            "segmento",
+            "tipo_cobranca",
+            "faturamento",
+            "cobranca"
+          ]
+        }
+      }
+    },
+    "CreateUserAdm": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Nome do usuário"
+        },
+        "email": {
+          "type": "string",
+          "example": "email@email.com"
+        },
+        "status": {
+          "type": "string",
+          "example": "ATIVO"
+        }
+      },
+      "required": [
+        "nome",
+        "email",
+        "status"
+      ]
+    },
+    "EditUserAdm": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Nome do usuário"
+        },
+        "email": {
+          "type": "string",
+          "example": "email@email.com"
+        },
+        "status": {
+          "type": "string",
+          "example": "ATIVO"
+        }
+      },
+      "required": [
+        "nome",
+        "email",
+        "status"
+      ]
+    },
+    "EmailInvatation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 147
+        },
+        "name": {
+          "type": "string",
+          "example": "Nome do usuário"
+        },
+        "status": {
+          "type": "string",
+          "example": "ATIVO"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ]
+    },
+    "FinisheRegister": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "10"
+        },
+        "nome": {
+          "type": "string",
+          "example": "Nome do usuário"
+        },
+        "email": {
+          "type": "string",
+          "example": "email@email.com"
+        },
+        "cpf": {
+          "type": "string",
+          "example": "000.000.000-00"
+        },
+        "celular": {
+          "type": "string",
+          "example": "31-99999-9999"
+        },
+        "ramal": {
+          "type": "string",
+          "example": "9999"
+        }
+      },
+      "required": [
+        "id",
+        "nome",
+        "email",
+        "cpf",
+        "celular",
+        "ramal"
+      ]
+    }
+  }
+}
