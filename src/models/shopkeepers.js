@@ -171,6 +171,7 @@ async function readShopkeeperid(id) {
   });
 }
 
+
 async function readShopkeeperGUUID(guuid) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -185,19 +186,58 @@ async function readShopkeeperGUUID(guuid) {
         let request = new sql.Request();
 
         request.query(
-          // `select guuid, cnpj, nome_fantasia, endereco, cidade, estado, cep, email, celular  from usuario where guuid ='${guuid}'`,
-          `select * from usuario where guuid ='${guuid}'`,
+          ` 
+          IF ( EXISTS(select * from View_Cadastro_Lojista where guuid ='${guuid}') )
+          BEGIN
+            select * from View_Cadastro_Lojista where guuid ='${guuid}'
+          END
+          ELSE
+          BEGIN
+            select 0 as rowsAffected
+          END                              
+          `,
           async (err, recordset) => {
             await sql.close();
 
+            if (err || recordset[0].rowsAffected == 0) return reject({ name: 'error', message: 'Falha na consulta.', details: (err) ? 'Syntax error: ' + err.message : 'rowsAffected: ' + recordset[0].rowsAffected })
+
             if (err) return reject({ name: "Error", message: err });
 
-            return resolve({ name: "success", message: recordset });
+            let response = (!!recordset[0]?.cnpj) ? 
+            {
+              "GU_ID": recordset[0].guuid,
+              "CNPJ": recordset[0].cnpj,
+              "Name": recordset[0].razao_social,
+              "Address1": `${recordset[0].pj_endereco} ${recordset[0].pj_numero} ${recordset[0].pj_complemento}`,
+              "Locality": recordset[0].pj_cidade,
+              "AdministrativeArea": recordset[0].pj_estado,
+              "Region": recordset[0].pj_bairro,
+              "PostalCode": recordset[0].pf_cep,
+              "Country": recordset[0].nacionalidade,
+              "Email": recordset[0].email,
+              "PhoneNumber": recordset[0].celular
+            } : {
+              "GU_ID": recordset[0].guuid,
+              "CPF": recordset[0].cpf,
+              "Name": recordset[0].nome,
+              "Address1": `${recordset[0].pf_endereco} ${recordset[0].pf_numero} ${recordset[0].pf_complemento}`,
+              "Locality": recordset[0].pf_cidade,
+              "AdministrativeArea": recordset[0].pf_estado,
+              "Region": recordset[0].pf_bairro,
+              "PostalCode": recordset[0].pf_cep,
+              "Country": recordset[0].nacionalidade,
+              "Email": recordset[0].email,
+              "PhoneNumber": recordset[0].celular
+            }                     
+
+            return resolve({ 
+              name: "success", 
+              message: response
+            });
           }
         );
       });
     } catch (error) {
-      await sql.close();
       return reject(error);
     }
   });
