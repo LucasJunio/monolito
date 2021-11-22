@@ -96,7 +96,7 @@ router.delete("/:id", auth, async (req, res, next) => {
   }
 });
 
-router.post("/user-admin", async (req, res, next) => {
+router.post("/user-admin", auth, async (req, res, next) => {
   try {
     /* 	#swagger.tags = ['User']
        #swagger.description = 'Endpoint to edit create a user admin' */
