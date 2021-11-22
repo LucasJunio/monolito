@@ -14,7 +14,7 @@ router.get("/:type", auth, async (req, res, next) => {
           "Bearer": []
   }] */
     logger.debug(`Busca por status do tipo: ${req.params.type}`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await getStatus(req.params);
     res.status(200).send(result);
   } catch (error) {

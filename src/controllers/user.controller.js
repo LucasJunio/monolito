@@ -67,7 +67,7 @@ router.put("/:id", auth, async (req, res, next) => {
           "Bearer": []
   }] */
     logger.debug(`Edição do usuário com id: ${req.params.id}`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await putUserAdmin(req.body, req.params.id);
     res.status(200).send(result);
   } catch (error) {
@@ -111,7 +111,7 @@ router.post("/user-admin", async (req, res, next) => {
           "Bearer": []
   }] */
     logger.debug(`Criando novo usuário admin`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await createUserAdmin(req.body);
     res.status(201).send(result);
   } catch (error) {
@@ -134,7 +134,7 @@ router.patch("/finishregister", async (req, res, next) => {
           "Bearer": []
   }] */
     logger.debug(`Termino do cadastro do usuário`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await finishRegister(req.body);
     res.status(200).send(result);
   } catch (error) {

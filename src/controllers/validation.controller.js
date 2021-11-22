@@ -119,7 +119,7 @@ router.post("/emailinvitation", auth, async (req, res, next) => {
           "Bearer": []
   }] */
     logger.debug(`Validação de email`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await emailInvitation(req.body);
     res.status(200).send(result);
   } catch (error) {

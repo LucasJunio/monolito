@@ -28,7 +28,7 @@ router.post("/", auth, async (req, res, next) => {
           "Bearer": []
   }] */
     logger.debug(`Criando um grupo`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await createGroup(req.body);
     res.status(201).send(result);
   } catch (error) {

@@ -2,7 +2,7 @@ require("dotenv").config();
 const sql = require("mssql");
 const jwt = require("jsonwebtoken");
 
-const { config, twilioconfig, email } = require("../config/settings");
+const { config, from, twilioconfig, email } = require("../config/settings");
 const twilio = require("twilio")(
   twilioconfig.accountSid,
   twilioconfig.authToken
@@ -17,7 +17,7 @@ async function sendEmail(payload) {
     );
 
     const message = {
-      from: "contato@vilevepay.com.br",
+      from,
       to: payload.email,
       subject: "Confirmação de Conta Vileve",
       html: `
@@ -186,7 +186,7 @@ function emailInvitation(payload) {
       const base64 = Buffer.from(json).toString("base64");
 
       const message = {
-        from: "contato@vilevepay.com.br",
+        from,
         to: emailPayload,
         subject: "Convite VileveWay Admin",
         html: `

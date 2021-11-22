@@ -39,6 +39,12 @@ module.exports = {
     },
   },
 
+
+
+  from: process.env.EMAILFROM,
+
+
+
   email: nodemailer.createTransport({
     host: process.env.EMAILHOST,
     port: process.env.EMAILPORT,
@@ -46,7 +52,7 @@ module.exports = {
       user: process.env.EMAILUSER,
       pass: process.env.EMAILPASS,
     },
-    secureConnection: false,
+    secureConnection: true,
     tls: { ciphers: "SSLv3" },
   }),
 

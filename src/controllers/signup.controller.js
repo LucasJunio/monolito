@@ -21,7 +21,7 @@ router.post("/cnpj", async (req, res, next) => {
           "apiKeyAuth": []
   }] */
     logger.debug(`Signup CNPJ`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await signupCNPJ(req.body);
     res.status(201).send(result);
   } catch (error) {
@@ -42,7 +42,7 @@ router.post("/cpf", async (req, res, next) => {
           schema: { $ref: "#/definitions/SignupCpf" }
   } */
     logger.debug(`Signup CPF`);
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await signupCPF(req.body);
     res.status(201).send(result);
   } catch (error) {

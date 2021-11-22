@@ -18,7 +18,7 @@ router.post("/", async (req, res, next) => {
   } */
 
     logger.debug("Logando com usuário");
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await signin(req.body);
     logger.debug("Usuário lojista logado");
     res.status(200).send(result);
@@ -39,7 +39,7 @@ router.post("/admin", async (req, res, next) => {
           schema: { $ref: "#/definitions/SigninAdm" }
   } */
     logger.debug("Logando com usuário");
-    logger.info(req.body);
+    logger.info(JSON.stringify(req.body));
     const result = await signinAdmin(req.body);
     logger.debug("Usuário Administrador logado");
     res.status(200).send(result);
