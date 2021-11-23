@@ -6,7 +6,7 @@ const swaggerFile = require("./src/swagger/swagger_output.json");
 // Express: Facto standard server framework for Node.js
 const app = express();
 // Cors habilited Cross-origin resource sharing
-const cors = require("cors");
+// const cors = require("cors");
 // Morgan is used for logging request details;
 const morgan = require("morgan");
 // BodyParser formated request body
@@ -17,7 +17,13 @@ const { log, logMiddleware } = require("./src/middleware/log");
 // Middlewares: functions run before of create routes
 log();
 app.use(logMiddleware());
-app.use(cors());
+// app.use(cors());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
