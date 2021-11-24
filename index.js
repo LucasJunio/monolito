@@ -15,9 +15,9 @@ const bodyParser = require("body-parser");
 const { log, logMiddleware } = require("./src/middleware/log");
 
 // Middlewares: functions run before of create routes
+app.use(cors());
 log();
 app.use(logMiddleware());
-app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(bodyParser.json());
