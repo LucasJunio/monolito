@@ -10,6 +10,13 @@ const bodyParser = require("body-parser");
 // logs
 const { log, logMiddleware } = require("./src/middleware/log");
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // Middlewares: functions run before of create routes
 app.use(cors());
 log();
