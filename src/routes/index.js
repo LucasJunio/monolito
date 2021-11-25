@@ -1,3 +1,6 @@
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("../swagger/swagger_output.json");
+
 const router = require("express").Router();
 
 router.use("/signup", require("../controllers/signup.controller"));
@@ -14,4 +17,5 @@ router.use("/dashboard", require("../controllers/dashboard.controller"));
 router.use("/lists", require("../controllers/lists.controller"));
 router.use("/log", require("../controllers/log.controller"));
 router.use("/embed", require("../controllers/embed.controller"));
+router.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 module.exports = router;
