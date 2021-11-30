@@ -10,13 +10,6 @@ const bodyParser = require("body-parser");
 // logs
 const { log, logMiddleware } = require("./src/middleware/log");
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-
 // Middlewares: functions run before of create routes
 app.use(cors());
 log();
@@ -54,8 +47,9 @@ app.use((err, req, res, next) => {
 
 // Not found 404
 app.use((req, res) => {
-  logger.error("Rota não encontrada!");
-  res.status(404).send("Rota não encontrada!");
+  console.log(req.originalUrl)
+  logger.error(`Rota não encontrada! ${req.originalUrl}`);
+  res.status(404).send(`Rota não encontrada! ${req.originalUrl}`);
 });
 
 // Settings
