@@ -47,7 +47,6 @@ app.use((err, req, res, next) => {
 
 // Not found 404
 app.use((req, res) => {
-  console.log(req.originalUrl)
   logger.error(`Rota não encontrada! ${req.originalUrl}`);
   res.status(404).send(`Rota não encontrada! ${req.originalUrl}`);
 });
@@ -57,5 +56,6 @@ app.set("port", process.env.HTTPPORT || 80);
 
 // Starting the server
 app.listen(app.get("port"), () => {
+  logger.info(process.version.match(/^v(\d+.\d+)/)[1]);
   logger.info(`Server is running ${app.get("port")}`);
 });
