@@ -11,9 +11,9 @@
     "secure-mode": "jest --watch --verbose=true"
   },
   "keywords": [
-    "LucasJunio"
+    "VileveWay"
   ],
-  "author": "LucasJunio",
+  "author": "VileveWay",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
